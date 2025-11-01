@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>070c741c-2dcb-4e20-b552-21efd44850a2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,10 @@
     <ProjectReference Include="..\..\Core\Talaqi.Application\Talaqi.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Talaqi.Infrastructure\Talaqi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Talaqi.Shared\Talaqi.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
