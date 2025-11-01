@@ -1,4 +1,4 @@
-@Talaqi.API_HostAddress = http://localhost:5228
+@Talaqi.API_HostAddress = http://localhost:5050
 
 GET {{Talaqi.API_HostAddress}}/weatherforecast/
 Accept: application/json
