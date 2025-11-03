@@ -10,8 +10,8 @@ namespace Talaqi.Domain.Entities
     {
         public Guid Id { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UdateAt { get; set; }
-        public bool IsDeletet { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
 /***************************************************************

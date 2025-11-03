@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Talaqi.Domain.Entities
 {
-    internal class VerificationCode : BaseEntity
+    public class VerificationCode : BaseEntity
     {
         public string Email { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
