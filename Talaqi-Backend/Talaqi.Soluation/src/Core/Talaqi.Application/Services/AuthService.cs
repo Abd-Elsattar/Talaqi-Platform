@@ -91,7 +91,7 @@ namespace Talaqi.Application.Services
 
             return Result<AuthResponseDto>.Success(response, "Login successful");
         }
-        public async Task<Result> forgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+        public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
         {
             var user = await _unitOfWork.Users.GetUserByEmailAsync(forgotPasswordDto.Email.ToLower());
 

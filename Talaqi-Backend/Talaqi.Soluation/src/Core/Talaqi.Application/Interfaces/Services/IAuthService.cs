@@ -20,7 +20,7 @@ namespace Talaqi.Application.Interfaces.Services
     {
         Task<Result<AuthResponseDto>> RegisterAsync(RegisterDto registerDto);
         Task<Result<AuthResponseDto>> LoginAsync(LoginDto loginDto);
-        Task<Result> forgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+        Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
         Task<Result> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
         Task<Result<AuthResponseDto>> RefreshTokenAsync(string refreshToken);
     }

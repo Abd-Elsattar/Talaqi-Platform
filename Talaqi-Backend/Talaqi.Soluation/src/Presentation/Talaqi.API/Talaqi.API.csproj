@@ -17,8 +17,4 @@
     <ProjectReference Include="..\..\Infrastructure\Talaqi.Shared\Talaqi.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
