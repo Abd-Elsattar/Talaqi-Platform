@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Talaqi.Application.Common
 {
     public class Result<T>
@@ -11,7 +6,9 @@ namespace Talaqi.Application.Common
         public bool IsSuccess { get; set; }
         public T? Data { get; set; }
         public string? Message { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
+        public int StatusCode { get; set; }
+        public List<string> Errors { get; set; } = new();
+
         public static Result<T> Success(T data, string? message = null)
         {
             return new Result<T>
@@ -22,23 +19,27 @@ namespace Talaqi.Application.Common
             };
         }
 
-        public static Result<T> Failure(string message, List<string> errors = null)
+        public static Result<T> Failure(string message, List<string>? errors = null)
         {
             return new Result<T>
             {
                 IsSuccess = false,
-                Errors = errors ?? new List<string>(),
-                Message = message
+                Message = message,
+                Errors = errors ?? new List<string>()
             };
         }
+        public static Result<T> FromCondition(bool condition, T data, string successMsg, string failureMsg)
+            => condition ? Success(data, successMsg) : Failure(failureMsg);
+
     }
+
 
     public class Result
     {
         public bool IsSuccess { get; set; }
-
         public string? Message { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
+        public List<string> Errors { get; set; } = new();
+
         public static Result Success(string? message = null)
         {
             return new Result
@@ -47,7 +48,8 @@ namespace Talaqi.Application.Common
                 Message = message
             };
         }
-        public static Result Failure(string message, List<string> errors = null)
+
+        public static Result Failure(string message, List<string>? errors = null)
         {
             return new Result
             {

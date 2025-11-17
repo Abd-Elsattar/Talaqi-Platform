@@ -1,217 +1,210 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using OpenAI.Chat;
 using Talaqi.Application.DTOs.AI;
 using Talaqi.Application.Interfaces.Services;
 
-public class AIService : IAIService
+namespace Talaqi.Infrastructure.Services
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _config;
-
-    private readonly string _openAiKey;
-    private readonly string _googleApiKey;
-
-    public AIService(HttpClient httpClient, IConfiguration config)
+    public class AIService : IAIService
     {
-        _httpClient = httpClient;
-        _config = config;
-        _openAiKey = _config["AI:OpenAI:ApiKey"] ?? throw new Exception("Missing OpenAI API Key");
-        _googleApiKey = _config["AI:Google:ApiKey"] ?? throw new Exception("Missing Google API Key");
-    }
+        private readonly ChatClient _chatClient;
+        private readonly ILogger<AIService> _logger;
+        private readonly IMemoryCache _cache;
+        private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(6);
 
-    // ---------- Analyze Image ----------
-    public async Task<AIAnalysisResult> AnalyzeImageAsync(string imageUrl)
-    {
-        try
+        public AIService(IConfiguration config, ILogger<AIService> logger, IMemoryCache cache)
         {
-            var endpoint = "https://api.openai.com/v1/responses";
-            var payload = new
+            _logger = logger;
+            _cache = cache;
+
+            var apiKey = config["OpenAI:ApiKey"]
+                ?? throw new InvalidOperationException("Missing OpenAI API Key.");
+            var model = config["OpenAI:Model"] ?? "gpt-4o-mini";
+
+            _chatClient = new ChatClient(model: model, apiKey: apiKey);
+        }
+
+        #region Image / Text / Location analysis (implements IAIService)
+
+        public async Task<AIAnalysisResult> AnalyzeImageAsync(string imageUrl)
+        {
+            if (_cache.TryGetValue($"img:{imageUrl}", out AIAnalysisResult cached))
+                return cached;
+
+            try
             {
-                model = "gpt-4o-mini",
-                input = new object[]
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(new List<ChatMessage>
                 {
-                    new
+                    new SystemChatMessage("You are an expert in image analysis."),
+                    new UserChatMessage($"Analyze this image at URL: {imageUrl}. Describe main objects, dominant colors and notable features.")
+                });
+
+                var description = completion?.Content?.FirstOrDefault()?.Text ?? "No description available.";
+                var keywords = ExtractKeywords(description);
+
+                var analysis = new AIAnalysisResult
+                {
+                    Success = true,
+                    ImageFeatures = Convert.ToBase64String(Encoding.UTF8.GetBytes(imageUrl)),
+                    Keywords = keywords,
+                    AdditionalData = new Dictionary<string, object>
                     {
-                        role = "user",
-                        content = new object[]
-                        {
-                            new { type = "input_text", text = "Analyze this image. Describe it and list any visible objects or text." },
-                            new { type = "input_image", image_url = imageUrl }
-                        }
+                        { "description", description },
+                        { "color_dominant", keywords.FirstOrDefault(k => k.Contains("color")) ?? "unknown" }
                     }
-                }
-            };
+                };
 
-            using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-            request.Headers.Add("Authorization", $"Bearer {_openAiKey}");
-            request.Content = JsonContent.Create(payload);
-
-            var response = await _httpClient.SendAsync(request);
-            var json = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-                return new AIAnalysisResult { Success = false, Error = json };
-
-            var doc = JsonDocument.Parse(json);
-            var content = doc.RootElement
-                .GetProperty("output")[0]
-                .GetProperty("content")[0]
-                .GetProperty("text")
-                .GetString();
-
-            return new AIAnalysisResult
+                _cache.Set($"img:{imageUrl}", analysis, CacheDuration);
+                return analysis;
+            }
+            catch (Exception ex)
             {
-                Success = true,
-                ImageFeatures = content,
-                AdditionalData = new Dictionary<string, object> { ["imageUrl"] = imageUrl }
-            };
+                _logger.LogError(ex, "AnalyzeImageAsync failed");
+                return new AIAnalysisResult { Success = false, Error = ex.Message };
+            }
         }
-        catch (Exception ex)
-        {
-            return new AIAnalysisResult { Success = false, Error = ex.Message };
-        }
-    }
 
-    // ---------- Analyze Text ----------
-    public async Task<AIAnalysisResult> AnalyzeTextAsync(string description)
-    {
-        try
+        public async Task<AIAnalysisResult> AnalyzeTextAsync(string description)
         {
-            var endpoint = "https://api.openai.com/v1/chat/completions";
-            var payload = new
+            var cacheKey = $"txt:{description.GetHashCode()}";
+            if (_cache.TryGetValue(cacheKey, out AIAnalysisResult cached))
+                return cached;
+
+            try
             {
-                model = "gpt-4o-mini",
-                messages = new[]
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(new List<ChatMessage>
                 {
-                    new { role = "system", content = "Analyze the following text. Extract key details, main keywords, and summarize meaning." },
-                    new { role = "user", content = description }
-                }
-            };
+                    new SystemChatMessage("You are an NLP assistant that extracts keywords."),
+                    new UserChatMessage($"Extract up to 10 important keywords from this text: {description}")
+                });
 
-            using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-            request.Headers.Add("Authorization", $"Bearer {_openAiKey}");
-            request.Content = JsonContent.Create(payload);
+                var output = completion?.Content?.FirstOrDefault()?.Text ?? "";
+                var keywords = ExtractKeywords(output);
 
-            var response = await _httpClient.SendAsync(request);
-            var json = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-                return new AIAnalysisResult { Success = false, Error = json };
-
-            var doc = JsonDocument.Parse(json);
-            var text = doc.RootElement.GetProperty("choices")[0]
-                .GetProperty("message").GetProperty("content").GetString();
-
-            var keywords = ExtractKeywords(text);
-
-            return new AIAnalysisResult
-            {
-                Success = true,
-                Keywords = keywords,
-                AdditionalData = new Dictionary<string, object>
+                var analysis = new AIAnalysisResult
                 {
-                    ["textSummary"] = text
-                }
-            };
-        }
-        catch (Exception ex)
-        {
-            return new AIAnalysisResult { Success = false, Error = ex.Message };
-        }
-    }
+                    Success = true,
+                    Keywords = keywords
+                };
 
-    // ---------- Analyze Location ----------
-    public async Task<AIAnalysisResult> AnalyzeLocationAsync(string location)
-    {
-        try
-        {
-            var endpoint = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(location)}&key={_googleApiKey}";
-            var response = await _httpClient.GetAsync(endpoint);
-            var json = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-                return new AIAnalysisResult { Success = false, Error = json };
-
-            var doc = JsonDocument.Parse(json);
-            var result = doc.RootElement.GetProperty("results")[0];
-            var formatted = result.GetProperty("formatted_address").GetString();
-            var loc = result.GetProperty("geometry").GetProperty("location");
-            var lat = loc.GetProperty("lat").GetDouble();
-            var lng = loc.GetProperty("lng").GetDouble();
-
-            return new AIAnalysisResult
+                _cache.Set(cacheKey, analysis, CacheDuration);
+                return analysis;
+            }
+            catch (Exception ex)
             {
-                Success = true,
-                AdditionalData = new Dictionary<string, object>
-                {
-                    ["formattedAddress"] = formatted!,
-                    ["latitude"] = lat,
-                    ["longitude"] = lng
-                }
-            };
+                _logger.LogError(ex, "AnalyzeTextAsync failed");
+                return new AIAnalysisResult { Success = false, Error = ex.Message };
+            }
         }
-        catch (Exception ex)
+
+        public Task<AIAnalysisResult> AnalyzeLocationAsync(string location)
         {
-            return new AIAnalysisResult { Success = false, Error = ex.Message };
-        }
-    }
+            var normalized = (location ?? string.Empty).Trim().ToLowerInvariant();
+            var cacheKey = $"loc:{normalized}";
+            if (_cache.TryGetValue(cacheKey, out AIAnalysisResult cached))
+                return Task.FromResult(cached);
 
-    // ---------- Analyze Lost Item ----------
-    public async Task<AIAnalysisResult> AnalyzeLostItemAsync(string? imageUrl, string description, string location)
-    {
-        var imageTask = imageUrl != null ? AnalyzeImageAsync(imageUrl) : Task.FromResult<AIAnalysisResult?>(null);
-        var textTask = AnalyzeTextAsync(description);
-        var locTask = AnalyzeLocationAsync(location);
-
-        await Task.WhenAll(imageTask!, textTask, locTask);
-
-        var img = imageTask?.Result;
-        var txt = textTask.Result;
-        var loc = locTask.Result;
-
-        if ((img == null || img.Success) && txt.Success && loc.Success)
-        {
             var result = new AIAnalysisResult
             {
                 Success = true,
-                ImageFeatures = img?.ImageFeatures,
-                Keywords = txt.Keywords,
                 AdditionalData = new Dictionary<string, object>
                 {
-                    ["imageAnalysis"] = img?.AdditionalData,
-                    ["textAnalysis"] = txt.AdditionalData,
-                    ["locationAnalysis"] = loc.AdditionalData,
-                    ["type"] = "Lost"
+                    { "normalized_address", normalized },
+                    { "timestamp", DateTime.UtcNow }
                 }
             };
-            return result;
+
+            _cache.Set(cacheKey, result, CacheDuration);
+            return Task.FromResult(result);
         }
 
-        return new AIAnalysisResult
+        public async Task<AIAnalysisResult> AnalyzeLostItemAsync(string? imageUrl, string description, string location)
         {
-            Success = false,
-            Error = img?.Error ?? txt.Error ?? loc.Error
-        };
-    }
+            var results = new List<AIAnalysisResult>();
 
-    // ---------- Analyze Found Item ----------
-    public async Task<AIAnalysisResult> AnalyzeFoundItemAsync(string? imageUrl, string description, string location)
-    {
-        var baseResult = await AnalyzeLostItemAsync(imageUrl, description, location);
-        if (baseResult.Success)
-            baseResult.AdditionalData["type"] = "Found";
-        return baseResult;
-    }
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+                results.Add(await AnalyzeImageAsync(imageUrl!));
 
-    // ---------- Helper ----------
-    private List<string> ExtractKeywords(string text)
-    {
-        return text.Split(new[] { ',', '.', '-', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                   .Where(w => w.Length > 2)
-                   .Select(w => w.Trim().ToLowerInvariant())
-                   .Distinct()
-                   .Take(10)
-                   .ToList();
+            results.Add(await AnalyzeTextAsync(description));
+            results.Add(await AnalyzeLocationAsync(location));
+
+            return CombineResults(results);
+        }
+
+        public Task<AIAnalysisResult> AnalyzeFoundItemAsync(string? imageUrl, string description, string location)
+            => AnalyzeLostItemAsync(imageUrl, description, location);
+        #endregion
+        #region Matching
+        public double ComputeMatchScore(AIAnalysisResult lostItem, AIAnalysisResult foundItem)
+        {
+            double keywordScore = 0, imageScore = 0, locationScore = 0;
+
+            if (lostItem.Keywords?.Any() == true && foundItem.Keywords?.Any() == true)
+            {
+                var intersect = lostItem.Keywords.Intersect(foundItem.Keywords).Count();
+                var union = lostItem.Keywords.Union(foundItem.Keywords).Count();
+                keywordScore = union == 0 ? 0 : (double)intersect / union;
+            }
+
+            if (!string.IsNullOrEmpty(lostItem.ImageFeatures) && !string.IsNullOrEmpty(foundItem.ImageFeatures))
+                imageScore = lostItem.ImageFeatures == foundItem.ImageFeatures ? 1.0 : 0.5;
+
+            if (lostItem.AdditionalData.TryGetValue("normalized_address", out var lostLoc) &&
+                foundItem.AdditionalData.TryGetValue("normalized_address", out var foundLoc))
+                locationScore = lostLoc!.ToString() == foundLoc!.ToString() ? 1.0 : 0.4;
+
+            var total = (keywordScore * 0.6) + (imageScore * 0.25) + (locationScore * 0.15);
+            return Math.Round(total, 2);
+        }
+
+        #endregion
+        #region Helpers
+        private List<string> ExtractKeywords(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return new List<string>();
+
+            var common = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "the","a","an","and","or","in","on","for","with","is","was","are","of",
+                "at","to","it","this","that","from","by","you","your","my","our","their"
+            };
+
+            return text.ToLowerInvariant()
+                .Split(new[] { ' ', ',', '.', ';', ':', '-', '\n', '\r', '!' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(w => w.Length > 3 && !common.Contains(w))
+                .Distinct()
+                .Take(25)
+                .ToList();
+        }
+
+        private AIAnalysisResult CombineResults(IEnumerable<AIAnalysisResult> results)
+        {
+            var list = results.ToList();
+            var combined = new AIAnalysisResult
+            {
+                Success = list.Any(r => r.Success),
+                Keywords = list.SelectMany(r => r.Keywords ?? new List<string>()).Distinct().ToList(),
+                AdditionalData = new Dictionary<string, object>()
+            };
+
+            foreach (var r in list)
+            {
+                if (r.AdditionalData == null) continue;
+                foreach (var kvp in r.AdditionalData)
+                {
+                    if (!combined.AdditionalData.ContainsKey(kvp.Key))
+                        combined.AdditionalData[kvp.Key] = kvp.Value;
+                }
+            }
+
+            var img = list.FirstOrDefault(r => !string.IsNullOrEmpty(r.ImageFeatures));
+            if (img != null) combined.ImageFeatures = img.ImageFeatures;
+
+            return combined;
+        }
+        #endregion
     }
 }

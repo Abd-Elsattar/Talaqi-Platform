@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Talaqi.Application.DTOs.Auth;
 using Talaqi.Application.Interfaces.Services;
 
 namespace Talaqi.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -18,9 +16,6 @@ namespace Talaqi.API.Controllers
             _authService = authService;
         }
 
-        /// <summary>
-        /// Register a new user
-        /// </summary>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
@@ -36,9 +31,6 @@ namespace Talaqi.API.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Login user
-        /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
@@ -54,9 +46,6 @@ namespace Talaqi.API.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Request password reset code
-        /// </summary>
         [HttpPost("forgot-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
@@ -69,9 +58,6 @@ namespace Talaqi.API.Controllers
             return Ok(result);
         }
 
-        // <summary>
-        /// Reset password with verification code
-        /// </summary>
         [HttpPost("reset-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
@@ -87,13 +73,10 @@ namespace Talaqi.API.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Refresh access token
-        /// </summary>
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
         {
-            var result = await _authService.RefreshTokenAsync(refreshToken);
+            var result = await _authService.RefreshTokenAsync(request.RefreshToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result);

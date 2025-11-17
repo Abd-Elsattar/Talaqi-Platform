@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Talaqi.Domain.ValueObjects
+﻿namespace Talaqi.Domain.ValueObjects
 {
     public class Location
     {
@@ -40,23 +34,3 @@ namespace Talaqi.Domain.ValueObjects
         }
     }
 }
-/***************************************************************
- *  Location ValueObject
- *
- * هنا يا معلم معمّلين Location كـ Value Object مش Entity.
- *  ليه مش Entity؟
- * - لأنه مالوش هوية مستقلة (No ID)
- * - قيمته بتتحدد عن طريق مجموعة خصائص مش مفتاح أساسي
- *
- *  ليه عاملينه كـ Value Object؟
- * - لأنه محتاج يكون جزء من الكيان نفسه، مش جدول منفصل
- * - ولأنه immutable conceptually (القيمة بتتغير ككل مش جزء منها)
- *
- *  ايه اللي بنسجله؟
- * - Address: العنوان النصّي
- * - Latitude / Longitude: احداثيات GPS لو موجودة
- * - City + Governorate: تفصيل أكتر حسب الحاجة
- *
- *  Override Equals & GetHashCode
- * - عشان الـ ValueObject بيقارن بالقيمة مش بالهوية (Reference)
- ***************************************************************/

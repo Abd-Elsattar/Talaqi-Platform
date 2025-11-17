@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Talaqi.Domain.Enums
+﻿namespace Talaqi.Domain.Enums
 {
     public enum MatchStatus
     {
@@ -14,8 +8,3 @@ namespace Talaqi.Domain.Enums
         Resolved = 4
     }
 }
-/***************************************************************
- *  MatchStatus Enum
- *
- * ده بيوضح حالة المطابقة بين LostItem & FoundItem.
- ***************************************************************/

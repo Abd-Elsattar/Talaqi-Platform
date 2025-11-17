@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Talaqi.Application.DTOs.Auth
+﻿namespace Talaqi.Application.DTOs.Auth
 {
     public class UserDto
     {
@@ -15,6 +9,5 @@ namespace Talaqi.Application.DTOs.Auth
         public string PhoneNumber { get; set; } = string.Empty;
         public string? ProfilePictureUrl { get; set; }
         public string Role { get; set; } = string.Empty;
-
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Talaqi.Domain.Enums
+﻿namespace Talaqi.Domain.Enums
 {
     public enum ItemStatus
     {
@@ -14,8 +8,3 @@ namespace Talaqi.Domain.Enums
         Expired = 4
     }
 }
-/***************************************************************
- *  ItemStatus Enum
- *
- * ده بيحدد حالة البلاغ سواء Lost أو Found في الوقت الحالي.
- ***************************************************************/
