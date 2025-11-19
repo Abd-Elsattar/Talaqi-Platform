@@ -54,10 +54,13 @@ namespace Talaqi.API.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded");
 
-            var imageUrl = await _fileService.UploadImageAsync(file);
+            var imagePath = await _fileService.UploadImageAsync(file);
 
-            if (imageUrl == null)
+            if (imagePath == null)
                 return BadRequest("Failed to upload image");
+
+            var requestBase = $"{Request.Scheme}://{Request.Host}";
+            var imageUrl = $"{requestBase}{imagePath}"; 
 
             var userId = GetUserId();
             var result = await _userService.UpdateProfilePictureAsync(userId, imageUrl);
@@ -67,6 +70,7 @@ namespace Talaqi.API.Controllers
 
             return Ok(new { imageUrl, message = result.Message });
         }
+
 
         [HttpDelete("account")]
         public async Task<IActionResult> DeleteAccount()
