@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Email - Talaqi Platform</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 0;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .content h2 {
+            color: #333333;
+            margin-top: 0;
+        }
+        .verification-box {
+            background-color: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .verification-code {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            letter-spacing: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #dee2e6;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Verify Your Email Address</h1>
+        </div>
+        
+        <div class="content">
+            <h2>Welcome to Talaqi Platform!</h2>
+            <p>Thank you for registering with Talaqi. To complete your account setup and ensure security, please verify your email address using the code below:</p>
+            
+            <div class="verification-box">
+                <p style="margin: 0; color: #666; font-size: 14px;">Your Verification Code:</p>
+                <div class="verification-code">{{CODE}}</div>
+            </div>
+            
+            <div class="info-box">
+                <strong>📝 Instructions:</strong>
+                <ul>
+                    <li>Enter this code on the verification page</li>
+                    <li>After email verification, you'll receive a phone OTP</li>
+                    <li>Both email and phone must be verified to login</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <strong>⚠️ Important:</strong> This verification code will expire in <strong>15 minutes</strong> for security reasons.
+            </div>
+            
+            <p>If you didn't create an account with Talaqi, please ignore this email. Your account won't be activated until you verify your email address.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Talaqi Platform - Lost & Found Made Simple</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

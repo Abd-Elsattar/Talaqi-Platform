@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Talaqi.Application.DTOs.Auth;
 using Talaqi.Application.Interfaces.Services;
@@ -28,6 +28,7 @@ namespace Talaqi.API.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result);
 
+            // NEW: Return success without tokens
             return Ok(result);
         }
 
@@ -42,6 +43,33 @@ namespace Talaqi.API.Controllers
 
             if (!result.IsSuccess)
                 return Unauthorized(result);
+
+            return Ok(result);
+        }
+
+        [HttpPost("send-email-confirmation")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendEmailConfirmation([FromBody] SendEmailConfirmationCodeDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.SendEmailConfirmationCodeAsync(dto);
+
+            return Ok(result);
+        }
+
+        [HttpPost("confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.ConfirmEmailAsync(dto);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
 
             return Ok(result);
         }

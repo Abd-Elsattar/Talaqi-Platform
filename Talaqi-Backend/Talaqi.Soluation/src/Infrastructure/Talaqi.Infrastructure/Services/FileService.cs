@@ -57,9 +57,8 @@ namespace Talaqi.Infrastructure.Services
                     await file.CopyToAsync(stream);
                 }
 
-                // Return relative URL
-                var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "https://localhost:5001";
-                return $"{baseUrl}/uploads/{fileName}";
+                // IMPORTANT: Return ONLY relative path
+                return $"/uploads/{fileName}";
             }
             catch (Exception ex)
             {
