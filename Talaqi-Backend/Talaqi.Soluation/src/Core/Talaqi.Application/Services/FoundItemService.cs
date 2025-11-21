@@ -28,6 +28,57 @@ namespace Talaqi.Application.Services
             _mapper = mapper;
         }
 
+        //public async Task<Result<FoundItemDto>> CreateFoundItemAsync(CreateFoundItemDto dto, Guid userId)
+        //{
+        //    var user = await _unitOfWork.Users.GetByIdAsync(userId);
+        //    if (user == null)
+        //        return Result<FoundItemDto>.Failure("User not found");
+
+        //    if (!Enum.TryParse<ItemCategory>(dto.Category, out var category))
+        //        return Result<FoundItemDto>.Failure("Invalid category");
+
+        //    // Analyze with AI
+        //    var aiResult = await _aiService.AnalyzeFoundItemAsync(
+        //        dto.ImageUrl, dto.Description, dto.Location.Address);
+
+        //    var foundItem = new FoundItem
+        //    {
+        //        UserId = userId,
+        //        Category = category,
+        //        Title = dto.Title,
+        //        Description = dto.Description,
+        //        ImageUrl = dto.ImageUrl,
+        //        Location = _mapper.Map<Location>(dto.Location),
+        //        DateFound = dto.DateFound,
+        //        ContactInfo = dto.ContactInfo,
+        //        Status = ItemStatus.Active,
+        //        AIAnalysisData = JsonSerializer.Serialize(aiResult),
+        //        CreatedAt = DateTime.UtcNow
+        //    };
+
+        //    await _unitOfWork.BeginTransactionAsync();
+
+        //    try
+        //    {
+        //        await _unitOfWork.FoundItems.AddAsync(foundItem);
+        //        await _unitOfWork.SaveChangesAsync();
+
+        //        // Trigger matching process
+        //        await _matchingService.FindMatchesForFoundItemAsync(foundItem.Id);
+
+        //        await _unitOfWork.CommitTransactionAsync();
+
+        //        var result = _mapper.Map<FoundItemDto>(foundItem);
+        //        result.UserName = user.FullName;
+
+        //        return Result<FoundItemDto>.Success(result, "Found item reported successfully");
+        //    }
+        //    catch
+        //    {
+        //        await _unitOfWork.RollbackTransactionAsync();
+        //        throw;
+        //    }
+        //}
         public async Task<Result<FoundItemDto>> CreateFoundItemAsync(CreateFoundItemDto dto, Guid userId)
         {
             var user = await _unitOfWork.Users.GetByIdAsync(userId);
@@ -37,7 +88,6 @@ namespace Talaqi.Application.Services
             if (!Enum.TryParse<ItemCategory>(dto.Category, out var category))
                 return Result<FoundItemDto>.Failure("Invalid category");
 
-            // Analyze with AI
             var aiResult = await _aiService.AnalyzeFoundItemAsync(
                 dto.ImageUrl, dto.Description, dto.Location.Address);
 
@@ -56,29 +106,21 @@ namespace Talaqi.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _unitOfWork.BeginTransactionAsync();
-
-            try
+            await _unitOfWork.ExecuteTransactionalAsync(async () =>
             {
                 await _unitOfWork.FoundItems.AddAsync(foundItem);
                 await _unitOfWork.SaveChangesAsync();
 
-                // Trigger matching process
+                // 🔥 Matching works normally with safe transaction
                 await _matchingService.FindMatchesForFoundItemAsync(foundItem.Id);
+            });
 
-                await _unitOfWork.CommitTransactionAsync();
+            var result = _mapper.Map<FoundItemDto>(foundItem);
+            result.UserName = user.FullName;
 
-                var result = _mapper.Map<FoundItemDto>(foundItem);
-                result.UserName = user.FullName;
-
-                return Result<FoundItemDto>.Success(result, "Found item reported successfully");
-            }
-            catch
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            return Result<FoundItemDto>.Success(result, "Found item reported successfully");
         }
+
 
         public async Task<Result<FoundItemDto>> GetFoundItemByIdAsync(Guid id)
         {
