@@ -1,6 +1,4 @@
-﻿using Talaqi.Application.DTOs.AI;
-
-namespace Talaqi.Application.Interfaces.Services
+﻿namespace Talaqi.Application.Interfaces.Services
 {
     public interface IAIService
     {
