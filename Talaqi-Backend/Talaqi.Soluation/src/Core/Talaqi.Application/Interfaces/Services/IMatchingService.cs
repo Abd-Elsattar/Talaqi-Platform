@@ -9,5 +9,6 @@ namespace Talaqi.Application.Interfaces.Services
         Task<Result<List<MatchDto>>> GetUserMatchesAsync(Guid userId);
         Task<Result<MatchDto>> GetMatchByIdAsync(Guid matchId);
         Task<Result> UpdateMatchStatusAsync(Guid matchId, string status, Guid userId);
+        Task<Result<List<MatchDto>>> FindMatchesForLostItemAsync(Guid lostItemId);
     }
 }

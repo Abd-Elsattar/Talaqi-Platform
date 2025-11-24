@@ -24,6 +24,61 @@ namespace Talaqi.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<Result<List<MatchDto>>> FindMatchesForLostItemAsync(Guid lostItemId)
+        {
+            var lostItem = await _unitOfWork.LostItems.GetByIdAsync(lostItemId);
+
+            if (lostItem == null)
+                return Result<List<MatchDto>>.Failure("Lost item not found");
+
+            var lostAnalysis = JsonSerializer.Deserialize<AIAnalysisResult>(lostItem.AIAnalysisData ?? "{}");
+
+            var foundItems = await _unitOfWork.FoundItems.GetByCategoryAsync(lostItem.Category);
+            var matches = new List<Match>();
+
+            foreach (var foundItem in foundItems.Where(x => x.Status == ItemStatus.Active && !x.IsDeleted))
+            {
+                var foundAnalysis = JsonSerializer.Deserialize<AIAnalysisResult>(foundItem.AIAnalysisData ?? "{}");
+
+                var score = CalculateMatchScore(lostAnalysis, foundAnalysis, foundItem, lostItem );
+
+                if (score >= MATCH_THRESHOLD)
+                {
+                    var existingMatch = await _unitOfWork.Matches
+                        .GetMatchByItemsAsync(lostItem.Id, foundItem.Id);
+
+                    if (existingMatch == null)
+                    {
+                        var match = new Match
+                        {
+                            LostItemId = lostItem.Id,
+                            FoundItemId = foundItem.Id,
+                            ConfidenceScore = score,
+                            Status = MatchStatus.Pending,
+                            CreatedAt = DateTime.UtcNow
+                        };
+
+                        await _unitOfWork.Matches.AddAsync(match);
+                        matches.Add(match);
+
+                        await _emailService.SendMatchNotificationAsync(
+                            lostItem.User.Email,
+                            $"A potential match found for your lost item: {lostItem.Title}");
+
+                        match.NotificationSent = true;
+                        match.NotificationSentAt = DateTime.UtcNow;
+                    }
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var matchDtos = matches.Select(x => _mapper.Map<MatchDto>(x)).ToList();
+
+            return Result<List<MatchDto>>.Success(matchDtos);
+        }
+
+
         public async Task<Result<List<MatchDto>>> FindMatchesForFoundItemAsync(Guid foundItemId)
         {
             var foundItem = await _unitOfWork.FoundItems.GetByIdAsync(foundItemId);
