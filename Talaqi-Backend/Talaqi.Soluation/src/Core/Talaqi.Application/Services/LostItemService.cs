@@ -14,13 +14,15 @@ namespace Talaqi.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAIService _aiService;
+        private readonly IMatchingService _matchingService;
         private readonly IMapper _mapper;
 
-        public LostItemService(IUnitOfWork unitOfWork, IAIService aiService, IMapper mapper)
+        public LostItemService(IUnitOfWork unitOfWork, IAIService aiService, IMapper mapper, IMatchingService matchingService)
         {
             _unitOfWork = unitOfWork;
             _aiService = aiService;
             _mapper = mapper;
+            _matchingService = matchingService;
         }
 
         public async Task<Result<LostItemDto>> CreateLostItemAsync(CreateLostItemDto dto, Guid userId)
@@ -29,11 +31,9 @@ namespace Talaqi.Application.Services
             if (user == null)
                 return Result<LostItemDto>.Failure("User not found");
 
-            // Parse category
             if (!Enum.TryParse<ItemCategory>(dto.Category, out var category))
                 return Result<LostItemDto>.Failure("Invalid category");
 
-            // Analyze with AI
             var aiResult = await _aiService.AnalyzeLostItemAsync(
                 dto.ImageUrl, dto.Description, dto.Location.Address);
 
@@ -52,8 +52,14 @@ namespace Talaqi.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _unitOfWork.LostItems.AddAsync(lostItem);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.ExecuteTransactionalAsync(async () =>
+            {
+                await _unitOfWork.LostItems.AddAsync(lostItem);
+                await _unitOfWork.SaveChangesAsync();
+
+                await _matchingService.FindMatchesForLostItemAsync(lostItem.Id);
+            });
+            
 
             var result = _mapper.Map<LostItemDto>(lostItem);
             result.UserName = user.FullName;
