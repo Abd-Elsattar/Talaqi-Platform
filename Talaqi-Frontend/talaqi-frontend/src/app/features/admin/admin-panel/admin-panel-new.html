@@ -1,0 +1,834 @@
+<!-- Template for the new Admin Panel UI. -->
+<!-- Modern Professional Admin Dashboard -->
+<div class="admin-dashboard">
+  <!-- Header with Gradient Background - Show only on Statistics section -->
+  <div class="dashboard-header" *ngIf="activeSection === 'statistics'">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="dashboard-title mb-2">
+            <i class="bi bi-speedometer2"></i> لوحة التحكم الإدارية
+          </h1>
+          <p class="dashboard-subtitle">إدارة شاملة للعناصر والمستخدمين والتطابقات</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="dashboard-icon">📊</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid dashboard-content p-4">
+    <!-- Quick Stats Section - Show only on Statistics section -->
+    <div class="stats-section mb-5" *ngIf="activeSection === 'statistics'">
+      <h5 class="section-title mb-4">
+        <i class="bi bi-graph-up"></i> الإحصائيات السريعة
+      </h5>
+
+      <div *ngIf="loadingStats" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+      </div>
+
+      <div *ngIf="!loadingStats && statistics" class="row g-3">
+        <!-- Users Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-primary">
+            <div class="stat-card-icon">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">إجمالي المستخدمين</h6>
+              <h2 class="stat-number">{{ statistics.users.total }}</h2>
+              <p class="stat-detail">نشط: <strong>{{ statistics.users.active }}</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lost Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-danger">
+            <div class="stat-card-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">عناصر مفقودة</h6>
+              <h2 class="stat-number">{{ statistics.items.lost }}</h2>
+              <p class="stat-detail">قيد الانتظار</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Found Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-success">
+            <div class="stat-card-icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">عناصر موجودة</h6>
+              <h2 class="stat-number">{{ statistics.items.found }}</h2>
+              <p class="stat-detail">جاهزة للتسليم</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matches Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-info">
+            <div class="stat-card-icon">
+              <i class="bi bi-link-45deg"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">التطابقات</h6>
+              <h2 class="stat-number">{{ statistics.matches.total }}</h2>
+              <p class="stat-detail">قيد الانتظار: {{ statistics.matches.pending }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section">
+      <!-- Items Section -->
+      <div *ngIf="activeSection === 'items'" class="tab-content-section">
+        <div class="card items-card border-0 shadow-sm rounded-3">
+          <div class="card-header items-header border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h5 class="mb-0 items-title">
+                  <i class="bi bi-box-seam me-2"></i> إدارة العناصر
+                </h5>
+              </div>
+              <div class="col-auto">
+                <!-- Item Type Selector -->
+                <div class="items-tabs-container">
+                  <button type="button" class="items-tab" [class.items-tab-active]="activeTab === 'lost'"
+                    (click)="switchTab('lost')">
+                    <div class="items-tab-inner">
+                      <div class="items-tab-icon">
+                        <i class="bi bi-search"></i>
+                      </div>
+                      <div class="items-tab-info">
+                        <span class="items-tab-label">المفقودة</span>
+                        <span class="items-tab-badge">{{ statistics?.items?.lost || 0 }}</span>
+                      </div>
+                    </div>
+                  </button>
+                  <button type="button" class="items-tab" [class.items-tab-active]="activeTab === 'found'"
+                    (click)="switchTab('found')">
+                    <div class="items-tab-inner">
+                      <div class="items-tab-icon">
+                        <i class="bi bi-check-circle"></i>
+                      </div>
+                      <div class="items-tab-info">
+                        <span class="items-tab-label">الموجودة</span>
+                        <span class="items-tab-badge">{{ statistics?.items?.found || 0 }}</span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Blue Accent Border -->
+            <div class="accent-border"></div>
+          </div>
+
+          <div class="card-body p-0">
+            <!-- Enhanced Search and Filter Bar -->
+            <div class="items-filter-bar p-4 bg-white border-bottom">
+              <div class="row g-3">
+                <div class="col-lg-4">
+                  <div class="filter-group">
+                    <label class="filter-label">البحث</label>
+                    <div class="search-input-wrapper">
+                      <i class="bi bi-search search-icon"></i>
+                      <input type="text" class="form-control filter-input" placeholder="ابحث عن عنصر..."
+                        [(ngModel)]="searchTerm">
+                      <span class="search-clear" *ngIf="searchTerm" (click)="searchTerm = ''">
+                        <i class="bi bi-x-circle-fill"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="filter-group">
+                    <label class="filter-label">الفئة</label>
+                    <div class="select-wrapper">
+                      <select class="form-select filter-select" [(ngModel)]="filterCategory">
+                        <option value="">جميع الفئات</option>
+                        <option value="1">مقتنيات شخصية</option>
+                        <option value="2">أشخاص</option>
+                        <option value="3">حيوانات أليفة</option>
+                      </select>
+                      <i class="bi bi-chevron-down select-icon"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="filter-group">
+                    <label class="filter-label">الحالة</label>
+                    <div class="select-wrapper">
+                      <select class="form-select filter-select" [(ngModel)]="filterStatus">
+                        <option value="">جميع الحالات</option>
+                        <option value="1">نشط</option>
+                        <option value="2">تم العثور عليه</option>
+                        <option value="3">مغلق</option>
+                      </select>
+                      <i class="bi bi-chevron-down select-icon"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <div class="filter-results">
+                    <i class="bi bi-funnel-fill me-2"></i>
+                    <span class="results-count">{{ filteredItems.length }}</span>
+                    <span class="results-text">من {{ totalItems }} عنصر</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div *ngIf="loadingItems" class="text-center py-5">
+              <div class="spinner-border text-primary" style="width: 2.5rem; height: 2.5rem;"></div>
+              <p class="mt-3 text-muted">جاري تحميل البيانات...</p>
+            </div>
+
+            <!-- Enhanced Items Table -->
+            <div *ngIf="!loadingItems" class="table-responsive">
+              <table class="table items-table align-middle mb-0">
+                <thead class="items-table-header">
+                  <tr>
+                    <th class="px-4 py-3" style="width: 35%;">
+                      <i class="bi bi-box-seam me-2"></i>العنصر
+                    </th>
+                    <th class="py-3" style="width: 12%;">
+                      <i class="bi bi-tag me-2"></i>الفئة
+                    </th>
+                    <th class="py-3" style="width: 15%;">
+                      <i class="bi bi-geo-alt me-2"></i>الموقع
+                    </th>
+                    <th class="py-3" style="width: 12%;">
+                      <i class="bi bi-calendar me-2"></i>التاريخ
+                    </th>
+                    <th class="py-3" style="width: 12%;">
+                      <i class="bi bi-info-circle me-2"></i>الحالة
+                    </th>
+                    <th class="py-3 text-center" style="width: 14%;">
+                      <i class="bi bi-gear me-2"></i>الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredItems" class="item-row">
+                    <td class="px-4">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="item-image-wrapper">
+                          <img [src]="getItemImageUrl(item)" [alt]="item.title" class="item-image"
+                            (error)="onImageError($event)">
+                        </div>
+                        <div class="item-details">
+                          <div class="item-title-text">{{ item.title }}</div>
+                          <div class="item-description" *ngIf="item.description">
+                            {{ item.description.length > 60 ? (item.description | slice:0:60) + '...' : item.description
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="item-category-badge">{{ getCategoryName(item.category) }}</span>
+                    </td>
+                    <td>
+                      <div class="item-location">
+                        <i class="bi bi-geo-alt me-1"></i>
+                        <span>{{ item.location?.city || 'غير محدد' }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="item-date">{{ item.createdAt | date: 'dd/MM/yyyy' }}</span>
+                    </td>
+                    <td>
+                      <span class="item-status-badge" [ngClass]="getStatusBadgeClass(item.status)">
+                        {{ getStatusName(item.status) }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <button type="button" class="item-action-btn" (click)="viewItemDetails(item)"
+                        title="عرض التفاصيل">
+                        <i class="bi bi-eye-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="filteredItems.length === 0" class="text-center">
+                    <td colspan="6" class="py-5">
+                      <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p class="empty-text">لا توجد عناصر</p>
+                        <small class="empty-subtext">جرب تغيير معايير البحث</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-section p-3 border-top bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                  عرض {{ (itemsPage - 1) * itemsPageSize + 1 }} -
+                  {{ Math.min(itemsPage * itemsPageSize, totalItems) }} من {{ totalItems }}
+                </div>
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="itemsPage === 1">
+                      <a class="page-link" (click)="prevItemsPage()" style="cursor: pointer;">
+                        <i class="bi bi-chevron-right"></i> السابق
+                      </a>
+                    </li>
+                    <li class="page-item active">
+                      <span class="page-link">{{ itemsPage }}</span>
+                    </li>
+                    <li class="page-item" [class.disabled]="itemsPage >= totalItemsPages">
+                      <a class="page-link" (click)="nextItemsPage()" style="cursor: pointer;">
+                        التالي <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Section -->
+      <div *ngIf="activeSection === 'users'" class="tab-content-section">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-header bg-gradient-primary text-white border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h5 class="mb-0 fw-600">
+                  <i class="bi bi-people-fill"></i> إدارة المستخدمين
+                </h5>
+                <p class="mb-0 small opacity-75">إدارة وعرض معلومات المستخدمين</p>
+              </div>
+              <div class="col-auto">
+                <span class="badge bg-white text-primary">{{ totalUsers }} مستخدم</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <!-- Enhanced Users Search Bar -->
+            <div class="search-bar-wrapper p-4 bg-white border-bottom">
+              <div class="row g-3 align-items-center">
+                <div class="col-lg-8">
+                  <div class="search-input-wrapper">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="form-control search-input"
+                      placeholder="ابحث عن مستخدم بالاسم، البريد الإلكتروني، أو رقم الهاتف..."
+                      [(ngModel)]="userSearchTerm">
+                    <span class="search-clear" *ngIf="userSearchTerm" (click)="userSearchTerm = ''">
+                      <i class="bi bi-x-circle-fill"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="search-results-info">
+                    <i class="bi bi-funnel-fill me-2"></i>
+                    <span class="results-count">{{ filteredUsers.length }}</span>
+                    <span class="results-text">من {{ users.length }} مستخدم</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div *ngIf="loadingUsers" class="text-center py-5">
+              <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+              <p class="mt-3 text-muted">جاري تحميل المستخدمين...</p>
+            </div>
+
+            <!-- Users Table -->
+            <div *ngIf="!loadingUsers" class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3" style="width: 35%">
+                      <i class="bi bi-person"></i> المستخدم
+                    </th>
+                    <th class="py-3">
+                      <i class="bi bi-envelope"></i> البريد الإلكتروني
+                    </th>
+                    <th class="py-3">
+                      <i class="bi bi-phone"></i> الهاتف
+                    </th>
+                    <th class="py-3">
+                      <i class="bi bi-shield"></i> الدور
+                    </th>
+                    <th class="py-3">
+                      <i class="bi bi-calendar"></i> تاريخ الانضمام
+                    </th>
+                    <th class="py-3 text-center">
+                      <i class="bi bi-toggle-on"></i> الحالة
+                    </th>
+                    <th class="py-3 text-center">
+                      <i class="bi bi-gear"></i> الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of filteredUsers" class="user-row">
+                    <td class="px-4">
+                      <div class="d-flex align-items-center gap-3">
+                        <div *ngIf="!getUserImageUrl(user)"
+                          class="user-avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                          style="width: 45px; height: 45px; font-size: 1.1rem;">
+                          {{ (user.firstName.charAt(0) || '') + (user.lastName.charAt(0) || '') | uppercase }}
+                        </div>
+                        <img *ngIf="getUserImageUrl(user)" [src]="getUserImageUrl(user)"
+                          [alt]="user.firstName + ' ' + user.lastName" class="user-avatar-img"
+                          style="width: 45px; height: 45px; object-fit: cover; border-radius: 50%;"
+                          (error)="onUserImageError($event)">
+                        <div>
+                          <div class="fw-600 text-dark">{{ user.firstName }} {{ user.lastName }}</div>
+                          <small class="text-muted">
+                            <i class="bi bi-person-badge"></i> ID: {{ user.id.substring(0, 8) }}...
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <a [href]="'mailto:' + user.email" class="text-decoration-none text-primary">
+                        {{ user.email }}
+                      </a>
+                    </td>
+                    <td>
+                      <span class="text-muted">
+                        <i class="bi bi-telephone"></i> {{ user.phoneNumber || 'غير متوفر' }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="getUserRoleBadge(user.role)">
+                        <i class="bi" [ngClass]="user.role === 'Admin' ? 'bi-shield-fill-check' : 'bi-person-fill'"></i>
+                        {{ getUserRoleText(user.role) }}
+                      </span>
+                    </td>
+                    <td>
+                      <small class="text-muted">
+                        {{ user.createdAt | date: 'dd/MM/yyyy' }}
+                      </small>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge" [ngClass]="getUserStatusBadgeClass(user.isActive)">
+                        <i class="bi" [ngClass]="user.isActive ? 'bi-check-circle' : 'bi-x-circle'"></i>
+                        {{ getUserStatusText(user.isActive) }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <div class="action-buttons-wrapper">
+                        <!-- View Details -->
+                        <button type="button" class="action-btn action-btn-view" (click)="viewUserDetails(user)"
+                          title="عرض التفاصيل">
+                          <i class="bi bi-eye-fill"></i>
+                        </button>
+
+                        <!-- Toggle Status -->
+                        <button type="button" class="action-btn" [ngClass]="{
+                                                        'action-btn-deactivate': user.isActive && canBlockUser(user),
+                                                        'action-btn-activate': !user.isActive && canBlockUser(user),
+                                                        'action-btn-disabled': !canBlockUser(user)
+                                                    }" (click)="toggleUserStatus(user)"
+                          [disabled]="updatingUserStatus === user.id || !canBlockUser(user)"
+                          [title]="!canBlockUser(user) ? 'لا يمكنك تعطيل حسابك الخاص' : (user.isActive ? 'تعطيل الحساب' : 'تفعيل الحساب')">
+                          <span *ngIf="updatingUserStatus !== user.id">
+                            <i class="bi" [ngClass]="user.isActive ? 'bi-toggle2-off' : 'bi-toggle2-on'"></i>
+                          </span>
+                          <span *ngIf="updatingUserStatus === user.id" class="spinner-border spinner-border-sm"></span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="filteredUsers.length === 0">
+                    <td colspan="7" class="py-5 text-center">
+                      <div class="text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-3 mb-0">لا توجد نتائج</p>
+                        <small>جرب تغيير معايير البحث</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Users Pagination -->
+            <div class="pagination-section p-3 border-top bg-light">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="text-muted small">
+                    <i class="bi bi-list-ul"></i>
+                    عرض {{ (usersPage - 1) * usersPageSize + 1 }} -
+                    {{ Math.min(usersPage * usersPageSize, totalUsers) }} من {{ totalUsers }} مستخدم
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <nav class="d-flex justify-content-end">
+                    <ul class="pagination pagination-sm mb-0">
+                      <li class="page-item" [class.disabled]="usersPage === 1">
+                        <a class="page-link" (click)="prevUsersPage()" style="cursor: pointer;">
+                          <i class="bi bi-chevron-right"></i> السابق
+                        </a>
+                      </li>
+                      <li class="page-item active">
+                        <span class="page-link">{{ usersPage }} / {{ totalUsersPages }}</span>
+                      </li>
+                      <li class="page-item" [class.disabled]="usersPage >= totalUsersPages">
+                        <a class="page-link" (click)="nextUsersPage()" style="cursor: pointer;">
+                          التالي <i class="bi bi-chevron-left"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Section Detail -->
+      <div *ngIf="activeSection === 'statistics'" class="tab-content-section">
+        <div class="row g-4">
+          <!-- Summary Cards -->
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6 class="info-card-title">ملخص العناصر</h6>
+              <div class="info-card-stat">
+                <span class="stat-label">عناصر مفقودة:</span>
+                <span class="stat-value text-danger">{{ statistics?.items?.lost }}</span>
+              </div>
+              <div class="info-card-stat">
+                <span class="stat-label">عناصر موجودة:</span>
+                <span class="stat-value text-success">{{ statistics?.items?.found }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6 class="info-card-title">ملخص التطابقات</h6>
+              <div class="info-card-stat">
+                <span class="stat-label">إجمالي التطابقات:</span>
+                <span class="stat-value text-info">{{ statistics?.matches?.total }}</span>
+              </div>
+              <div class="info-card-stat">
+                <span class="stat-label">قيد الانتظار:</span>
+                <span class="stat-value text-warning">{{ statistics?.matches?.pending }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Item Details Modal -->
+<div *ngIf="showItemModal && selectedItem" class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Modal Header -->
+      <div class="modal-header items-header border-0">
+        <h5 class="modal-title ms-auto items-title">
+          <i class="bi bi-box-seam me-2"></i>تفاصيل العنصر
+        </h5>
+        <button type="button" class="btn-close-enhanced" (click)="closeItemModal()" aria-label="إغلاق">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4">
+        <div class="row g-4">
+          <!-- Item Image -->
+          <div class="col-12">
+            <div class="text-center mb-4">
+              <div class="item-detail-image-wrapper">
+                <img [src]="getItemImageUrl(selectedItem)" [alt]="selectedItem.title" class="item-detail-image"
+                  (error)="onImageError($event)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Item Title & Status -->
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h4 class="item-detail-title mb-0">{{ selectedItem.title }}</h4>
+              <span class="item-status-badge" [ngClass]="getStatusBadgeClass(selectedItem.status)">
+                {{ getStatusName(selectedItem.status) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Item Information -->
+          <div class="col-md-6">
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <i class="bi bi-info-circle me-2"></i>
+                <span>معلومات العنصر</span>
+              </div>
+              <div class="detail-card-body">
+                <div class="detail-row">
+                  <span class="detail-label">الفئة:</span>
+                  <span class="detail-value">{{ getCategoryName(selectedItem.category) }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">التاريخ:</span>
+                  <span class="detail-value">{{ selectedItem.createdAt | date: 'dd/MM/yyyy - hh:mm a' }}</span>
+                </div>
+                <div class="detail-row" *ngIf="selectedItem.dateLost">
+                  <span class="detail-label">تاريخ الفقدان:</span>
+                  <span class="detail-value">{{ selectedItem.dateLost | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="detail-row" *ngIf="selectedItem.dateFound">
+                  <span class="detail-label">تاريخ العثور:</span>
+                  <span class="detail-value">{{ selectedItem.dateFound | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Information -->
+          <div class="col-md-6">
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <i class="bi bi-geo-alt me-2"></i>
+                <span>معلومات الموقع</span>
+              </div>
+              <div class="detail-card-body">
+                <div class="detail-row">
+                  <span class="detail-label">المدينة:</span>
+                  <span class="detail-value">{{ selectedItem.location?.city || 'غير محدد' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">الولاية:</span>
+                  <span class="detail-value">{{ selectedItem.location?.state || 'غير محدد' }}</span>
+                </div>
+                <div class="detail-row" *ngIf="selectedItem.location?.address">
+                  <span class="detail-label">العنوان:</span>
+                  <span class="detail-value">{{ selectedItem.location.address }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="col-md-6">
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <i class="bi bi-person me-2"></i>
+                <span>معلومات الناشر</span>
+              </div>
+              <div class="detail-card-body">
+                <div class="detail-row">
+                  <span class="detail-label">الاسم:</span>
+                  <span class="detail-value">{{ selectedItem.userName || 'غير محدد' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">معلومات التواصل:</span>
+                  <span class="detail-value">{{ selectedItem.contactInfo || 'غير محدد' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Match Information (if applicable) -->
+          <div class="col-md-6" *ngIf="selectedItem.matchCount !== undefined">
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <i class="bi bi-link-45deg me-2"></i>
+                <span>معلومات التطابق</span>
+              </div>
+              <div class="detail-card-body">
+                <div class="detail-row">
+                  <span class="detail-label">عدد التطابقات:</span>
+                  <span class="detail-value">
+                    <span class="badge bg-info">{{ selectedItem.matchCount || 0 }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12" *ngIf="selectedItem.description">
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <i class="bi bi-file-text me-2"></i>
+                <span>الوصف</span>
+              </div>
+              <div class="detail-card-body">
+                <p class="mb-0">{{ selectedItem.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer border-0 bg-light">
+        <button type="button" class="btn btn-secondary" (click)="closeItemModal()">
+          <i class="bi bi-x-circle"></i> إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Details Modal -->
+<div *ngIf="showUserModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Modal Header -->
+      <div class="modal-header bg-gradient-primary text-white border-0">
+        <h5 class="modal-title ms-auto">
+          <i class="bi bi-person-circle"></i> تفاصيل المستخدم
+        </h5>
+        <button type="button" class="btn-close-enhanced" (click)="closeUserModal()" aria-label="إغلاق">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4" *ngIf="selectedUser">
+        <div class="row g-4">
+          <!-- User Avatar and Basic Info -->
+          <div class="col-12">
+            <div class="text-center mb-4">
+              <div *ngIf="!getUserImageUrl(selectedUser)"
+                class="user-avatar-xl bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold mb-3"
+                style="width: 100px; height: 100px; font-size: 2.5rem;">
+                {{ (selectedUser.firstName.charAt(0) || '') + (selectedUser.lastName.charAt(0) || '') | uppercase }}
+              </div>
+              <img *ngIf="getUserImageUrl(selectedUser)" [src]="getUserImageUrl(selectedUser)"
+                [alt]="selectedUser.firstName + ' ' + selectedUser.lastName" class="user-avatar-img-xl mb-3"
+                style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                (error)="onUserImageError($event)">
+              <h4 class="mb-1">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h4>
+              <p class="text-muted mb-2">
+                <span class="badge" [ngClass]="getUserRoleBadge(selectedUser.role)">
+                  <i class="bi"
+                    [ngClass]="selectedUser.role === 'Admin' ? 'bi-shield-fill-check' : 'bi-person-fill'"></i>
+                  {{ getUserRoleText(selectedUser.role) }}
+                </span>
+                <span class="badge ms-2" [ngClass]="getUserStatusBadgeClass(selectedUser.isActive)">
+                  <i class="bi" [ngClass]="selectedUser.isActive ? 'bi-check-circle' : 'bi-x-circle'"></i>
+                  {{ getUserStatusText(selectedUser.isActive) }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">
+                  <i class="bi bi-envelope-fill"></i> معلومات الاتصال
+                </h6>
+                <div class="mb-3">
+                  <label class="form-label text-muted small fw-bold">البريد الإلكتروني</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-envelope text-primary"></i>
+                    <a [href]="'mailto:' + selectedUser.email" class="text-decoration-none">
+                      {{ selectedUser.email }}
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label text-muted small fw-bold">رقم الهاتف</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-telephone text-primary"></i>
+                    <span>{{ selectedUser.phoneNumber || 'غير متوفر' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Information -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">
+                  <i class="bi bi-info-circle-fill"></i> معلومات الحساب
+                </h6>
+                <div class="mb-3">
+                  <label class="form-label text-muted small fw-bold">معرف المستخدم</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-hash text-primary"></i>
+                    <small class="font-monospace text-break">{{ selectedUser.id }}</small>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label text-muted small fw-bold">تاريخ الانضمام</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-calendar-event text-primary"></i>
+                    <span>{{ selectedUser.createdAt | date: 'dd MMMM yyyy, HH:mm' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Actions -->
+          <div class="col-12">
+            <div class="card border-0 bg-light">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">
+                  <i class="bi bi-gear-fill"></i> إجراءات الإدارة
+                </h6>
+                <div class="d-flex gap-2 flex-wrap">
+                  <!-- Show warning if viewing own account -->
+                  <div *ngIf="!canBlockUser(selectedUser)" class="alert alert-warning w-100 mb-2" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    لا يمكنك تعطيل حسابك الخاص
+                  </div>
+
+                  <button class="btn" [ngClass]="selectedUser.isActive ? 'btn-danger' : 'btn-success'"
+                    (click)="toggleUserStatus(selectedUser)"
+                    [disabled]="updatingUserStatus === selectedUser.id || !canBlockUser(selectedUser)">
+                    <span *ngIf="updatingUserStatus !== selectedUser.id">
+                      <i class="bi" [ngClass]="selectedUser.isActive ? 'bi-toggle-off' : 'bi-toggle-on'"></i>
+                      {{ selectedUser.isActive ? 'تعطيل الحساب' : 'تفعيل الحساب' }}
+                    </span>
+                    <span *ngIf="updatingUserStatus === selectedUser.id">
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      جاري المعالجة...
+                    </span>
+                  </button>
+                  <a [href]="'mailto:' + selectedUser.email" class="btn btn-outline-primary">
+                    <i class="bi bi-envelope"></i> إرسال بريد إلكتروني
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer border-0 bg-light">
+        <button type="button" class="btn btn-secondary" (click)="closeUserModal()">
+          <i class="bi bi-x-circle"></i> إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

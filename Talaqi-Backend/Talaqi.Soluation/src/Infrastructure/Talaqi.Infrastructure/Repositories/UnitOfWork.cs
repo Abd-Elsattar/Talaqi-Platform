@@ -17,6 +17,7 @@ namespace Talaqi.Infrastructure.Repositories
         public ILostItemRepository LostItems => new LostItemRepository(_context);
         public IFoundItemRepository FoundItems => new FoundItemRepository(_context);
         public IMatchRepository Matches => new MatchRepository(_context);
+        public IMatchCandidateRepository MatchCandidates => new MatchCandidateRepository(_context);
         public IVerificationCodeRepository VerificationCodes => new VerificationCodeRepository(_context);
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

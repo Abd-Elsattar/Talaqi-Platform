@@ -1,0 +1,380 @@
+<!-- Report Found Item template: submit details for a found item. -->
+<div class="report-found-item-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <!-- #region PAGE HEADER -->
+        <div class="page-header-wrapper mb-4">
+          <div class="page-header-content">
+            <div class="header-icon-wrapper">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="header-text-wrapper">
+              <h1 class="header-e">الإبلاغ عن عنصر موجود</h1>
+              <p class="header-subtitle">
+                املأ النموذج بدقة للمساعدة في إعادة العنصر لصاحبه. سيقوم نظامنا بالبحث عن تطابقات محتملة مع العناصر
+                المفقودة باستخدام تقنية الذكاء الاصطناعي.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- #endregion PAGE HEADER -->
+        <!-- #region ALERTS -->
+        <div *ngIf="successMessage" class="alert-wrapper success-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>نجاح!</strong>
+              <p>{{ successMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="successMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert-wrapper error-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>خطأ!</strong>
+              <p>{{ errorMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="errorMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        <!-- #endregion ALERTS -->
+        <!-- #region REPORT FORM -->
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="report-form-wrapper">
+          <div class="form-card">
+            <div class="form-card-body">
+
+              <!-- #region CATEGORY -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-grid-3x3-gap label-icon"></i>
+                  <span>الفئة</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <select class="form-control-enhanced" formControlName="category"
+                  (blur)="reportForm.get('category')?.markAsTouched()" [class.is-invalid]="isFieldInvalid('category')">
+                  <option value="">-- اختر فئة العنصر الموجود --</option>
+                  <option *ngFor="let cat of categories" [value]="cat.value">
+                    {{ cat.label }}
+                  </option>
+                </select>
+                <div class="error-feedback" *ngIf="isFieldInvalid('category')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('category') }}
+                </div>
+                <small class="form-hint">اختر الفئة الأنسب لتحسين نتائج البحث</small>
+              </div>
+              <!-- #endregion CATEGORY -->
+
+              <!-- #region TITLE -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-card-heading label-icon"></i>
+                  <span>العنوان</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="title"
+                  (blur)="reportForm.get('title')?.markAsTouched()"
+                  placeholder="مثال: محفظة جلدية سوداء أو هاتف آيفون 13" [class.is-invalid]="isFieldInvalid('title')"
+                  maxlength="200">
+                <div class="error-feedback" *ngIf="isFieldInvalid('title')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('title') }}
+                </div>
+                <small class="form-hint">
+                  <span>الحد الأقصى: 200 حرف</span>
+                  <span class="char-counter">{{ reportForm.get('title')?.value?.length || 0 }}/200</span>
+                </small>
+              </div>
+              <!-- #endregion TITLE -->
+
+              <!-- #region DESCRIPTION -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-text-paragraph label-icon"></i>
+                  <span>الوصف التفصيلي</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <textarea class="form-control-enhanced textarea-enhanced" formControlName="description"
+                  (blur)="reportForm.get('description')?.markAsTouched()"
+                  placeholder="صف العنصر الموجود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل."
+                  rows="5" [class.is-invalid]="isFieldInvalid('description')"></textarea>
+                <div class="error-feedback" *ngIf="isFieldInvalid('description')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('description') }}
+                </div>
+                <small class="form-hint">
+                  <i class="bi bi-lightbulb me-1"></i>
+                  الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل مع العناصر المفقودة
+                </small>
+              </div>
+              <!-- #endregion DESCRIPTION -->
+
+              <!-- #region IMAGE UPLOAD -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-image label-icon"></i>
+                  <span>صورة العنصر</span>
+                </label>
+
+                <!-- Upload Zone -->
+                <div *ngIf="!imagePreviewUrl" class="upload-zone-enhanced" [class.is-invalid]="isImageInvalid()"
+                  (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+
+                  <div class="upload-zone-content">
+                    <div class="upload-icon-wrapper">
+                      <i class="bi bi-cloud-upload-fill"></i>
+                    </div>
+
+                    <h5 class="upload-title">اسحب وأفلت الصورة هنا</h5>
+                    <p class="upload-subtitle">أو</p>
+
+                    <label class="btn-upload-file">
+                      <i class="bi bi-folder2-open me-2"></i>
+                      تصفح الملفات
+                      <input type="file" class="d-none" accept="image/jpeg,image/jpg,image/png,image/gif"
+                        (change)="onFileSelected($event)" (blur)="reportForm.get('imageUrl')?.markAsTouched()">
+                    </label>
+
+                    <!-- ✅ Error Message -->
+                    <div class="error-feedback" *ngIf="isImageInvalid()">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ getImageError() }}
+                    </div>
+
+                    <p class="upload-hint">
+                      <i class="bi bi-info-circle me-1"></i>
+                      JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div *ngIf="imagePreviewUrl" class="image-preview-wrapper">
+                  <div class="image-preview-container">
+                    <img [src]="imagePreviewUrl" alt="معاينة الصورة" class="preview-image">
+                    <button type="button" class="btn-remove-image" (click)="removeImage()" [disabled]="isUploadingImage"
+                      title="حذف الصورة">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                    <div *ngIf="isUploadingImage" class="upload-progress-overlay">
+                      <div class="upload-spinner-wrapper">
+                        <div class="spinner-border text-light" role="status">
+                          <span class="visually-hidden">جاري الرفع...</span>
+                        </div>
+                        <p class="upload-status-text">جاري رفع الصورة...</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="image-info-badge" *ngIf="!isUploadingImage && !isDefaultImage">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    تم رفع الصورة بنجاح
+                  </div>
+                </div>
+              </div>
+              <!-- #endregion IMAGE UPLOAD -->
+
+              <!-- #region LOCATION -->
+              <div class="form-group-wrapper location-section" formGroupName="location">
+                <label class="form-label-enhanced section-label">
+                  <i class="bi bi-geo-alt-fill label-icon"></i>
+                  <span>موقع العثور على العنصر</span>
+                </label>
+
+                <!-- Map Picker -->
+                <app-map-picker [height]="'350px'" [language]="'ar'"
+                  (locationSelected)="onLocationSelected($event)"></app-map-picker>
+
+                <!-- GPS Detection -->
+                <div class="gps-detection-wrapper">
+                  <div class="gps-info-box">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span>تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل</span>
+                  </div>
+                  <button type="button" class="btn-detect-location" (click)="detectLocation()"
+                    [disabled]="isDetectingLocation || locationDetected">
+                    <span *ngIf="!isDetectingLocation && !locationDetected">
+                      <i class="bi bi-crosshair me-2"></i>
+                      تحديد موقعي الحالي
+                    </span>
+                    <span *ngIf="isDetectingLocation">
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      جاري تحديد الموقع...
+                    </span>
+                    <span *ngIf="locationDetected">
+                      <i class="bi bi-check-circle-fill me-2"></i>
+                      تم تحديد الموقع
+                    </span>
+                  </button>
+                  <button type="button" class="btn-clear-location" *ngIf="locationDetected" (click)="clearLocation()">
+                    <i class="bi bi-x-circle me-2"></i>
+                    إزالة الموقع
+                  </button>
+                  <!-- Coordinates validation message -->
+                  <div class="error-feedback mt-2" *ngIf="areCoordinatesInvalid()">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً
+                  </div>
+                </div>
+
+                <!-- GPS Coordinates Display -->
+                <div class="gps-coordinates-display" *ngIf="locationDetected">
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <strong>خط العرض:</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
+                  </div>
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo me-2"></i>
+                    <strong>خط الطول:</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
+                  </div>
+                </div>
+
+                <!-- Address -->
+                <div class="location-field-wrapper">
+                  <label class="form-label-secondary">
+                    العنوان <span class="required-mark">*</span>
+                  </label>
+                  <input type="text" class="form-control-enhanced" formControlName="address"
+                    (blur)="reportForm.get('location')?.get('address')?.markAsTouched()"
+                    placeholder="أدخل أو عدّل العنوان (يُملأ تلقائياً)"
+                    [class.is-invalid]="isLocationFieldInvalid('address')">
+                  <div class="error-feedback" *ngIf="isLocationFieldInvalid('address')">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    هذا الحقل مطلوب
+                  </div>
+                </div>
+
+                <!-- City and Governorate -->
+                <div class="row location-row">
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">المدينة</label>
+                    <input type="text" class="form-control-enhanced" formControlName="city"
+                      (blur)="reportForm.get('location')?.get('city')?.markAsTouched()"
+                      placeholder="أدخل أو عدّل المدينة" [class.is-invalid]="isLocationFieldInvalid('city')">
+                    <div class="error-feedback" *ngIf="isLocationFieldInvalid('city')">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      هذا الحقل مطلوب
+                    </div>
+                  </div>
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">المحافظة</label>
+                    <input type="text" class="form-control-enhanced" formControlName="governorate"
+                      (blur)="reportForm.get('location')?.get('governorate')?.markAsTouched()"
+                      placeholder="أدخل أو عدّل المحافظة" [class.is-invalid]="isLocationFieldInvalid('governorate')">
+                    <div class="error-feedback" *ngIf="isLocationFieldInvalid('governorate')">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      هذا الحقل مطلوب
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- #endregion LOCATION -->
+
+              <!-- #region DATE FOUND -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-calendar-event label-icon"></i>
+                  <span>تاريخ العثور على العنصر</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="date" class="form-control-enhanced date-input" formControlName="dateFound"
+                  (blur)="reportForm.get('dateFound')?.markAsTouched()" [max]="maxDate"
+                  [class.is-invalid]="isFieldInvalid('dateFound')">
+                <div class="error-feedback" *ngIf="isFieldInvalid('dateFound')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('dateFound') }}
+                </div>
+                <small class="form-hint">
+                  <i class="bi bi-info-circle me-1"></i>
+                  التاريخ يجب أن يكون اليوم أو في الماضي
+                </small>
+              </div>
+              <!-- #endregion DATE FOUND -->
+
+              <!-- #region CONTACT INFO -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-telephone-fill label-icon"></i>
+                  <span>معلومات الاتصال</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="contactInfo"
+                  (blur)="reportForm.get('contactInfo')?.markAsTouched()"
+                  placeholder="رقم الهاتف أو البريد الإلكتروني للتواصل"
+                  [class.is-invalid]="isFieldInvalid('contactInfo')">
+                <div class="error-feedback" *ngIf="isFieldInvalid('contactInfo')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('contactInfo') }}
+                </div>
+                <small class="form-hint">
+                  <i class="bi bi-shield-check me-1"></i>
+                  سيُستخدم للتواصل معك عند إيجاد تطابقات محتملة
+                </small>
+              </div>
+              <!-- #endregion CONTACT INFO -->
+
+              <!-- #region LEGAL -->
+              <div class="form-group-wrapper legal-section">
+                <div class="legal-checkbox-wrapper">
+                  <input class="form-check-input-enhanced" type="checkbox" formControlName="legalResponsibility"
+                    id="legalResponsibility" [class.is-invalid]="isFieldInvalid('legalResponsibility')">
+                  <label class="legal-checkbox-label" for="legalResponsibility">
+                    <span class="legal-text">
+                      أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ
+                      <span class="required-mark">*</span>
+                    </span>
+                  </label>
+                </div>
+                <div class="error-feedback" *ngIf="isFieldInvalid('legalResponsibility')">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  يجب الموافقة على تحمل المسؤولية القانونية للمتابعة
+                </div>
+              </div>
+              <!-- #endregion LEGAL -->
+
+              <!-- #region ACTIONS -->
+              <div class="form-actions-wrapper">
+                <button type="submit" class="btn-action-primary"
+                  [disabled]="isSubmitting || isUploadingImage || !isLocationReady">
+                  <span *ngIf="!isSubmitting">
+                    <i class="bi bi-send-fill me-2"></i>
+                    إرسال البلاغ
+                  </span>
+                  <span *ngIf="isSubmitting">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    جاري الإرسال...
+                  </span>
+                </button>
+                <button type="button" class="btn-action-secondary" routerLink="/home" [disabled]="isSubmitting">
+                  <i class="bi bi-x-circle me-2"></i>
+                  إلغاء
+                </button>
+                <div class="actions-note">
+                  <i class="bi bi-info-circle me-2"></i>
+                  <span>جميع الحقول المميزة بـ <span class="required-mark">*</span> إلزامية — يجب تحديد الموقع
+                    أولاً</span>
+                </div>
+              </div>
+              <!-- #endregion ACTIONS -->
+
+            </div>
+          </div>
+        </form>
+        <!-- #endregion REPORT FORM -->
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,14 @@ using Talaqi.Application.Services;
 using Talaqi.Infrastructure.Data;
 using Talaqi.Infrastructure.Repositories;
 using Talaqi.Infrastructure.Services;
+using Talaqi.Infrastructure.Rag.Embeddings;
+using Talaqi.Infrastructure.Rag.VectorSearch;
+using Talaqi.Infrastructure.Rag.Assistant;
+using Talaqi.Application.Rag.Embeddings;
+using Talaqi.Application.Rag.VectorSearch;
+using Talaqi.Application.Rag.Assistant;
+using Talaqi.Application.Common;
+using Talaqi.Infrastructure.Jobs;
 
 namespace Talaqi.API.Extensions
 {
@@ -31,6 +39,11 @@ namespace Talaqi.API.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAIService, AIService>();
             services.AddScoped<IFileService, FileService>();
+
+            // RAG services
+            services.AddScoped<IEmbeddingService, EmbeddingService>();
+            services.AddScoped<IVectorSearchService, VectorSearchService>();
+            services.AddScoped<IAssistantService, AssistantService>();
 
             return services;
         }
@@ -59,11 +72,15 @@ namespace Talaqi.API.Extensions
             services.AddScoped<ILostItemRepository, LostItemRepository>();
             services.AddScoped<IFoundItemRepository, FoundItemRepository>();
             services.AddScoped<IMatchRepository, MatchRepository>();
+            services.AddScoped<IMatchCandidateRepository, MatchCandidateRepository>();
             services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
             #endregion
 
             #region External Services
             services.AddHttpClient<IAIService, AIService>();
+            services.AddHttpClient();
+            services.Configure<MatchingOptions>(configuration.GetSection("Matching"));
+            services.AddHostedService<DailyRematchJob>();
             #endregion
 
             return services;

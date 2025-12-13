@@ -1,0 +1,82 @@
+<div class="not-found-container">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="not-found-content">
+          <!-- 404 Icon -->
+          <div class="error-icon-wrapper">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+
+          <!-- Error Code -->
+          <h1 class="error-code">404</h1>
+
+          <!-- Error Message -->
+          <h2 class="error-title">الصفحة غير موجودة</h2>
+          <p class="error-description">
+            عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها إلى موقع آخر.
+            <br>
+            يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.
+          </p>
+
+          <!-- Suggestions -->
+          <div class="suggestions-wrapper">
+            <h3 class="suggestions-title">
+              <i class="bi bi-lightbulb me-2"></i>
+              اقتراحات مفيدة:
+            </h3>
+            <ul class="suggestions-list">
+              <li>
+                <i class="bi bi-check-circle me-2"></i>
+                تحقق من صحة الرابط المدخل
+              </li>
+              <li>
+                <i class="bi bi-check-circle me-2"></i>
+                ارجع إلى الصفحة السابقة
+              </li>
+              <li>
+                <i class="bi bi-check-circle me-2"></i>
+                انتقل إلى الصفحة الرئيسية
+              </li>
+            </ul>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button class="btn-primary-action" (click)="goHome()">
+              <i class="bi bi-house-door-fill me-2"></i>
+              الصفحة الرئيسية
+            </button>
+            <button class="btn-secondary-action" (click)="goBack()">
+              <i class="bi bi-arrow-right me-2"></i>
+              العودة للخلف
+            </button>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="quick-links">
+            <p class="quick-links-title">روابط سريعة:</p>
+            <div class="links-wrapper">
+              <a routerLink="/report-lost-item" class="quick-link">
+                <i class="bi bi-file-earmark-plus me-1"></i>
+                الإبلاغ عن عنصر مفقود
+              </a>
+              <a routerLink="/report-found-item" class="quick-link">
+                <i class="bi bi-check-circle me-1"></i>
+                الإبلاغ عن عنصر موجود
+              </a>
+              <a routerLink="/help-support" class="quick-link">
+                <i class="bi bi-question-circle me-1"></i>
+                المساعدة والدعم
+              </a>
+              <a routerLink="/contact-us" class="quick-link">
+                <i class="bi bi-envelope me-1"></i>
+                اتصل بنا
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

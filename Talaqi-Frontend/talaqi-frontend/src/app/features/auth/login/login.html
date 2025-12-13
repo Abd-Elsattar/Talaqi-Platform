@@ -1,0 +1,58 @@
+<!-- Login template: user sign-in form and UI. -->
+<section class="login-section">
+  <div class="login-layout">
+
+    <!-- LEFT: Image -->
+    <div class="login-image">
+      <img src="login/1.png" alt="Login Illustration" />
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="login-form">
+
+      <header class="login-header">
+        <h2>مرحباً بعودتك</h2>
+        <p>سجل دخولك للمتابعة</p>
+        <div *ngIf="authError" class="form-alert" role="alert" aria-live="assertive">
+          {{ authError }}
+        </div>
+      </header>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <div class="form-group">
+          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <input type="email" class="form-input" formControlName="email" placeholder="name@example.com"
+            (blur)="loginForm.get('email')?.markAsTouched()" [class.invalid]="isFieldInvalid('email')" />
+          <div class="error-message" *ngIf="isFieldInvalid('email')">
+            {{ getFieldError('email') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>كلمة المرور <span class="required">*</span></label>
+          <input type="password" class="form-input" formControlName="password" placeholder="********"
+            (blur)="loginForm.get('password')?.markAsTouched()" [class.invalid]="isFieldInvalid('password')" />
+          <div class="error-message" *ngIf="isFieldInvalid('password')">
+            {{ getFieldError('password') }}
+          </div>
+        </div>
+
+        <div class="forgot-password">
+          <a routerLink="/forgot-password">نسيت كلمة المرور؟</a>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'جاري الدخول...' : 'تسجيل الدخول' }}
+        </button>
+
+        <div class="register-link">
+          <span>ليس لديك حساب؟</span>
+          <a routerLink="/register">إنشاء حساب جديد</a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</section>

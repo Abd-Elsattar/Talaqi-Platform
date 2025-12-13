@@ -16,14 +16,17 @@ namespace Talaqi.Application.Services
         private readonly IAIService _aiService;
         private readonly IMatchingService _matchingService;
         private readonly IMapper _mapper;
+        private readonly Talaqi.Application.Rag.Embeddings.IEmbeddingService _embeddingService;
 
         public FoundItemService(IUnitOfWork unitOfWork, IAIService aiService,
-                               IMatchingService matchingService, IMapper mapper)
+                               IMatchingService matchingService, IMapper mapper,
+                               Talaqi.Application.Rag.Embeddings.IEmbeddingService embeddingService)
         {
             _unitOfWork = unitOfWork;
             _aiService = aiService;
             _matchingService = matchingService;
             _mapper = mapper;
+            _embeddingService = embeddingService;
         }
 
         public async Task<Result<FoundItemDto>> CreateFoundItemAsync(CreateFoundItemDto dto, Guid userId)
@@ -59,6 +62,11 @@ namespace Talaqi.Application.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 await _matchingService.FindMatchesForFoundItemAsync(foundItem.Id);
+                _ = Task.Run(async () =>
+                {
+                    try { await _embeddingService.UpsertItemEmbeddingAsync(foundItem, "Found"); }
+                    catch { }
+                });
             });
 
             var result = _mapper.Map<FoundItemDto>(foundItem);
@@ -117,6 +125,13 @@ namespace Talaqi.Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             var result = _mapper.Map<FoundItemDto>(item);
+            // Trigger re-matching on update
+            await _matchingService.FindMatchesForFoundItemAsync(item.Id);
+            _ = Task.Run(async () =>
+            {
+                try { await _embeddingService.UpsertItemEmbeddingAsync(item, "Found"); }
+                catch { }
+            });
             return Result<FoundItemDto>.Success(result, "Found item updated successfully");
         }
 
@@ -131,9 +146,16 @@ namespace Talaqi.Application.Services
                 return Result.Failure("Unauthorized");
 
             item.IsDeleted = true;
+            item.DeletedAt = DateTime.UtcNow;
             item.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.SaveChangesAsync();
+
+            _ = Task.Run(async () =>
+            {
+                try { await _embeddingService.RemoveItemEmbeddingAsync(item.Id, "Found"); }
+                catch { }
+            });
 
             return Result.Success("Found item deleted successfully");
         }

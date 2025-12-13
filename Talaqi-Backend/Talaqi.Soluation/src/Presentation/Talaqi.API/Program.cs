@@ -27,7 +27,13 @@ namespace Talaqi.API
             #endregion
 
             #region Services Registration
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                    options.JsonSerializerOptions.WriteIndented = false;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             #endregion
@@ -105,6 +111,10 @@ namespace Talaqi.API
                     }
 
                     await SeedData(context);
+
+                    // Trigger embedding generation for existing items (idempotent)
+                    var embeddingService = services.GetRequiredService<Talaqi.Application.Rag.Embeddings.IEmbeddingService>();
+                    await embeddingService.BulkRefreshAsync(CancellationToken.None);
                 }
                 catch (Exception ex)
                 {

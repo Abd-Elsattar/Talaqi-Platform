@@ -16,13 +16,15 @@ namespace Talaqi.Application.Services
         private readonly IAIService _aiService;
         private readonly IMatchingService _matchingService;
         private readonly IMapper _mapper;
+        private readonly Talaqi.Application.Rag.Embeddings.IEmbeddingService _embeddingService;
 
-        public LostItemService(IUnitOfWork unitOfWork, IAIService aiService, IMapper mapper, IMatchingService matchingService)
+        public LostItemService(IUnitOfWork unitOfWork, IAIService aiService, IMapper mapper, IMatchingService matchingService, Talaqi.Application.Rag.Embeddings.IEmbeddingService embeddingService)
         {
             _unitOfWork = unitOfWork;
             _aiService = aiService;
             _mapper = mapper;
             _matchingService = matchingService;
+            _embeddingService = embeddingService;
         }
 
         public async Task<Result<LostItemDto>> CreateLostItemAsync(CreateLostItemDto dto, Guid userId)
@@ -58,6 +60,11 @@ namespace Talaqi.Application.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 await _matchingService.FindMatchesForLostItemAsync(lostItem.Id);
+                _ = Task.Run(async () =>
+                {
+                    try { await _embeddingService.UpsertItemEmbeddingAsync(lostItem, "Lost"); }
+                    catch { /* swallow to avoid blocking */ }
+                });
             });
             
 
@@ -155,6 +162,13 @@ namespace Talaqi.Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             var result = _mapper.Map<LostItemDto>(item);
+            // Trigger re-matching on update
+            await _matchingService.FindMatchesForLostItemAsync(item.Id);
+            _ = Task.Run(async () =>
+            {
+                try { await _embeddingService.UpsertItemEmbeddingAsync(item, "Lost"); }
+                catch { }
+            });
             return Result<LostItemDto>.Success(result, "Lost item updated successfully");
         }
 
@@ -169,9 +183,16 @@ namespace Talaqi.Application.Services
                 return Result.Failure("Unauthorized");
 
             item.IsDeleted = true;
+            item.DeletedAt = DateTime.UtcNow;
             item.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.SaveChangesAsync();
+
+            _ = Task.Run(async () =>
+            {
+                try { await _embeddingService.RemoveItemEmbeddingAsync(item.Id, "Lost"); }
+                catch { }
+            });
 
             return Result.Success("Lost item deleted successfully");
         }
