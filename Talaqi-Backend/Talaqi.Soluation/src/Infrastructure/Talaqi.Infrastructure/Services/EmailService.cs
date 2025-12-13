@@ -63,7 +63,7 @@ namespace Talaqi.Infrastructure.Services
             try
             {
                 var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "ConfirmEmailTemplate.html");
-                var template = await File.ReadAllTextAsync(templatePath);
+                var template = await File.ReadAllTextAsync(templatePath, System.Text.Encoding.UTF8);
                 
                 var body = template.Replace("{{CODE}}", code);
                 var subject = "Confirm Your Email - Talaqi Platform";
@@ -82,7 +82,7 @@ namespace Talaqi.Infrastructure.Services
             try
             {
                 var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "PasswordResetTemplate.html");
-                var template = await File.ReadAllTextAsync(templatePath);
+                var template = await File.ReadAllTextAsync(templatePath, System.Text.Encoding.UTF8);
                 
                 var body = template.Replace("{{CODE}}", code);
                 var subject = "Password Reset - Talaqi Platform";

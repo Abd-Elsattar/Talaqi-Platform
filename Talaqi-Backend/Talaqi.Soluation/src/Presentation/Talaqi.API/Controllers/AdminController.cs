@@ -37,7 +37,8 @@ namespace Talaqi.API.Controllers
                     u.PhoneNumber,
                     u.Role,
                     u.IsActive,
-                    u.CreatedAt
+                    u.CreatedAt, 
+                    u.ProfilePictureUrl
                 })
                 .ToList();
 
@@ -105,7 +106,8 @@ namespace Talaqi.API.Controllers
                         i.Category,
                         i.Status,
                         userName = i.User.FullName,
-                        i.CreatedAt
+                        i.CreatedAt,
+                        i.ImageUrl
                     })
                     .ToList();
 
@@ -133,7 +135,8 @@ namespace Talaqi.API.Controllers
                         i.Category,
                         i.Status,
                         userName = i.User.FullName,
-                        i.CreatedAt
+                        i.CreatedAt,
+                        i.ImageUrl
                     })
                     .ToList();
 

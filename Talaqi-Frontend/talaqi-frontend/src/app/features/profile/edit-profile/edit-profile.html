@@ -1,0 +1,139 @@
+<!-- Edit Profile template: form for updating user information. -->
+<div class="edit-profile-page">
+  <!-- Hero Section with Blue Bottom Border -->
+  <div class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">تعديل الملف الشخصي</h1>
+        <p class="hero-subtitle">قم بتحديث معلوماتك الشخصية</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+      <p>جاري تحميل البيانات...</p>
+    </div>
+    }
+
+    <!-- Edit Profile Content -->
+    @if (!isLoading && currentProfile) {
+    <div class="profile-card">
+      <!-- Profile Picture Section -->
+      <div class="profile-picture-section">
+        <div class="profile-picture-container">
+          <img [src]="imagePreview || getProfilePictureUrl()" alt="Profile Picture" class="profile-picture">
+          <label for="fileInput" class="upload-overlay">
+            <i class="bi bi-camera-fill"></i>
+          </label>
+          <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" class="d-none">
+        </div>
+
+        <!-- Upload Button -->
+        @if (selectedFile && !uploadingImage) {
+        <button type="button" class="btn-upload" (click)="uploadProfilePicture()">
+          <i class="bi bi-upload"></i>
+          رفع الصورة
+        </button>
+        }
+
+        @if (uploadingImage) {
+        <button type="button" class="btn-upload" disabled>
+          <span class="spinner-border spinner-border-sm"></span>
+          جاري الرفع...
+        </button>
+        }
+      </div>
+
+      <!-- Profile Form -->
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <!-- Email (Read-only) -->
+        <div class="form-group">
+          <label class="form-label">البريد الإلكتروني</label>
+          <input type="email" class="form-input" [value]="currentProfile.email" readonly disabled>
+        </div>
+
+        <!-- First Name -->
+        <div class="form-group">
+          <label class="form-label">
+            الاسم الأول <span class="required">*</span>
+          </label>
+          <input type="text" class="form-input" formControlName="firstName"
+            (blur)="profileForm.get('firstName')?.markAsTouched()" [class.invalid]="isFieldInvalid('firstName')"
+            placeholder="أدخل الاسم الأول">
+          @if (isFieldInvalid('firstName')) {
+          <div class="error-message">
+            {{ getFieldError('firstName') }}
+          </div>
+          }
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+          <label class="form-label">
+            الاسم الأخير <span class="required">*</span>
+          </label>
+          <input type="text" class="form-input" formControlName="lastName"
+            (blur)="profileForm.get('lastName')?.markAsTouched()" [class.invalid]="isFieldInvalid('lastName')"
+            placeholder="أدخل الاسم الأخير">
+          @if (isFieldInvalid('lastName')) {
+          <div class="error-message">
+            {{ getFieldError('lastName') }}
+          </div>
+          }
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+          <label class="form-label">
+            رقم الهاتف <span class="required">*</span>
+          </label>
+          <input type="tel" class="form-input" formControlName="phoneNumber"
+            (blur)="profileForm.get('phoneNumber')?.markAsTouched()" [class.invalid]="isFieldInvalid('phoneNumber')"
+            placeholder="01xxxxxxxxx">
+          @if (isFieldInvalid('phoneNumber')) {
+          <div class="error-message">
+            {{ getFieldError('phoneNumber') }}
+          </div>
+          }
+        </div>
+
+        <!-- Member Since -->
+        <div class="member-info">
+          <i class="bi bi-calendar"></i>
+          عضو منذ: {{ currentProfile.createdAt | date: 'dd/MM/yyyy' }}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button type="submit" class="btn-primary" [disabled]="!canSave">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm"></span>
+            جاري الحفظ...
+            } @else {
+            <i class="bi bi-check-circle"></i>
+            حفظ التغييرات
+            }
+          </button>
+
+          <button type="button" class="btn-secondary" routerLink="/home" [disabled]="isSubmitting">
+            <i class="bi bi-x-circle"></i>
+            إلغاء
+          </button>
+
+          <button type="button" class="btn-danger" (click)="deleteAccount()" [disabled]="isSubmitting">
+            <i class="bi bi-trash"></i>
+            حذف الحساب
+          </button>
+        </div>
+      </form>
+    </div>
+    }
+  </div>
+</div>

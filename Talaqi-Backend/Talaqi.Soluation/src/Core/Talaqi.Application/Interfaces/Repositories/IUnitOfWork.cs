@@ -24,6 +24,7 @@ namespace Talaqi.Application.Interfaces.Repositories
         ILostItemRepository LostItems { get; }
         IFoundItemRepository FoundItems { get; }
         IMatchRepository Matches { get; }
+        IMatchCandidateRepository MatchCandidates { get; }
         IVerificationCodeRepository VerificationCodes { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

@@ -7,5 +7,6 @@
         Task<AIAnalysisResult> AnalyzeLocationAsync(string location);
         Task<AIAnalysisResult> AnalyzeLostItemAsync(string? imageUrl, string description, string location);
         Task<AIAnalysisResult> AnalyzeFoundItemAsync(string? imageUrl, string description, string location);
+        Task<double[]?> GetImageEmbeddingAsync(string imageUrl);
     }
 }

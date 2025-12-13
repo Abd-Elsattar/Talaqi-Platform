@@ -17,6 +17,9 @@ namespace Talaqi.Infrastructure.Data.Configuration
                 .HasPrecision(5, 2);
 
             builder.Property(x => x.Status).IsRequired();
+            builder.Property(x => x.MatchDetails);
+            builder.Property(x => x.MatchExplanation);
+            builder.Property(x => x.DeletedAt);
 
             builder.HasIndex(x => x.LostItemId);
             builder.HasIndex(x => x.FoundItemId);

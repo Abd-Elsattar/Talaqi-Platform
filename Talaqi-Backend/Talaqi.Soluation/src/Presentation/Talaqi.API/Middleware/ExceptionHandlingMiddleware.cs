@@ -8,7 +8,9 @@ namespace Talaqi.API.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+        public ExceptionHandlingMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -22,25 +24,27 @@ namespace Talaqi.API.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred");
-                await HandleExceptionAsync(context, ex);
+                _logger.LogError(ex, "Unhandled exception");
+
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json; charset=utf-8";
+
+                var payload = new
+                {
+                    isSuccess = false,
+                    message = "حدث خطأ أثناء معالجة الطلب",
+                    errors = new[] { ex.Message }
+                };
+
+                var json = JsonSerializer.Serialize(payload,
+                    new JsonSerializerOptions
+                    {
+                        Encoder = System.Text.Encodings.Web
+                            .JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+
+                await context.Response.WriteAsync(json);
             }
-        }
-
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-            var response = new
-            {
-                isSuccess = false,
-                message = "An error occurred while processing your request",
-                errors = new List<string> { exception.Message }
-            };
-
-            var jsonResponse = JsonSerializer.Serialize(response);
-            return context.Response.WriteAsync(jsonResponse);
         }
     }
 }

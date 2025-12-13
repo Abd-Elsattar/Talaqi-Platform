@@ -1,0 +1,174 @@
+<!-- My Found Items template: shows items reported by the user. -->
+<div class="my-found-items-page">
+  <!-- Hero Section with Blue Bottom Border -->
+  <div class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">الموجودات الخاصة بي</h1>
+          <p class="hero-subtitle">إدارة العناصر التي وجدتها وأبلغت عنها</p>
+        </div>
+        <div class="hero-action">
+          <button routerLink="/report-found-item" class="btn-accent-primary">
+            <i class="bi bi-plus-circle"></i>
+            إبلاغ عن عنصر موجود
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+      <p>جاري تحميل العناصر الموجودة...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (errorMessage && !isLoading) {
+    <div class="alert-error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (foundItems.length === 0 && !isLoading && !errorMessage) {
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-inbox"></i>
+      </div>
+      <h3 class="empty-state-title">لا توجد عناصر موجودة</h3>
+      <p class="empty-state-text">لم تقم بالإبلاغ عن أي عناصر موجودة بعد</p>
+      <button routerLink="/report-found-item" class="btn-accent-primary btn-lg">
+        <i class="bi bi-plus-circle"></i>
+        إبلاغ عن عنصر موجود الآن
+      </button>
+    </div>
+    }
+
+    <!-- Stats Section -->
+    @if (foundItems.length > 0 && !isLoading) {
+    <div class="stats-section mb-4">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="stat-content">
+              <p class="stat-label">إجمالي العناصر</p>
+              <h4 class="stat-value">{{ totalItems }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-icon active">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <p class="stat-label">عناصر نشطة</p>
+              <h4 class="stat-value">{{ activeItemsCount }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-icon found">
+              <i class="bi bi-star"></i>
+            </div>
+            <div class="stat-content">
+              <p class="stat-label"> تم ايجاده</p>
+              <h4 class="stat-value">{{ foundStatusCount }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-icon matches">
+              <i class="bi bi-lightning-fill"></i>
+            </div>
+            <div class="stat-content">
+              <p class="stat-label">إجمالي التطابقات</p>
+              <h4 class="stat-value">{{ totalMatches }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Grid -->
+    <div class="items-grid">
+      @for (item of foundItems; track item.id) {
+      <div class="item-card">
+        <!-- Image -->
+        <div class="item-image-wrapper">
+          <img [src]="getItemImageUrl(item)" [alt]="item.title" class="item-image"
+            (error)="$event.target.src='images/lost-and-found-.png'">
+          <span class="status-badge badge-found">
+            <i class="bi bi-check-circle-fill"></i>
+            موجود
+          </span>
+        </div>
+
+        <!-- Content -->
+        <div class="item-content">
+          <h3 class="item-title">{{ item.title }}</h3>
+
+          <!-- Meta Information -->
+          <div class="item-meta">
+            <div class="meta-item">
+              <i class="bi bi-tag-fill"></i>
+              <span>{{ item.category }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              <span>{{ getItemLocation(item) }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-calendar-event"></i>
+              <span>{{ item.dateFound | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+
+          <p class="item-description">{{ item.description }}</p>
+
+          <!-- Action Buttons -->
+          <div class="item-footer">
+            <div class="action-buttons">
+              <button (click)="viewDetails(item.id); $event.stopPropagation()" class="btn-action-view"
+                title="عرض التفاصيل">
+                <i class="bi bi-eye"></i>
+                <span>عرض</span>
+              </button>
+              <button (click)="editItem(item.id, $event)" class="btn-action-edit" title="تعديل العنصر">
+                <i class="bi bi-pencil-square"></i>
+                <span>تعديل</span>
+              </button>
+              <button (click)="deleteItem(item.id, item.title, $event)" class="btn-action-delete" title="حذف العنصر">
+                <i class="bi bi-trash"></i>
+                <span>حذف</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Items Count -->
+    <div class="items-count">
+      <p><strong>{{ foundItems.length }}</strong> عنصر موجود</p>
+    </div>
+    }
+  </div>
+</div>

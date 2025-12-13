@@ -1,0 +1,82 @@
+<!-- Account Verification template: informs user of verification status. -->
+<div class="verify-container">
+  <div class="verify-card">
+    <!-- Left Side: Form -->
+    <div class="verify-form">
+      <!-- Header -->
+      <div class="verify-header">
+        <h2>تفعيل الحساب</h2>
+        <p>
+          لقد أرسلنا كود تفعيل مكون من 6 أرقام إلى بريدك الإلكتروني:
+        </p>
+        <span class="email">{{ email }}</span>
+
+        <!-- Helpful email hints -->
+        <div class="email-hint">
+          <div class="hint-text">لم يصلك البريد؟ جرّب التالي:</div>
+          <ul class="hint-list">
+            <li>تفقد مجلد الرسائل غير المرغوب فيها (Spam/Junk).</li>
+            <li>ابحث في تبويبات Promotions/Updates في Gmail.</li>
+            <li>انتظر دقيقة ثم اضغط "إعادة إرسال الكود".</li>
+          </ul>
+        </div>
+      </div>
+
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+
+        <!-- كود التفعيل -->
+        <div class="form-group">
+          <label>كود التفعيل <span class="required">*</span></label>
+          <input type="text" class="form-input code-input" formControlName="code"
+            (blur)="verifyForm.get('code')?.markAsTouched()" [class.invalid]="isFieldInvalid('code')"
+            placeholder="------" maxlength="6" />
+          @if (isFieldInvalid('code')) {
+          <div class="error-message">
+            {{ getFieldError('code') }}
+          </div>
+          }
+        </div>
+
+        <!-- زر التأكيد -->
+        <button type="submit" class="btn-verify" [disabled]="verifyForm.invalid || isSubmitting">
+          @if (!isSubmitting) {
+          <span>تأكيد وتفعيل الحساب</span>
+          }
+          @if (isSubmitting) {
+          <span>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            جاري التحقق...
+          </span>
+          }
+        </button>
+
+        <!-- زر إعادة إرسال الكود -->
+        <button type="button" class="btn-resend" (click)="resendCode()" [disabled]="isResending || countdown > 0">
+          @if (!isResending && countdown === 0) {
+          <span>
+            <i class="bi bi-arrow-clockwise"></i>
+            إعادة إرسال الكود
+          </span>
+          }
+          @if (isResending) {
+          <span>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            جاري الإرسال...
+          </span>
+          }
+          @if (countdown > 0) {
+          <span>
+            إعادة الإرسال بعد {{ countdown }} ثانية
+          </span>
+          }
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Right Side: Image -->
+    <div class="verify-image">
+      <img src="verify/1.png" alt="Verify" />
+    </div>
+  </div>
+</div>

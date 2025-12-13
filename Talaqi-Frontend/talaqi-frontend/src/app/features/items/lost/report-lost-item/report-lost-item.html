@@ -1,0 +1,421 @@
+<!-- Report Lost Item template: submit details for a lost item. -->
+<div class="report-lost-item-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <!-- Enhanced Page Header -->
+        <div class="page-header-wrapper mb-4">
+          <div class="page-header-content">
+            <div class="header-icon-wrapper">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="header-text-wrapper">
+              <h1 class="header-title">الإبلاغ عن عنصر مفقود</h1>
+              <p class="header-subtitle">
+                املأ النموذج بدقة للحصول على أفضل النتائج. سيقوم نظامنا بالبحث عن تطابقات محتملة تلقائياً باستخدام تقنية
+                الذكاء الاصطناعي.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        @if (successMessage) {
+        <div class="alert-wrapper success-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>نجاح!</strong>
+              <p>{{ successMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="successMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+        <div class="alert-wrapper error-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>خطأ!</strong>
+              <p>{{ errorMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="errorMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Report Form -->
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="report-form-wrapper">
+          <div class="form-card">
+            <div class="form-card-body">
+
+              <!-- Category -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-grid-3x3-gap label-icon"></i>
+                  <span>الفئة</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <select class="form-control-enhanced" formControlName="category"
+                  (blur)="reportForm.get('category')?.markAsTouched()" [class.is-invalid]="isFieldInvalid('category')">
+                  <option value="">-- اختر فئة العنصر المفقود --</option>
+                  <option *ngFor="let cat of categories" [value]="cat.value">
+                    {{ cat.label }}
+                  </option>
+                </select>
+                @if (isFieldInvalid('category')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('category') }}
+                </div>
+                }
+                <small class="form-hint">اختر الفئة الأنسب لتحسين نتائج البحث</small>
+              </div>
+
+              <!-- Title -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-card-heading label-icon"></i>
+                  <span>العنوان</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="title"
+                  (blur)="reportForm.get('title')?.markAsTouched()"
+                  placeholder="مثال: محفظة جلدية سوداء أو هاتف آيفون 13" [class.is-invalid]="isFieldInvalid('title')"
+                  maxlength="200">
+                @if (isFieldInvalid('title')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('title') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <span>الحد الأقصى: 200 حرف</span>
+                  <span class="char-counter">{{ reportForm.get('title')?.value?.length || 0 }}/200</span>
+                </small>
+              </div>
+
+              <!-- Description -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-text-paragraph label-icon"></i>
+                  <span>الوصف التفصيلي</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <textarea class="form-control-enhanced textarea-enhanced" formControlName="description"
+                  (blur)="reportForm.get('description')?.markAsTouched()"
+                  placeholder="صف العنصر المفقود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل."
+                  rows="5" [class.is-invalid]="isFieldInvalid('description')"></textarea>
+                @if (isFieldInvalid('description')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('description') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-lightbulb me-1"></i>
+                  الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل
+                </small>
+              </div>
+
+              <!-- Image Upload -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-image label-icon"></i>
+                  <span>صورة العنصر</span>
+                  <span class="required-mark">*</span>
+                </label>
+
+                <!-- Upload Zone -->
+                @if (!imagePreviewUrl) {
+                <div class="upload-zone-enhanced" [class.is-invalid]="isImageInvalid()" (drop)="onFileDrop($event)"
+                  (dragover)="onDragOver($event)">
+
+                  <div class="upload-zone-content">
+                    <div class="upload-icon-wrapper">
+                      <i class="bi bi-cloud-upload-fill"></i>
+                    </div>
+
+                    <h5 class="upload-title">اسحب وأفلت الصورة هنا</h5>
+                    <p class="upload-subtitle">أو</p>
+
+                    <label class="btn-upload-file">
+                      <i class="bi bi-folder2-open me-2"></i>
+                      تصفح الملفات
+                      <input type="file" class="d-none" accept="image/jpeg,image/jpg,image/png,image/gif"
+                        (change)="onFileSelected($event)" (blur)="reportForm.get('imageUrl')?.markAsTouched()">
+                    </label>
+
+                    <!-- ✅ Error Message -->
+                    @if (isImageInvalid()) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ getImageError() }}
+                    </div>
+                    }
+
+                    <p class="upload-hint">
+                      <i class="bi bi-info-circle me-1"></i>
+                      JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)
+                    </p>
+                  </div>
+                </div>
+                }
+
+
+                <!-- Image Preview -->
+                @if (imagePreviewUrl) {
+                <div class="image-preview-wrapper">
+                  <div class="image-preview-container">
+                    <img [src]="imagePreviewUrl" alt="معاينة الصورة" class="preview-image">
+                    <button type="button" class="btn-remove-image" (click)="removeImage()" [disabled]="isUploadingImage"
+                      title="حذف الصورة">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                    @if (isUploadingImage) {
+                    <div class="upload-progress-overlay">
+                      <div class="upload-spinner-wrapper">
+                        <div class="spinner-border text-light" role="status">
+                          <span class="visually-hidden">جاري الرفع...</span>
+                        </div>
+                        <p class="upload-status-text">جاري رفع الصورة...</p>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                  @if (!isUploadingImage && !isDefaultImage) {
+                  <div class="image-info-badge">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    تم رفع الصورة بنجاح
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+
+              <!-- Location Section -->
+              <div class="form-group-wrapper location-section" formGroupName="location">
+                <label class="form-label-enhanced section-label">
+                  <i class="bi bi-geo-alt-fill label-icon"></i>
+                  <span>معلومات الموقع</span>
+                </label>
+
+                <!-- Map Picker -->
+                <app-map-picker [height]="'350px'" [language]="'ar'"
+                  (locationSelected)="onLocationSelected($event)"></app-map-picker>
+
+                <!-- GPS Detection -->
+                <div class="gps-detection-wrapper">
+                  <div class="gps-info-box">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span>تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل</span>
+                  </div>
+                  <button type="button" class="btn-detect-location" (click)="detectLocation()"
+                    [disabled]="isDetectingLocation || locationDetected">
+                    @if (!isDetectingLocation && !locationDetected) {
+                    <span>
+                      <i class="bi bi-crosshair me-2"></i>
+                      تحديد موقعي الحالي
+                    </span>
+                    }
+                    @if (isDetectingLocation) {
+                    <span>
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      جاري تحديد الموقع...
+                    </span>
+                    }
+                    @if (locationDetected) {
+                    <span>
+                      <i class="bi bi-check-circle-fill me-2"></i>
+                      تم تحديد الموقع
+                    </span>
+                    }
+                  </button>
+                  @if (locationDetected) {
+                  <button type="button" class="btn-clear-location" (click)="clearLocation()">
+                    <i class="bi bi-x-circle me-2"></i>
+                    إزالة الموقع
+                  </button>
+                  }
+                  <!-- Coordinates validation message -->
+                  @if (areCoordinatesInvalid()) {
+                  <div class="error-feedback mt-2">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً
+                  </div>
+                  }
+                </div>
+
+                <!-- GPS Coordinates Display -->
+                @if (locationDetected) {
+                <div class="gps-coordinates-display">
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <strong>خط العرض:</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
+                  </div>
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo me-2"></i>
+                    <strong>خط الطول:</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
+                  </div>
+                </div>
+                }
+
+                <!-- Address -->
+                <div class="location-field-wrapper">
+                  <label class="form-label-secondary">
+                    العنوان <span class="required-mark">*</span>
+                  </label>
+                  <input type="text" class="form-control-enhanced" formControlName="address"
+                    (blur)="reportForm.get('location')?.get('address')?.markAsTouched()"
+                    placeholder="مثال: شارع التحرير، أمام محطة المترو، القاهرة"
+                    [class.is-invalid]="isLocationFieldInvalid('address')">
+                  @if (isLocationFieldInvalid('address')) {
+                  <div class="error-feedback">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    هذا الحقل مطلوب
+                  </div>
+                  }
+                </div>
+
+                <!-- City and Governorate -->
+                <div class="row location-row">
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">المدينة</label>
+                    <input type="text" class="form-control-enhanced" formControlName="city"
+                      (blur)="reportForm.get('location')?.get('city')?.markAsTouched()" placeholder="مثال: القاهرة"
+                      [class.is-invalid]="isLocationFieldInvalid('city')">
+                    @if (isLocationFieldInvalid('city')) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      هذا الحقل مطلوب
+                    </div>
+                    }
+                  </div>
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">المحافظة</label>
+                    <input type="text" class="form-control-enhanced" formControlName="governorate"
+                      (blur)="reportForm.get('location')?.get('governorate')?.markAsTouched()"
+                      placeholder="مثال: القاهرة" [class.is-invalid]="isLocationFieldInvalid('governorate')">
+                    @if (isLocationFieldInvalid('governorate')) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      هذا الحقل مطلوب
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Date Lost -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-calendar-event label-icon"></i>
+                  <span>تاريخ الفقدان</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="date" class="form-control-enhanced date-input" formControlName="dateLost"
+                  (blur)="reportForm.get('dateLost')?.markAsTouched()" [max]="maxDate"
+                  [class.is-invalid]="isFieldInvalid('dateLost')">
+                @if (isFieldInvalid('dateLost')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('dateLost') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-info-circle me-1"></i>
+                  التاريخ يجب أن يكون اليوم أو في الماضي
+                </small>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-telephone-fill label-icon"></i>
+                  <span>معلومات الاتصال</span>
+                  <span class="required-mark">*</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="contactInfo"
+                  (blur)="reportForm.get('contactInfo')?.markAsTouched()"
+                  placeholder="رقم الهاتف أو البريد الإلكتروني للتواصل"
+                  [class.is-invalid]="isFieldInvalid('contactInfo')">
+                @if (isFieldInvalid('contactInfo')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('contactInfo') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-shield-check me-1"></i>
+                  سيُستخدم للتواصل معك عند إيجاد تطابقات محتملة
+                </small>
+              </div>
+
+              <!-- Legal Responsibility -->
+              <div class="form-group-wrapper legal-section">
+                <div class="legal-checkbox-wrapper">
+                  <input class="form-check-input-enhanced" type="checkbox" formControlName="legalResponsibility"
+                    id="legalResponsibility" [class.is-invalid]="isFieldInvalid('legalResponsibility')">
+                  <label class="legal-checkbox-label" for="legalResponsibility">
+                    <span class="legal-text">
+                      أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ
+                      <span class="required-mark">*</span>
+                    </span>
+                  </label>
+                </div>
+                @if (isFieldInvalid('legalResponsibility')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  يجب الموافقة على تحمل المسؤولية القانونية للمتابعة
+                </div>
+                }
+              </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions-wrapper">
+              <div class="actions-content">
+                <button type="button" class="btn-action-secondary" routerLink="/home" [disabled]="isSubmitting">
+                  <i class="bi bi-x-circle me-2"></i>
+                  <span>إلغاء</span>
+                </button>
+                <button type="submit" class="btn-action-primary"
+                  [disabled]="isSubmitting || isUploadingImage || !isLocationReady">
+                  @if (!isSubmitting) {
+                  <span class="btn-content">
+                    <i class="bi bi-send-fill me-2"></i>
+                    <span>إرسال البلاغ</span>
+                  </span>
+                  }
+                  @if (isSubmitting) {
+                  <span class="btn-content">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    <span>جاري الإرسال...</span>
+                  </span>
+                  }
+                </button>
+              </div>
+              <p class="actions-note">
+                <i class="bi bi-info-circle me-1"></i>
+                يجب تحديد الموقع وملء العنوان/المدينة/المحافظة أو تعديلهم يدوياً قبل الإرسال
+              </p>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,155 @@
+<!-- Lost Item Detail template: shows details and actions for a lost item. -->
+<div class="detail-container">
+  <!-- Loading State -->
+  @if (isLoading) {
+  <div class="loading-state">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+    <p>جاري تحميل التفاصيل...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @if (!isLoading && errorMessage) {
+  <div class="error-state">
+    <div class="container">
+      <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        {{ errorMessage }}
+      </div>
+      <button class="btn btn-primary" (click)="goBack()">العودة</button>
+    </div>
+  </div>
+  }
+
+  <!-- Item Detail -->
+  @if (!isLoading && item && !errorMessage) {
+  <div class="container-lg">
+    <!-- Header with Back -->
+    <div class="page-title-section mb-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="page-title">تفاصيل العنصر المفقود</h1>
+        <p class="page-subtitle mb-0">معلومات شاملة عن العنصر المفقود</p>
+      </div>
+      <a class="btn btn-outline-secondary" (click)="goBack()">
+        <i class="bi bi-arrow-right"></i>
+        <span class="me-1">العودة</span>
+      </a>
+    </div>
+
+    <!-- Detail Card with Horizontal Layout -->
+    <div class="detail-card-grid">
+      <!-- Left: Image -->
+      <div class="detail-image-wrapper position-relative" (click)="openImageModal(getItemImageUrl(item.imageUrl))">
+        <img [src]="getItemImageUrl(item.imageUrl)" [alt]="item.title" class="detail-image clickable"
+          (error)="$event.target.src='/images/lost-and-found-.png'" />
+        <div class="position-absolute top-0 start-0 p-3">
+          <span class="badge bg-danger">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            مفقود
+          </span>
+        </div>
+      </div>
+
+      <!-- Right: Content -->
+      <div class="detail-content">
+        <!-- Title & Publisher -->
+        <div class="detail-top-row">
+          <div>
+            <h2 class="detail-title">{{ item.title }}</h2>
+            <small class="text-muted">منشور بواسطة <strong>{{ item.userName }}</strong></small>
+          </div>
+          <span class="category-tag">{{ item.category | categoryTranslate }}</span>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="info-row">
+          <div class="info-card">
+            <small class="text-muted d-block mb-1">تاريخ الفقدان</small>
+            <strong class="text-dark">{{ item.dateLost | date: 'dd/MM/yyyy' }}</strong>
+          </div>
+          <div class="info-card">
+            <small class="text-muted d-block mb-1">الموقع</small>
+            <strong class="text-dark">{{ item.location.city || 'غير محدد' }}</strong>
+          </div>
+          <div class="info-card">
+            <small class="text-muted d-block mb-1">تم النشر</small>
+            <strong class="text-dark">{{ item.createdAt | date: 'dd/MM HH:mm' }}</strong>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="section-block">
+          <h5 class="fw-bold">الوصف</h5>
+          <p class="text-muted">{{ item.description }}</p>
+        </div>
+
+        <!-- Location -->
+        <div class="section-block">
+          <h5 class="fw-bold">تفاصيل الموقع</h5>
+          <div class="card bg-light border-0">
+            <div class="card-body">
+              @if (item.location.city) {
+              <p class="mb-2"><strong>المدينة:</strong> {{ item.location.city }}</p>
+              }
+              @if (item.location.governorate) {
+              <p class="mb-2"><strong>المحافظة:</strong> {{ item.location.governorate }}</p>
+              }
+              @if (item.location.address) {
+              <p class="mb-0"><strong>العنوان:</strong> {{ item.location.address }}</p>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="section-block">
+          <h5 class="fw-bold">معلومات المبلغ</h5>
+          <div class="card bg-light border-0">
+            <div class="card-body d-flex align-items-center gap-3">
+              <img [src]="getUserImageUrl(item)" alt="User" (error)="$event.target.src='/images/Default User Icon.jpg'"
+                style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
+              <div>
+                <h6 class="mb-1">{{ item.userName }}</h6>
+                <p class="mb-0 text-muted">{{ item.contactInfo }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-row">
+          <button class="btn btn-primary" (click)="contactUser()">
+            <i class="bi bi-envelope-fill me-1"></i>
+            التواصل
+          </button>
+          <button class="btn btn-outline-primary" (click)="shareItem()">
+            <i class="bi bi-share me-1"></i>
+            مشاركة
+          </button>
+        </div>
+
+        <!-- Match Alert -->
+        @if (item.matchCount > 0) {
+        <div class="match-alert mt-3">
+          <i class="bi bi-stars"></i>
+          توجد <strong>{{ item.matchCount }}</strong> مطابقة محتملة
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal-backdrop" *ngIf="modalImageUrl" (click)="closeImageModal()">
+  <div class="image-modal" (click)="$event.stopPropagation()">
+    <img [src]="modalImageUrl" alt="عرض الصورة" class="image-modal-img"
+      (error)="$event.target.src='/images/lost-and-found-.png'" />
+    <button class="image-modal-close" (click)="closeImageModal()" aria-label="إغلاق">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+</div>

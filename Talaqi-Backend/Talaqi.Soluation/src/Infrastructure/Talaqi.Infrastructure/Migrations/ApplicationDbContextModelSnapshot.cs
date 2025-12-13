@@ -45,6 +45,9 @@ namespace Talaqi.Infrastructure.Migrations
                     b.Property<DateTime>("DateFound")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -106,6 +109,9 @@ namespace Talaqi.Infrastructure.Migrations
                     b.Property<DateTime>("DateLost")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -157,6 +163,9 @@ namespace Talaqi.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("FoundItemId")
                         .HasColumnType("uniqueidentifier");
 
@@ -167,6 +176,9 @@ namespace Talaqi.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MatchDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MatchExplanation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("NotificationSent")
@@ -193,6 +205,60 @@ namespace Talaqi.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Matches", (string)null);
+                });
+
+            modelBuilder.Entity("Talaqi.Domain.Entities.MatchCandidate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AggregateScore")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FoundItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LostItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Promoted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReasonsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ScoreDate")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("ScoreImage")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("ScoreLocation")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("ScoreText")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoundItemId");
+
+                    b.HasIndex("LostItemId");
+
+                    b.ToTable("MatchCandidates");
                 });
 
             modelBuilder.Entity("Talaqi.Domain.Entities.User", b =>
@@ -311,6 +377,134 @@ namespace Talaqi.Infrastructure.Migrations
                     b.ToTable("VerificationCodes", (string)null);
                 });
 
+            modelBuilder.Entity("Talaqi.Domain.Rag.Embeddings.ItemEmbedding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Governorate")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NormalizedText")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("City");
+
+                    b.HasIndex("Governorate");
+
+                    b.HasIndex("LastUpdatedAt");
+
+                    b.HasIndex("ItemId", "ItemType")
+                        .IsUnique();
+
+                    b.ToTable("ItemEmbeddings", (string)null);
+                });
+
+            modelBuilder.Entity("Talaqi.Domain.Rag.Embeddings.PlatformKnowledgeEmbedding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("KnowledgeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NormalizedText")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("KnowledgeId")
+                        .IsUnique();
+
+                    b.HasIndex("LastUpdatedAt");
+
+                    b.ToTable("PlatformKnowledgeEmbeddings", (string)null);
+                });
+
+            modelBuilder.Entity("Talaqi.Domain.Rag.Knowledge.PlatformKnowledge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlatformKnowledge", (string)null);
+                });
+
             modelBuilder.Entity("Talaqi.Domain.Entities.FoundItem", b =>
                 {
                     b.HasOne("Talaqi.Domain.Entities.User", "User")
@@ -413,6 +607,25 @@ namespace Talaqi.Infrastructure.Migrations
 
                     b.HasOne("Talaqi.Domain.Entities.LostItem", "LostItem")
                         .WithMany("Matches")
+                        .HasForeignKey("LostItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FoundItem");
+
+                    b.Navigation("LostItem");
+                });
+
+            modelBuilder.Entity("Talaqi.Domain.Entities.MatchCandidate", b =>
+                {
+                    b.HasOne("Talaqi.Domain.Entities.FoundItem", "FoundItem")
+                        .WithMany()
+                        .HasForeignKey("FoundItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Talaqi.Domain.Entities.LostItem", "LostItem")
+                        .WithMany()
                         .HasForeignKey("LostItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

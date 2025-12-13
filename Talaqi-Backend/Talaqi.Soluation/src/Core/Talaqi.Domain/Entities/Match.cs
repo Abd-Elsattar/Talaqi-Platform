@@ -11,6 +11,8 @@ namespace Talaqi.Domain.Entities
         public bool NotificationSent { get; set; }
         public DateTime? NotificationSentAt { get; set; }
         public string? MatchDetails { get; set; } 
+        public string? MatchExplanation { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         // Navigation Properties
         public virtual LostItem LostItem { get; set; } = null!;

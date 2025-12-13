@@ -10,6 +10,8 @@
         public DateTime CreatedAt { get; set; }
         public LostItemDto? LostItem { get; set; }
         public FoundItemDto? FoundItem { get; set; }
+        public string? MatchDetails { get; set; }
+        public string? MatchExplanation { get; set; }
     }
 
 }
