@@ -25,6 +25,10 @@ namespace Talaqi.Domain.Entities
         public virtual ICollection<LostItem> LostItems { get; set; } = new List<LostItem>();
         public virtual ICollection<FoundItem> FoundItems { get; set; } = new List<FoundItem>();
 
+        // Reviews navigation
+        public virtual ICollection<Review> GivenReviews { get; set; } = new List<Review>();
+        public virtual ICollection<Review> ReceivedReviews { get; set; } = new List<Review>();
+
         public string FullName => $"{FirstName} {LastName}";
     }
 }

@@ -15,6 +15,10 @@ namespace Talaqi.Infrastructure.Repositories
         private IMatchRepository? _matches;
         private IVerificationCodeRepository? _verificationCodes;
 
+        // New repositories backing fields
+        private IReviewRepository? _reviews;
+        private IMessageRepository? _messages;
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -25,6 +29,10 @@ namespace Talaqi.Infrastructure.Repositories
         public IFoundItemRepository FoundItems => _foundItems ??= new FoundItemRepository(_context);
         public IMatchRepository Matches => _matches ??= new MatchRepository(_context);
         public IVerificationCodeRepository VerificationCodes => _verificationCodes ??= new VerificationCodeRepository(_context);
+
+        // New properties
+        public IReviewRepository Reviews => _reviews ??= new ReviewRepository(_context);
+        public IMessageRepository Messages => _messages ??= new MessageRepository(_context);
 
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

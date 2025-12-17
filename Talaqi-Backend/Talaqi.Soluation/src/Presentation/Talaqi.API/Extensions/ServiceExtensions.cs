@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication;
 using Talaqi.Application.Interfaces.Repositories;
 using Talaqi.Application.Interfaces.Services;
 using Talaqi.Application.Mapping;
@@ -10,6 +11,7 @@ using Talaqi.Application.Services;
 using Talaqi.Infrastructure.Data;
 using Talaqi.Infrastructure.Repositories;
 using Talaqi.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Talaqi.API.Extensions
 {
@@ -60,6 +62,10 @@ namespace Talaqi.API.Extensions
             services.AddScoped<IFoundItemRepository, FoundItemRepository>();
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
+
+            // New repositories
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             #endregion
 
             #region External Services
@@ -96,6 +102,22 @@ namespace Talaqi.API.Extensions
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                     ClockSkew = TimeSpan.Zero
+                };
+
+                // Allow access token in query string for SignalR
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"].FirstOrDefault();
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

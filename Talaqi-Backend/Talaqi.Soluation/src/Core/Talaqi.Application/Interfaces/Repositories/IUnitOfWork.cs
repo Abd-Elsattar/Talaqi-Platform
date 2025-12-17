@@ -8,6 +8,10 @@
         IMatchRepository Matches { get; }
         IVerificationCodeRepository VerificationCodes { get; }
 
+        // New repositories
+        IReviewRepository Reviews { get; }
+        IMessageRepository Messages { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();

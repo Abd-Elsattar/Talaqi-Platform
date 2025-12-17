@@ -6,6 +6,9 @@ using Talaqi.API.Filters;
 using Talaqi.API.Middleware;
 using Talaqi.API.Validators;
 using Talaqi.Infrastructure.Data;
+using Talaqi.API.Hubs;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Logging;
 
 namespace Talaqi.API
 {
@@ -13,6 +16,9 @@ namespace Talaqi.API
     {
         public static async Task Main(string[] args)
         {
+            // Show Personal Identifiable Information for IdentityModel events
+            IdentityModelEventSource.ShowPII = true;
+
             var builder = WebApplication.CreateBuilder(args);
 
             #region Serilog Configuration
@@ -39,6 +45,12 @@ namespace Talaqi.API
             builder.Services.AddApplicationServices();
             builder.Services.AddJwtAuthentication(builder.Configuration);
             builder.Services.AddCorsPolicy();
+
+            // Localization for SharedResources
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            // SignalR
+            builder.Services.AddSignalR();
             #endregion
 
             #region Health Checks
@@ -88,6 +100,9 @@ namespace Talaqi.API
 
             app.MapHealthChecks("/health");
             app.MapControllers();
+
+            // SignalR Hub mapping
+            app.MapHub<ChatHub>("/chathub");
             #endregion
 
             #region Database Migration & Seeding

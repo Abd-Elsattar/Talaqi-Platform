@@ -2,8 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Talaqi.Application.DTOs.Users;
 using Talaqi.Application.Interfaces.Services;
+using Talaqi.Application.Interfaces.Repositories;
+using Talaqi.Application.DTOs.Reviews;
+using Microsoft.Extensions.Localization;
+using Talaqi.API.Resources;
+using System;
 
 namespace Talaqi.API.Controllers
 {
@@ -14,11 +20,15 @@ namespace Talaqi.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IFileService _fileService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public UsersController(IUserService userService, IFileService fileService)
+        public UsersController(IUserService userService, IFileService fileService, IUnitOfWork unitOfWork, IStringLocalizer<SharedResources> localizer)
         {
             _userService = userService;
             _fileService = fileService;
+            _unitOfWork = unitOfWork;
+            _localizer = localizer;
         }
 
         [HttpGet("profile")]
@@ -80,9 +90,87 @@ namespace Talaqi.API.Controllers
             return Ok(result);
         }
 
+        // New endpoints for reviews
+
+        [Authorize]
+        [HttpGet("{userId}/reviews")]
+        [HttpGet("users/{userId}/reviews")]
+        public async Task<ActionResult<UserReviewsSummaryDto>> GetUserReviews(string userId)
+        {
+            if (!Guid.TryParse(userId, out var reviewedUserId))
+                return BadRequest(_localizer["InvalidUserId"]);
+
+            var user = await _unitOfWork.Users.GetByIdAsync(reviewedUserId);
+            if (user == null)
+                return NotFound(_localizer["UserNotFound"]);
+
+            var reviews = (await _unitOfWork.Reviews.GetReviewsForUserAsync(reviewedUserId)).ToList();
+
+            var dtoList = reviews.Select(r => new ReviewDto
+            {
+                ReviewerName = r.Reviewer.FullName,
+                ReviewerPhotoUrl = r.Reviewer.ProfilePictureUrl,
+                Rating = r.Rating,
+                Comment = r.Comment,
+                CreatedAt = r.CreatedAt
+            }).ToList();
+
+            var summary = new UserReviewsSummaryDto
+            {
+                TotalReviews = dtoList.Count,
+                AverageRating = dtoList.Any() ? Math.Round((decimal)dtoList.Sum(r => r.Rating) / dtoList.Count, 2) : 0,
+                Reviews = dtoList
+            };
+
+            return Ok(summary);
+        }
+
+        [Authorize]
+        [HttpPost("{userId}/reviews")]
+        [HttpPost("users/{userId}/reviews")]
+        public async Task<IActionResult> AddReview(string userId, [FromBody] CreateReviewDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!Guid.TryParse(userId, out var reviewedUserId))
+                return BadRequest(_localizer["InvalidUserId"]);
+
+            var reviewerId = GetUserId();
+
+            if (reviewerId == reviewedUserId)
+                return BadRequest(_localizer["CannotReviewYourself"]);
+
+            var reviewedUser = await _unitOfWork.Users.GetByIdAsync(reviewedUserId);
+            if (reviewedUser == null)
+                return NotFound(_localizer["UserNotFound"]);
+
+            if (dto.Rating < 1 || dto.Rating > 5)
+                return BadRequest(_localizer["InvalidRating"]);
+
+            // Check existing review
+            var exists = await _unitOfWork.Reviews.HasReviewAsync(reviewerId, reviewedUserId);
+            if (exists)
+                return BadRequest(_localizer["ReviewAlreadyExists"]);
+
+            var review = new Talaqi.Domain.Entities.Review
+            {
+                ReviewerId = reviewerId,
+                ReviewedUserId = reviewedUserId,
+                Rating = dto.Rating,
+                Comment = dto.Comment
+            };
+
+            await _unitOfWork.Reviews.AddAsync(review);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(new { message = _localizer["ReviewAdded"] });
+        }
+
         private Guid GetUserId()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             return Guid.Parse(userIdClaim ?? throw new UnauthorizedAccessException());
         }
     }
