@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/verify/verify.css"],
-  "sourcesContent": ["/* Verify OTP Code Styling */\r\n.letter-spacing-lg {\r\n  letter-spacing: 0.5em !important;\r\n  font-size: 1.5rem;\r\n  background-color: #FFFFFF;\r\n  border: 2px solid #DDDDDD;\r\n  color: #324260;\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.letter-spacing-lg:focus {\r\n  background-color: #FFFFFF;\r\n  border-color: #6C8DB5;\r\n  box-shadow: 0 0 0 0.25rem rgba(108, 141, 181, 0.15);\r\n}\r\n\r\n/* Verify Page Background */\r\n:host {\r\n  display: block;\r\n  background-color: #FFFFFF;\r\n}"],
-  "mappings": ";AACA,CAAC;AACC,kBAAgB;AAChB,aAAW;AACX,oBAAkB;AAClB,UAAQ,IAAI,MAAM;AAClB,SAAO;AACP,cAAY,IAAI,KAAK;AACvB;AAEA,CATC,iBASiB;AAChB,oBAAkB;AAClB,gBAAc;AACd,cAAY,EAAE,EAAE,EAAE,QAAQ,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE;AAChD;AAGA;AACE,WAAS;AACT,oBAAkB;AACpB;",
-  "names": []
-}
