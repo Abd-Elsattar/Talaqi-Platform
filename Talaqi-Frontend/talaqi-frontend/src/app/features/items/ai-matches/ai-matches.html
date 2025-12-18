@@ -223,6 +223,10 @@
 
           <!-- Action Buttons -->
           <div class="match-actions">
+            <button (click)="startChat(match)" class="btn-action btn-chat" title="بدء المحادثة">
+              <i class="bi bi-chat-dots-fill"></i>
+              <span>محادثة</span>
+            </button>
             @if (canConfirm(match)) {
             <button (click)="updateMatchStatus(match.id, MatchStatus.Confirmed)" class="btn-action btn-confirm"
               title="تأكيد المطابقة">

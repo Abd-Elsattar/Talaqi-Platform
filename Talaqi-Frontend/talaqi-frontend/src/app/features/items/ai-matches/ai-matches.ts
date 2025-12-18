@@ -8,6 +8,7 @@ import { MatchService } from '../../../core/services/match.service';
 import { MatchDto, MatchStatus, normalizeMatchStatus } from '../../../core/models/match';
 import { ImageUrlService } from '../../../core/services/image-url.service';
 import { TokenService } from '../../../core/services/token.service';
+import { ChatService } from '../../../core/services/chat.service';
 
 @Component({
   selector: 'app-ai-matches',
@@ -21,6 +22,7 @@ export class AiMatches implements OnInit {
   private router = inject(Router);
   private imageUrlService = inject(ImageUrlService);
   private tokenService = inject(TokenService);
+  private chatService = inject(ChatService);
 
   //#region State
   allMatches: MatchDto[] = [];
@@ -124,6 +126,41 @@ export class AiMatches implements OnInit {
   //#endregion
 
   //#region Actions
+  startChat(match: MatchDto) {
+    const currentUser = this.tokenService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+        Swal.fire('Error', 'You must be logged in to chat', 'error');
+        return;
+    }
+
+    let otherUserId = '';
+    // Determine who is the other party
+    if (match.lostItem?.userId === currentUser.id) {
+        otherUserId = match.foundItem?.userId || '';
+    } else if (match.foundItem?.userId === currentUser.id) {
+        otherUserId = match.lostItem?.userId || '';
+    }
+
+    if (!otherUserId) {
+        Swal.fire('Error', 'Cannot determine chat participant', 'error');
+        return;
+    }
+
+    this.chatService.startConversation({ userId: otherUserId, matchId: match.id }).subscribe({
+        next: (res) => {
+            if (res.isSuccess && res.data) {
+                this.router.navigate(['/messages/chat', res.data.id]);
+            } else {
+                Swal.fire('Error', 'Failed to start conversation', 'error');
+            }
+        },
+        error: (err) => {
+             console.error(err);
+             Swal.fire('Error', 'Failed to start conversation', 'error');
+        }
+    });
+  }
+
   updateMatchStatus(matchId: string, newStatus: MatchStatus) {
     const match = this.allMatches.find((m) => m.id === matchId);
     // Prevent non-lost owners from changing status

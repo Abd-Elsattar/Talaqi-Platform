@@ -1,0 +1,9 @@
+/* user-reports.css */
+.table th {
+    font-weight: 600;
+    color: #555;
+}
+
+.table td {
+    vertical-align: middle;
+}

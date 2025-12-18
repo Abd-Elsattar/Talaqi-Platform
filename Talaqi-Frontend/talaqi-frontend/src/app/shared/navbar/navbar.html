@@ -24,25 +24,29 @@
         <!-- Admin only -->
         @if (isAdmin()) {
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateToAdminSection('statistics')"
+          <button class="nav-link" (click)="navigateToAdminSection('statistics')"
             [class.active]="activeAdminSection === 'statistics'">
             <i class="bi bi-graph-up"></i> الإحصائيات العامة
-          </a>
+        </button>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateToAdminSection('users')" [class.active]="activeAdminSection === 'users'">
+          <button class="nav-link" (click)="navigateToAdminSection('users')" [class.active]="activeAdminSection === 'users'">
             <i class="bi bi-people"></i> إدارة المستخدمين
-          </a>
+          </button>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateToAdminSection('items')" [class.active]="activeAdminSection === 'items'">
+          <button class="nav-link" (click)="navigateToAdminSection('items')" [class.active]="activeAdminSection === 'items'">
             <i class="bi bi-box"></i> إدارة العناصر
-          </a>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" (click)="navigateToAdminSection('reports')" [class.active]="activeAdminSection === 'reports'">
+            <i class="bi bi-flag me-2"></i> البلاغات
+          </button>
         </li>
         }
-
         <!-- Normal users -->
         @if (currentUser && !isAdmin()) {
 
@@ -67,6 +71,25 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/ai-matches" routerLinkActive="active">
             <i class="bi bi-cpu"></i> متطابقات الذكاء الاصطناعي
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/messages" routerLinkActive="active">
+            <div class="position-relative d-inline-flex align-items-center gap-2">
+              <i class="bi bi-chat-dots-fill"></i> الرسائل
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                *ngIf="unreadCount > 0" style="font-size: 0.65rem; padding: 0.25em 0.5em;">
+                {{ unreadCount > 99 ? '99+' : unreadCount }}
+                <span class="visually-hidden">unread messages</span>
+              </span>
+            </div>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/my-reports" routerLinkActive="active">
+            <i class="bi bi-flag"></i> بلاغاتي
           </a>
         </li>
 

@@ -427,11 +427,7 @@
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.5);
 }
 
-max-width: 100%;
-max-height: 100%;
-object-fit: contain;
-background: #ffffff;
-display: block;
+
 
 .btn-remove-image i {
   font-size: 1.2rem;

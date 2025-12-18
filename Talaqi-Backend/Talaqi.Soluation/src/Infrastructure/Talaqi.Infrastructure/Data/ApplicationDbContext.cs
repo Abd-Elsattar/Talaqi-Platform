@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Talaqi.Domain.Entities;
 using Talaqi.Domain.Rag.Embeddings;
 using Talaqi.Infrastructure.Data.Configuration;
+using Talaqi.Infrastructure.Data.Configuration.Messaging;
+using Talaqi.Domain.Entities.Messaging;
 
 namespace Talaqi.Infrastructure.Data
 {
@@ -13,6 +15,15 @@ namespace Talaqi.Infrastructure.Data
         public DbSet<LostItem> LostItems => Set<LostItem>();
         public DbSet<FoundItem> FoundItems => Set<FoundItem>();
         public DbSet<Match> Matches => Set<Match>();
+        
+        // Messaging (New)
+        public DbSet<Conversation> Conversations => Set<Conversation>();
+        public DbSet<ConversationParticipant> ConversationParticipants => Set<ConversationParticipant>();
+        public DbSet<Talaqi.Domain.Entities.Messaging.Message> Messages => Set<Talaqi.Domain.Entities.Messaging.Message>();
+        public DbSet<MessageDelivery> MessageDeliveries => Set<MessageDelivery>();
+        public DbSet<Attachment> Attachments => Set<Attachment>();
+        public DbSet<Talaqi.Domain.Entities.Reporting.Report> Reports => Set<Talaqi.Domain.Entities.Reporting.Report>();
+
         public DbSet<MatchCandidate> MatchCandidates => Set<MatchCandidate>();
         public DbSet<VerificationCode> VerificationCodes => Set<VerificationCode>();
         public DbSet<ItemEmbedding> ItemEmbeddings => Set<ItemEmbedding>();
@@ -27,17 +38,33 @@ namespace Talaqi.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new LostItemConfiguration());
             modelBuilder.ApplyConfiguration(new FoundItemConfiguration());
             modelBuilder.ApplyConfiguration(new MatchConfiguration());
+            
+            // Messaging Configurations
+            modelBuilder.ApplyConfiguration(new ConversationConfiguration());
+            modelBuilder.ApplyConfiguration(new ConversationParticipantConfiguration());
+            modelBuilder.ApplyConfiguration(new Talaqi.Infrastructure.Data.Configuration.Messaging.MessageConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageDeliveryConfiguration());
+
+            modelBuilder.ApplyConfiguration(new UserReportConfiguration());
             // Optionally configure MatchCandidate via conventions
             modelBuilder.ApplyConfiguration(new VerificationCodeConfiguration());
             modelBuilder.ApplyConfiguration(new ItemEmbeddingConfiguration());
             modelBuilder.ApplyConfiguration(new PlatformKnowledgeConfiguration());
             modelBuilder.ApplyConfiguration(new PlatformKnowledgeEmbeddingConfiguration());
+            modelBuilder.ApplyConfiguration(new Talaqi.Infrastructure.Data.Configuration.Reporting.ReportConfiguration());
 
             // Global query filters
             modelBuilder.Entity<User>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<LostItem>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<FoundItem>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Talaqi.Domain.Rag.Knowledge.PlatformKnowledge>().HasQueryFilter(e => !e.IsDeleted);
+            
+            // New Messaging Filters
+            modelBuilder.Entity<Conversation>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Talaqi.Domain.Entities.Messaging.Message>().HasQueryFilter(e => e.DeletedForEveryoneAt == null);
+
+            modelBuilder.Entity<UserReport>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Talaqi.Domain.Entities.Reporting.Report>().HasQueryFilter(e => !e.IsDeleted);
 
             // Configure decimal precision for MatchCandidate scores
             modelBuilder.Entity<MatchCandidate>(b =>
@@ -47,6 +74,12 @@ namespace Talaqi.Infrastructure.Data
                 b.Property(x => x.ScoreLocation).HasColumnType("decimal(5,2)");
                 b.Property(x => x.ScoreDate).HasColumnType("decimal(5,2)");
                 b.Property(x => x.AggregateScore).HasColumnType("decimal(5,2)");
+            });
+
+            // Configure reports (no updates expected, but allow admin metadata)
+            modelBuilder.Entity<UserReport>(b =>
+            {
+                b.Property(x => x.Description).HasMaxLength(2000);
             });
         }
 

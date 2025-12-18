@@ -1,14 +1,17 @@
-﻿using System.Text;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Talaqi.Application.Interfaces.Repositories;
+using Talaqi.Application.Interfaces.Repositories.Reporting;
 using Talaqi.Application.Interfaces.Services;
 using Talaqi.Application.Mapping;
 using Talaqi.Application.Services;
 using Talaqi.Infrastructure.Data;
 using Talaqi.Infrastructure.Repositories;
+using Talaqi.Infrastructure.Repositories.Reporting;
 using Talaqi.Infrastructure.Services;
 using Talaqi.Infrastructure.Rag.Embeddings;
 using Talaqi.Infrastructure.Rag.VectorSearch;
@@ -39,6 +42,10 @@ namespace Talaqi.API.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAIService, AIService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IMessagingService, MessagingService>();
+            services.AddScoped<IChatNotifier, Talaqi.API.Services.ChatNotifier>();
+            services.AddScoped<IUserReportService, UserReportService>();
+            services.AddScoped<IReportService, ReportService>();
 
             // RAG services
             services.AddScoped<IEmbeddingService, EmbeddingService>();
@@ -74,6 +81,13 @@ namespace Talaqi.API.Extensions
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddScoped<IMatchCandidateRepository, MatchCandidateRepository>();
             services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
+            
+            // Messaging
+            services.AddScoped<Talaqi.Application.Interfaces.Repositories.Messaging.IConversationRepository, Talaqi.Infrastructure.Repositories.Messaging.ConversationRepository>();
+            services.AddScoped<Talaqi.Application.Interfaces.Repositories.Messaging.IMessageRepository, Talaqi.Infrastructure.Repositories.Messaging.MessageRepository>();
+            
+            services.AddScoped<IUserReportRepository, UserReportRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
             #endregion
 
             #region External Services
@@ -113,6 +127,22 @@ namespace Talaqi.API.Extensions
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                     ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/api/hubs")))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

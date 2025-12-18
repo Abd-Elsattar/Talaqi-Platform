@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -26,6 +26,10 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./features/legal/legal.routes').then((m) => m.LEGAL_ROUTES),
+  },
+  {
+    path: '',
+    loadChildren: () => import('./features/messages/messages.routes').then((m) => m.MESSAGES_ROUTES),
   },
 
   {

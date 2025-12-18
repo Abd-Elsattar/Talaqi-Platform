@@ -13,6 +13,8 @@ import { Subscription } from 'rxjs';
 import { TokenService } from '../../core/services/token.service';
 import { ImageUrlService } from '../../core/services/image-url.service';
 import { User } from '../../core/models/auth';
+import { ChatService } from '../../core/services/chat.service';
+import { SignalRService } from '../../core/services/signalr.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,11 +29,16 @@ export class Navbar implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private imageUrlService = inject(ImageUrlService);
   private elRef = inject(ElementRef);
+  private chatService = inject(ChatService);
+  private signalRService = inject(SignalRService);
 
   private userSubscription?: Subscription;
   private queryParamsSubscription?: Subscription;
+  private unreadCountSubscription?: Subscription;
+  private messageSubscription?: Subscription;
 
   currentUser: User | null = null;
+  unreadCount = 0;
 
   isDropdownOpen = false;
   isReportDropdownOpen = false;
@@ -39,24 +46,45 @@ export class Navbar implements OnInit, OnDestroy {
 
   @ViewChild('collapseContent') collapseContent?: ElementRef<HTMLElement>;
 
-  activeAdminSection: 'statistics' | 'users' | 'items' = 'statistics';
+  activeAdminSection: 'statistics' | 'users' | 'items' | 'reports' = 'statistics';
 
   defaultProfilePicture = 'images/Default User Icon.jpg';
 
   ngOnInit() {
     this.userSubscription = this.tokenService.currentUser$.subscribe(
-      (user) => (this.currentUser = user)
+      (user) => {
+        this.currentUser = user;
+        if (user) {
+          // Initialize chat connection and count
+          this.signalRService.startConnection();
+          this.chatService.getConversations().subscribe(); // Triggers count update via tap
+        }
+      }
     );
 
     this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
-      if (['statistics', 'users', 'items'].includes(params['section']))
+      if (['statistics', 'users', 'items', 'reports'].includes(params['section']))
         this.activeAdminSection = params['section'];
+    });
+
+    this.unreadCountSubscription = this.chatService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+
+    this.messageSubscription = this.signalRService.messageReceived$.subscribe(message => {
+      if (message && message.senderId !== this.currentUser?.id) {
+        // Increment unread count globally if we are not already viewing it?
+        // For now, we increment. The chat component will mark it as read which decrements.
+        this.chatService.incrementUnreadCount();
+      }
     });
   }
 
   ngOnDestroy() {
     this.userSubscription?.unsubscribe();
     this.queryParamsSubscription?.unsubscribe();
+    this.unreadCountSubscription?.unsubscribe();
+    this.messageSubscription?.unsubscribe();
   }
 
   getProfilePictureUrl() {
@@ -70,7 +98,7 @@ export class Navbar implements OnInit, OnDestroy {
     return this.tokenService.isAdmin();
   }
 
-  navigateToAdminSection(section: 'statistics' | 'users' | 'items') {
+  navigateToAdminSection(section: 'statistics' | 'users' | 'items' | 'reports') {
     this.activeAdminSection = section;
     this.router.navigate(['/admin-panel'], { queryParams: { section } });
   }

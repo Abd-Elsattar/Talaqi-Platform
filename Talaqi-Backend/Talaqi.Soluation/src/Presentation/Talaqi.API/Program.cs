@@ -1,11 +1,12 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Talaqi.API.Extensions;
 using Talaqi.API.Filters;
 using Talaqi.API.Middleware;
-using Talaqi.API.Validators;
+using Talaqi.API.Hubs;
 using Talaqi.Infrastructure.Data;
+using Talaqi.API.Validators;
 
 namespace Talaqi.API
 {
@@ -67,6 +68,12 @@ namespace Talaqi.API
             });
             #endregion
 
+            // Ensure SignalR services are registered
+            builder.Services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+
             var app = builder.Build();
 
             #region Development Environment Setup
@@ -83,7 +90,7 @@ namespace Talaqi.API
 
             #region Middleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseRouting();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -125,7 +132,10 @@ namespace Talaqi.API
             Log.Information("Talaqi API started successfully");
             #endregion
 
-            app.Run();
+            // Map the SignalR chat hub at the expected path used by frontend
+            app.MapHub<ChatHub>("/api/hubs/chat");
+
+            await app.RunAsync();
         }
 
         #region Seed Method

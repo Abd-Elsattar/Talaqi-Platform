@@ -141,19 +141,13 @@ namespace Talaqi.Application.Services
         }
 
         private decimal CalculateMatchScore(
-            AIAnalysisResult? foundAI,
-            AIAnalysisResult? lostAI,
-            FoundItem found,
-            LostItem lost)
+    AIAnalysisResult? foundAI,
+    AIAnalysisResult? lostAI,
+    FoundItem found,
+    LostItem lost)
         {
-            var weights = _weights.ContainsKey(lost.Category)
-                ? _weights[lost.Category]
-                : new CategoryWeights { Keywords = 0.50m, Location = 0.30m, Date = 0.20m };
-
             decimal scoreKeywords = 0;
             decimal scoreSemantic = 0;
-            decimal scoreLocation = 0;
-            decimal scoreDate = 0;
 
             if (foundAI?.Keywords != null && lostAI?.Keywords != null)
             {
@@ -166,7 +160,6 @@ namespace Talaqi.Application.Services
                 if (union > 0)
                 {
                     var jaccard = intersect / (decimal)union;
-                    // Bonus for having at least 3 overlapping keywords
                     var bonus = intersect >= 3 ? 0.1m : 0m;
                     scoreKeywords = Math.Clamp((jaccard + bonus) * 100m, 0, 100);
                 }
@@ -177,61 +170,18 @@ namespace Talaqi.Application.Services
             if (foundEmb != null && lostEmb != null)
             {
                 var cos = (decimal)(CosineSimilarity(foundEmb, lostEmb) * 100.0);
-                // Blend semantic with keywords to avoid overfitting
                 scoreSemantic = Math.Clamp(cos, 0, 100);
             }
 
-            decimal gpsScore = 0;
-            int adminScore = 0;
+            // Blend text only
+            var textScore =
+                scoreSemantic > 0
+                    ? (0.6m * scoreSemantic + 0.4m * scoreKeywords)
+                    : scoreKeywords;
 
-            if (found.Location.Latitude != null && lost.Location.Latitude != null)
-            {
-                var dist = Haversine(
-                    found.Location.Latitude.Value, found.Location.Longitude!.Value,
-                    lost.Location.Latitude.Value, lost.Location.Longitude!.Value);
-                var score = 100.0 * Math.Exp(-(dist / 5.0));
-                gpsScore = (decimal)Math.Clamp(score, 0, 100);
-            }
-
-            var foundAddr = foundAI?.AdditionalData?
-                .GetValueOrDefault("normalized_address")?.ToString();
-
-            var lostAddr = lostAI?.AdditionalData?
-                .GetValueOrDefault("normalized_address")?.ToString();
-
-            if (!string.IsNullOrWhiteSpace(foundAddr) &&
-                !string.IsNullOrWhiteSpace(lostAddr) &&
-                foundAddr.Equals(lostAddr, StringComparison.OrdinalIgnoreCase))
-            {
-                adminScore = 100;
-            }
-            else if (found.Location.City == lost.Location.City)
-            {
-                adminScore = 75;
-            }
-            else if (found.Location.Governorate == lost.Location.Governorate)
-            {
-                adminScore = 55;
-            }
-
-            scoreLocation = Math.Max(gpsScore, adminScore);
-
-            var days = Math.Abs((found.DateFound - lost.DateLost).TotalDays);
-
-            var dateScore = 100.0 * Math.Exp(-(days / 7.0));
-            scoreDate = (decimal)Math.Clamp(dateScore, 5, 100);
-
-            var contentRelevance = scoreSemantic > 0
-                ? (double)(0.6m * scoreSemantic + 0.4m * scoreKeywords)
-                : (double)scoreKeywords;
-
-            decimal final =
-                ((decimal)contentRelevance * weights.Keywords) +
-                (scoreLocation * weights.Location) +
-                (scoreDate * weights.Date);
-
-            return Math.Clamp(final, 0, 100);
+            return Math.Clamp(textScore, 0, 100);
         }
+
 
         private (decimal sText, decimal sImage, decimal sLoc, decimal sDate, decimal agg, Dictionary<string, object> reasons)
             ComputeEnsembleScores(AIAnalysisResult? foundAI, AIAnalysisResult? lostAI, FoundItem found, LostItem lost)

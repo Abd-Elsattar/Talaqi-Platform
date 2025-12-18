@@ -4,7 +4,8 @@
 .match-actions .btn-action,
 .match-actions .btn-confirm,
 .match-actions .btn-reject,
-.match-actions .btn-resolve {
+.match-actions .btn-resolve,
+.match-actions .btn-chat {
   background: linear-gradient(135deg, var(--primary) 0%, #243041 100%);
   color: #FFFFFF;
   border: none;
@@ -14,7 +15,8 @@
 .match-actions .btn-action:hover,
 .match-actions .btn-confirm:hover,
 .match-actions .btn-reject:hover,
-.match-actions .btn-resolve:hover {
+.match-actions .btn-resolve:hover,
+.match-actions .btn-chat:hover {
   filter: brightness(1.05);
 }
 
@@ -859,24 +861,15 @@
   z-index: 1;
 }
 
-.btn-confirm {
-  background: linear-gradient(135deg, #6C8DB5 0%, #8ba3c7 100%);
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(108, 141, 181, 0.3);
+/* Special colors for specific buttons */
+.match-actions .btn-confirm {
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
 }
-
-.btn-confirm:hover {
-  background: linear-gradient(135deg, #5a7ba3 0%, #6C8DB5 100%);
+.match-actions .btn-reject {
+  background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
 }
-
-.btn-reject {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-.btn-reject:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+.match-actions .btn-chat {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
 }
 
 .btn-resolve {
@@ -897,6 +890,16 @@
   padding: 1.25rem 0;
   margin-top: 1.5rem;
   border-top: 2px solid #DDDDDD;
+}
+
+.btn-chat {
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-chat:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
 }
 
 .results-count p {
