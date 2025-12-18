@@ -242,12 +242,20 @@
                     <td>
                       <span class="item-category-badge">{{ getCategoryName(item.category) }}</span>
                     </td>
+
                     <td>
                       <div class="item-location">
                         <i class="bi bi-geo-alt me-1"></i>
-                        <span>{{ item.location?.city || 'غير محدد' }}</span>
+                        <span>
+                          {{
+                          typeof item.location === 'string'
+                          ? item.location
+                          : item.location?.city || item.location?.state || 'غير محدد'
+                          }}
+                        </span>
                       </div>
                     </td>
+
                     <td>
                       <span class="item-date">{{ item.createdAt | date: 'dd/MM/yyyy' }}</span>
                     </td>
@@ -534,6 +542,138 @@
           </div>
         </div>
       </div>
+
+      <!-- Reports Section -->
+      <div *ngIf="activeSection === 'reports'" class="tab-content-section">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-header bg-gradient-danger text-white border-0">
+            <div class="row align-items-center">
+              <div class="col">
+                <h5 class="mb-0 fw-600">
+                  <i class="bi bi-flag-fill"></i> إدارة البلاغات
+                </h5>
+                <p class="mb-0 small opacity-75">مراجعة وإدارة بلاغات المستخدمين</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <!-- Reports Filter Bar -->
+            <div class="search-bar-wrapper p-4 bg-white border-bottom">
+              <div class="row g-3 align-items-center">
+                <div class="col-lg-8">
+                  <div class="d-flex gap-3">
+                    <button class="btn btn-outline-secondary" (click)="filterReports()" [class.active]="!reportFilter.status">
+                      الكل
+                    </button>
+                    <button class="btn btn-outline-warning" (click)="reportFilter.status = 0; filterReports()" [class.active]="reportFilter.status === 0">
+                      قيد الانتظار
+                    </button>
+                    <button class="btn btn-outline-info" (click)="reportFilter.status = 1; filterReports()" [class.active]="reportFilter.status === 1">
+                      قيد المراجعة
+                    </button>
+                    <button class="btn btn-outline-success" (click)="reportFilter.status = 2; filterReports()" [class.active]="reportFilter.status === 2">
+                      تم الحل
+                    </button>
+                    <button class="btn btn-outline-danger" (click)="reportFilter.status = 3; filterReports()" [class.active]="reportFilter.status === 3">
+                      مرفوض
+                    </button>
+                  </div>
+                </div>
+                <div class="col-lg-4 text-end">
+                  <button class="btn btn-primary" (click)="loadReports()">
+                    <i class="bi bi-arrow-clockwise"></i> تحديث
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div *ngIf="loadingReports" class="text-center py-5">
+              <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+              <p class="mt-3 text-muted">جاري تحميل البلاغات...</p>
+            </div>
+
+            <!-- Reports Table -->
+            <div *ngIf="!loadingReports" class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3"><i class="bi bi-person"></i> المُبَلِّغ</th>
+                    <th class="py-3"><i class="bi bi-bullseye"></i> الهدف</th>
+                    <th class="py-3"><i class="bi bi-exclamation-circle"></i> السبب</th>
+                    <th class="py-3"><i class="bi bi-calendar"></i> التاريخ</th>
+                    <th class="py-3 text-center"><i class="bi bi-toggle-on"></i> الحالة</th>
+                    <th class="py-3 text-center"><i class="bi bi-gear"></i> الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let report of reports">
+                    <td class="px-4">
+                      <div class="fw-bold">{{ report.reporterName || 'مستخدم محذوف' }}</div>
+                      <small class="text-muted">{{ report.reporterId.substring(0, 8) }}...</small>
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">{{ getReportTargetTypeText(report.targetType) }}</span>
+                      <div class="small mt-1 text-truncate" style="max-width: 200px;" title="{{ report.description }}">
+                        {{ report.description || 'لا يوجد وصف' }}
+                      </div>
+                    </td>
+                    <td>
+                      <span class="fw-bold">{{ getReportReasonText(report.reason) }}</span>
+                    </td>
+                    <td>
+                      <small>{{ report.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge" [ngClass]="{
+                        'bg-warning': report.status === 0,
+                        'bg-info': report.status === 1,
+                        'bg-success': report.status === 2,
+                        'bg-danger': report.status === 3
+                      }">
+                        {{
+                          report.status === 0 ? 'قيد الانتظار' :
+                          report.status === 1 ? 'قيد المراجعة' :
+                          report.status === 2 ? 'تم الحل' : 'مرفوض'
+                        }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <button class="btn btn-sm btn-outline-primary" (click)="openReportModal(report)">
+                        <i class="bi bi-eye"></i> تفاصيل
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="reports.length === 0">
+                    <td colspan="6" class="text-center py-5 text-muted">
+                      <i class="bi bi-check-circle fs-1 d-block mb-3"></i>
+                      لا توجد بلاغات حالياً
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-section p-3 border-top bg-light">
+               <nav class="d-flex justify-content-center">
+                 <ul class="pagination pagination-sm mb-0">
+                   <li class="page-item" [class.disabled]="reportsPage === 1">
+                     <button class="page-link" (click)="prevReportsPage()">السابق</button>
+                   </li>
+                   <li class="page-item disabled">
+                     <span class="page-link">{{ reportsPage }}</span>
+                   </li>
+                   <li class="page-item">
+                     <button class="page-link" (click)="nextReportsPage()">التالي</button>
+                   </li>
+                 </ul>
+               </nav>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -612,9 +752,12 @@
                 <span>معلومات الموقع</span>
               </div>
               <div class="detail-card-body">
-                <div class="detail-row">
+
+                <!-- <div class="detail-row">
                   <span class="detail-label">المدينة:</span>
-                  <span class="detail-value">{{ selectedItem.location?.city || 'غير محدد' }}</span>
+                   <span class="detail-value">
+                {{ selectedItem.location?.city || selectedItem.location?.state || 'غير محدد' }}
+              </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">الولاية:</span>
@@ -623,7 +766,36 @@
                 <div class="detail-row" *ngIf="selectedItem.location?.address">
                   <span class="detail-label">العنوان:</span>
                   <span class="detail-value">{{ selectedItem.location.address }}</span>
+                </div> -->
+
+                <div class="detail-row">
+                  <span class="detail-label">المدينة:</span>
+                  <span class="detail-value">
+                    {{
+                    typeof selectedItem.location === 'string'
+                    ? selectedItem.location
+                    : selectedItem.location?.city || 'غير محدد'
+                    }}
+                  </span>
                 </div>
+
+                <!-- <div class="detail-row">
+  <span class="detail-label">الولاية:</span>
+  <span class="detail-value">
+    {{
+      typeof selectedItem.location === 'string'
+        ? '—'
+        : selectedItem.location?.state || 'غير محدد'
+    }}
+  </span>
+</div> -->
+
+                <div class="detail-row" *ngIf="selectedItem.location?.address">
+                  <span class="detail-label">العنوان:</span>
+                  <span class="detail-value">{{ selectedItem.location.address }}</span>
+                </div>
+
+
               </div>
             </div>
           </div>
@@ -642,8 +814,16 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">معلومات التواصل:</span>
-                  <span class="detail-value">{{ selectedItem.contactInfo || 'غير محدد' }}</span>
+                  <span class="detail-value">
+                    {{
+                    selectedItem.userPhone
+                    ||
+                    selectedItem.userEmail
+                    || 'غير محدد'
+                    }}
+                  </span>
                 </div>
+
               </div>
             </div>
           </div>
@@ -826,6 +1006,123 @@
       <!-- Modal Footer -->
       <div class="modal-footer border-0 bg-light">
         <button type="button" class="btn btn-secondary" (click)="closeUserModal()">
+          <i class="bi bi-x-circle"></i> إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Details Modal -->
+<div *ngIf="showReportModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-gradient-danger text-white border-0">
+        <h5 class="modal-title ms-auto">
+          <i class="bi bi-flag-fill"></i> تفاصيل البلاغ
+        </h5>
+        <button type="button" class="btn-close-enhanced" (click)="closeReportModal()" aria-label="إغلاق">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body p-4" *ngIf="selectedReport">
+        <div class="row g-4">
+          <!-- Report Info -->
+          <div class="col-12">
+            <div class="card border-0 bg-light mb-3">
+              <div class="card-body">
+                <h6 class="card-title text-danger mb-3">
+                  <i class="bi bi-info-circle-fill"></i> معلومات البلاغ
+                </h6>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold">السبب</label>
+                    <div class="fw-bold">{{ getReportReasonText(selectedReport.reason) }}</div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold">تاريخ البلاغ</label>
+                    <div>{{ selectedReport.createdAt | date:'dd MMMM yyyy, HH:mm' }}</div>
+                  </div>
+                  <div class="col-12">
+                    <label class="text-muted small fw-bold">الوصف</label>
+                    <div class="p-2 bg-white rounded border">{{ selectedReport.description || 'لا يوجد وصف' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reporter Info -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">
+                  <i class="bi bi-person-fill"></i> المُبَلِّغ
+                </h6>
+                <div>
+                  <div class="fw-bold">{{ selectedReport.reporterName || 'مستخدم محذوف' }}</div>
+                  <small class="text-muted d-block">ID: {{ selectedReport.reporterId }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Target Info -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">
+                  <i class="bi bi-bullseye"></i> الهدف ({{ getReportTargetTypeText(selectedReport.targetType) }})
+                </h6>
+                <div *ngIf="selectedReport.targetUserId">
+                  <label class="text-muted small">المستخدم المبلغ عنه:</label>
+                  <div class="fw-bold">{{ selectedReport.targetUserName || 'غير معروف' }}</div>
+                  <small class="text-muted d-block">ID: {{ selectedReport.targetUserId }}</small>
+                </div>
+                <div *ngIf="selectedReport.messageId">
+                  <label class="text-muted small">الرسالة:</label>
+                  <div class="fw-bold">{{ selectedReport.messageId }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Action -->
+          <div class="col-12">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <h6 class="card-title text-dark mb-3">
+                  <i class="bi bi-shield-lock-fill"></i> إجراءات الإدارة
+                </h6>
+
+                <div class="mb-3">
+                  <label class="form-label fw-bold">تحديث الحالة</label>
+                  <select class="form-select" [(ngModel)]="newStatus">
+                    <option [ngValue]="0">قيد الانتظار</option>
+                    <option [ngValue]="1">قيد المراجعة</option>
+                    <option [ngValue]="2">تم الحل (قبول البلاغ)</option>
+                    <option [ngValue]="3">مرفوض (بلاغ كاذب)</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-bold">ملاحظات الإدارة</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="adminNote" placeholder="أضف ملاحظات حول الإجراء المتخذ..."></textarea>
+                </div>
+
+                <button class="btn btn-primary w-100" (click)="updateReport()" [disabled]="updatingReportStatus">
+                  <span *ngIf="updatingReportStatus" class="spinner-border spinner-border-sm me-2"></span>
+                  حفظ التغييرات
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 bg-light">
+        <button type="button" class="btn btn-secondary" (click)="closeReportModal()">
           <i class="bi bi-x-circle"></i> إغلاق
         </button>
       </div>

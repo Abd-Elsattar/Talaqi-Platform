@@ -1,0 +1,164 @@
+<div class="chat-container">
+
+  <!-- Match Context Header (Sticky) -->
+  <div class="match-context-header" *ngIf="matchDetails">
+    <div class="match-info">
+      <div class="context-label">
+        <i class="bi bi-stars text-primary"></i> تفاصيل التطابق
+      </div>
+
+      <div class="match-items-wrapper">
+        <div class="match-item lost">
+          <span class="item-badge">مفقود</span>
+          <span class="item-title">{{ matchDetails.lostItem?.title }}</span>
+        </div>
+
+        <div class="match-divider">
+          <i class="bi bi-arrow-left-right"></i>
+        </div>
+
+        <div class="match-item found">
+          <span class="item-badge">معثور عليه</span>
+          <span class="item-title">{{ matchDetails.foundItem?.title }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="match-score" title="نسبة التطابق">
+      <div class="score-circle">
+        <span>{{ matchDetails.confidenceScore | number:'1.0-0' }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <div class="header-left">
+      <button class="btn-back d-md-none" [routerLink]="['/messages']">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+      <div class="avatar-wrapper">
+        <img [src]="getParticipantImage()" alt="Avatar" class="header-avatar">
+        <span class="status-dot" *ngIf="conversation?.type === 0"></span>
+      </div>
+
+      <div class="header-info">
+        <span class="header-name">{{ getParticipantName() }}</span>
+        <span class="header-status" *ngIf="conversation?.type === 0">نشط الآن</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class=" text-danger btn btn-outline-danger " (click)="openReportUserModal()" title="إبلاغ عن المستخدم">
+        ابلاغ عن المستخدم <i class="bi bi-flag"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Area -->
+  <div class="messages-area" #scrollContainer>
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!loading && messages.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-chat-dots"></i>
+      </div>
+      <h3>لا توجد رسائل</h3>
+      <p>ابدأ المحادثة بإرسال رسالة الآن.</p>
+    </div>
+
+    <ng-container *ngFor="let group of groupedMessages">
+      <div class="date-separator">
+        <span>{{ group.date }}</span>
+      </div>
+
+      <div *ngFor="let msg of group.messages" class="message-bubble-wrapper" [ngClass]="{
+    'received': msg.senderId !== currentUser?.id,
+    'sent': msg.senderId === currentUser?.id
+  }">
+
+        <div class="message-actions">
+          <button *ngIf="msg.senderId === currentUser?.id" class="btn-action delete" (click)="deleteMessage(msg.id)"
+            title="حذف">
+            <i class="bi bi-trash"></i>
+          </button>
+          <button *ngIf="msg.senderId !== currentUser?.id" class="btn-action report"
+            (click)="openReportMessageModal(msg.id)" title="إبلاغ">
+            <i class="bi bi-flag"></i>
+          </button>
+        </div>
+
+        <div class="message-bubble">
+          <div class="message-content">
+            {{ msg.content }}
+          </div>
+
+          <div class="message-meta">
+            <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+            <span class="status" *ngIf="msg.senderId === currentUser?.id">
+              <i class="bi bi-check" *ngIf="msg.deliveryStatus === 1"></i> <!-- Sent -->
+              <i class="bi bi-check-all" *ngIf="msg.deliveryStatus === 2"></i> <!-- Delivered -->
+              <i class="bi bi-check-all text-primary" *ngIf="msg.deliveryStatus === 3"></i> <!-- Read -->
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="typingUser" class="typing-indicator-wrapper">
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="typing-text">{{ typingUser }}</span>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <div class="input-wrapper">
+      <input type="text" class="input-field" placeholder="اكتب رسالتك هنا..." [(ngModel)]="newMessage"
+        (keyup.enter)="sendMessage()" (input)="onTyping()">
+    </div>
+
+    <button class="btn-send" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal-overlay" *ngIf="showReportModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>إبلاغ</h3>
+      <button class="btn-close-modal" (click)="closeReportModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>سبب الإبلاغ</label>
+        <select [(ngModel)]="reportReason" class="form-control">
+          <option *ngFor="let reason of reportReasons" [value]="reason.value">{{ reason.label }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>تفاصيل إضافية (اختياري)</label>
+        <textarea [(ngModel)]="reportDescription" class="form-control" rows="4"
+          placeholder="اشرح المشكلة..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeReportModal()">إلغاء</button>
+      <button class="btn-submit" (click)="submitReport()" [disabled]="isReporting">
+        <span *ngIf="isReporting" class="spinner-border spinner-border-sm"></span>
+        <span>إرسال البلاغ</span>
+      </button>
+    </div>
+  </div>
+</div>

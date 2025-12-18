@@ -234,19 +234,16 @@ namespace Talaqi.Infrastructure.Services
             if (string.IsNullOrWhiteSpace(text))
                 return new();
 
-            var stopWords = new HashSet<string>
-            {
-                "the","a","an","and","or","in","for","with","this","that","from",
-                "cannot","access","view","image","images","directly"
-            };
-
-            return text.ToLowerInvariant()
+            return text
+                .Replace("،", " ")
+                .Replace("ـ", "")
                 .Split(new[] { ' ', ',', '.', '\n', '\r' },
                        StringSplitOptions.RemoveEmptyEntries)
-                .Where(w => w.Length > 3 && !stopWords.Contains(w))
+                .Where(w => w.Length >= 2)
                 .Distinct()
                 .Take(25)
                 .ToList();
         }
+
     }
 }

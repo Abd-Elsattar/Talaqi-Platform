@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Talaqi.Application.Interfaces.Repositories;
+using Talaqi.Application.Interfaces.Repositories.Messaging;
+using Talaqi.Application.Interfaces.Repositories.Reporting;
 using Talaqi.Infrastructure.Data;
+using Talaqi.Infrastructure.Repositories.Messaging;
+using Talaqi.Infrastructure.Repositories.Reporting;
 
 namespace Talaqi.Infrastructure.Repositories
 {
@@ -17,6 +21,13 @@ namespace Talaqi.Infrastructure.Repositories
         public ILostItemRepository LostItems => new LostItemRepository(_context);
         public IFoundItemRepository FoundItems => new FoundItemRepository(_context);
         public IMatchRepository Matches => new MatchRepository(_context);
+        
+        // Messaging
+        public IConversationRepository Conversations => new ConversationRepository(_context);
+        public IMessageRepository Messages => new MessageRepository(_context);
+        
+        public IReportRepository Reports => new ReportRepository(_context);
+        public IUserReportRepository UserReports => new UserReportRepository(_context);
         public IMatchCandidateRepository MatchCandidates => new MatchCandidateRepository(_context);
         public IVerificationCodeRepository VerificationCodes => new VerificationCodeRepository(_context);
 

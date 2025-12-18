@@ -39,7 +39,7 @@ namespace Talaqi.Infrastructure.Services
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(
-                    Convert.ToDouble(_configuration["JwtSettings:ExpirationInMinutes"] ?? "60")),
+                    Convert.ToDouble(_configuration["JwtSettings:ExpirationInMinutes"] ?? "180")),
                 signingCredentials: credentials
             );
 
