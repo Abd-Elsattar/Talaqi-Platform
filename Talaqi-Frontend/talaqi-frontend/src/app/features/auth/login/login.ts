@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { TokenService } from '../../../core/services/token.service';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -20,6 +22,8 @@ export class Login {
   private tokenService = inject(TokenService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private translate = inject(TranslateService);
+  public languageService = inject(LanguageService);
 
   isSubmitting = false;
   authError: string | null = null;
@@ -47,8 +51,8 @@ export class Login {
     const field = this.loginForm.get(fieldName);
     if (!field) return '';
 
-    if (field.hasError('required')) return 'هذا الحقل مطلوب';
-    if (field.hasError('email')) return 'بريد إلكتروني غير صحيح';
+    if (field.hasError('required')) return this.translate.instant('login.errors.required');
+    if (field.hasError('email')) return this.translate.instant('login.errors.email');
     return '';
   }
 
@@ -76,8 +80,8 @@ export class Login {
 
           // Welcome message
           Swal.fire({
-            title: 'أهلاً بك!',
-            text: 'تم تسجيل الدخول بنجاح',
+            title: this.translate.instant('login.success.title'),
+            text: this.translate.instant('login.success.message'),
             icon: 'success',
             timer: 1500,
             showConfirmButton: false,
@@ -90,7 +94,7 @@ export class Login {
       error: (err) => {
         this.isSubmitting = false;
         // عرض رسالة خطأ أنيقة داخل النموذج
-        this.authError = err?.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        this.authError = err?.error?.message || this.translate.instant('login.errors.authError');
         // إبراز الحقول كغير صحيحة لمساعدة المستخدم بصرياً
         const emailCtrl = this.loginForm.get('email');
         const passwordCtrl = this.loginForm.get('password');

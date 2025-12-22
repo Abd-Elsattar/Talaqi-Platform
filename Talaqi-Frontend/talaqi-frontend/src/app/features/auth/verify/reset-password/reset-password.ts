@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ResetPasswordDto } from '../../../../core/models/auth';
@@ -10,7 +11,7 @@ import { ResetPasswordDto } from '../../../../core/models/auth';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './reset-password.html',
   styleUrls: ['./reset-password.css'],
 })
@@ -19,6 +20,7 @@ export class ResetPassword implements OnInit {
   private auth = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   email = '';
   isSubmitting = false;
@@ -43,9 +45,9 @@ export class ResetPassword implements OnInit {
     const c = this.resetPasswordForm.get(field);
     if (!c) return '';
 
-    if (c.hasError('required')) return 'هذا الحقل مطلوب';
+    if (c.hasError('required')) return this.translate.instant('resetPassword.errors.required');
     if (c.hasError('minlength'))
-      return `يجب أن يكون ${c.getError('minlength').requiredLength} أحرف على الأقل`;
+      return this.translate.instant('resetPassword.errors.minLength', { length: c.getError('minlength').requiredLength });
 
     return '';
   }
@@ -62,8 +64,8 @@ export class ResetPassword implements OnInit {
     if (newPass !== confirm) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ',
-        text: 'كلمات المرور غير متطابقة',
+        title: this.translate.instant('resetPassword.error.title'),
+        text: this.translate.instant('resetPassword.errors.passwordMismatch'),
       });
       return;
     }
@@ -84,9 +86,9 @@ export class ResetPassword implements OnInit {
         if (res.isSuccess) {
           Swal.fire({
             icon: 'success',
-            title: 'تم التعيين بنجاح',
-            text: 'تم تغيير كلمة المرور.',
-            confirmButtonText: 'تسجيل الدخول',
+            title: this.translate.instant('resetPassword.success.title'),
+            text: this.translate.instant('resetPassword.success.text'),
+            confirmButtonText: this.translate.instant('resetPassword.success.button'),
           }).then(() => this.router.navigate(['/login']));
         }
       },

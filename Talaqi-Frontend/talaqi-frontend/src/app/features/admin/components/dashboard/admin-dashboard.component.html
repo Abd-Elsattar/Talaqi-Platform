@@ -1,0 +1,32 @@
+<div class="admin-layout">
+  <!-- Main Content -->
+  <main class="admin-content">
+    <!-- Header (Only for Statistics/Dashboard view) -->
+    <div class="dashboard-header" *ngIf="activeSection === 'statistics'">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="dashboard-title mb-2">
+              <i class="bi bi-speedometer2"></i> {{ 'adminPanel.header.title' | translate }}
+            </h1>
+            <p class="dashboard-subtitle">{{ 'adminPanel.header.subtitle' | translate }}</p>
+          </div>
+          <div class="col-md-6 text-end">
+            <div class="dashboard-icon">📊</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-wrapper p-4">
+      <app-admin-statistics *ngIf="activeSection === 'statistics'"></app-admin-statistics>
+
+      <app-admin-users *ngIf="activeSection === 'users'"></app-admin-users>
+
+      <app-admin-items *ngIf="activeSection === 'items'"></app-admin-items>
+
+      <app-admin-reports *ngIf="activeSection === 'reports'"></app-admin-reports>
+    </div>
+  </main>
+</div>

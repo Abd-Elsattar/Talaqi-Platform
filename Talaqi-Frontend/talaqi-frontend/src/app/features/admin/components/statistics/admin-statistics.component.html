@@ -1,0 +1,68 @@
+    <!-- Quick Stats Section -->
+    <div class="stats-section mb-5">
+      <h5 class="section-title mb-4">
+        <i class="bi bi-graph-up"></i> {{ 'adminPanel.statistics.title' | translate }}
+      </h5>
+
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+      </div>
+
+      <div *ngIf="!loading && statistics" class="row g-3">
+        <!-- Users Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-primary">
+            <div class="stat-card-icon">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">{{ 'adminPanel.statistics.users.total' | translate }}</h6>
+              <h2 class="stat-number">{{ statistics.users.total }}</h2>
+              <p class="stat-detail">{{ 'adminPanel.statistics.users.active' | translate }}: <strong>{{ statistics.users.active }}</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lost Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-danger">
+            <div class="stat-card-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">{{ 'adminPanel.statistics.items.lost' | translate }}</h6>
+              <h2 class="stat-number">{{ statistics.items.lost }}</h2>
+              <p class="stat-detail">{{ 'adminPanel.statistics.items.lostDetail' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Found Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-success">
+            <div class="stat-card-icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">{{ 'adminPanel.statistics.items.found' | translate }}</h6>
+              <h2 class="stat-number">{{ statistics.items.found }}</h2>
+              <p class="stat-detail">{{ 'adminPanel.statistics.items.foundDetail' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matches Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-info">
+            <div class="stat-card-icon">
+              <i class="bi bi-link-45deg"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">{{ 'adminPanel.statistics.matches.total' | translate }}</h6>
+              <h2 class="stat-number">{{ statistics.matches.total }}</h2>
+              <p class="stat-detail">{{ 'adminPanel.statistics.matches.pending' | translate }}: {{ statistics.matches.pending }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

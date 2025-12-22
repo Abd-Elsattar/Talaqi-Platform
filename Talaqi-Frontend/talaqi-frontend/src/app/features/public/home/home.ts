@@ -4,19 +4,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TokenService } from '../../../core/services/token.service';
 import { LostItemService } from '../../../core/services/lost-item.service';
 import { FoundItemService } from '../../../core/services/found-item.service';
 import { ImageUrlService } from '../../../core/services/image-url.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { FoundItemDto, LostItemDto } from '../../../core/models/item';
 import { User } from '../../../core/models/auth';
 import { CategoryTranslatePipe } from '../../../shared/pipes/category-translate.pipe';
+import { LocationTranslatePipe } from '../../../shared/pipes/location-translate.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CategoryTranslatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, CategoryTranslatePipe, LocationTranslatePipe, TranslateModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -29,6 +32,8 @@ export class Home implements OnInit, OnDestroy {
   private foundItemService = inject(FoundItemService);
   private imageUrlService = inject(ImageUrlService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
+  public languageService = inject(LanguageService);
 
   private userSubscription?: Subscription;
 
@@ -64,22 +69,22 @@ export class Home implements OnInit, OnDestroy {
     {
       id: 1,
       imageUrl: 'https://picsum.photos/320/280?random=1',
-      title: 'مساحة إعلانية متاحة',
-      description: 'ضع إعلانك هنا للوصول إلى آلاف المستخدمين',
+      titleKey: 'home.ads.ad1.title',
+      descriptionKey: 'home.ads.ad1.description',
       link: '#',
     },
     {
       id: 2,
       imageUrl: 'https://picsum.photos/320/280?random=2',
-      title: 'أعلن معنا',
-      description: 'احجز مساحتك الإعلانية الآن',
+      titleKey: 'home.ads.ad2.title',
+      descriptionKey: 'home.ads.ad2.description',
       link: '#',
     },
     {
       id: 3,
       imageUrl: 'https://picsum.photos/320/280?random=3',
-      title: 'مساحة إعلانية',
-      description: 'تواصل معنا لحجز مساحتك الإعلانية',
+      titleKey: 'home.ads.ad3.title',
+      descriptionKey: 'home.ads.ad3.description',
       link: '#',
     },
   ];
@@ -90,31 +95,31 @@ export class Home implements OnInit, OnDestroy {
   heroSlides = [
     {
       image: 'herosection/2.png',
-      title: 'عشان الضياع مايبقاش نهايه',
-      description: 'من اول لحظة فقدان لعند لحظ اللقاء... إحنا هنا عشان نرجع الامل',
-      primaryButton: 'جرب الآن',
-      secondaryButton: 'كيف يعمل؟',
+      titleKey: 'home.hero.slide1.title',
+      descriptionKey: 'home.hero.slide1.description',
+      primaryButtonKey: 'home.hero.slide1.primaryButton',
+      secondaryButtonKey: 'home.hero.slide1.secondaryButton',
     },
     {
       image: 'herosection/1.png',
-      title: 'ساعدنا في إعادة الأشياء لأصحابها',
-      description: 'منصة تلاقي تجمع بين الأشخاص الذين فقدوا أغراضهم والأشخاص الذين وجدوها',
-      primaryButton: 'ابدأ الآن',
-      secondaryButton: 'تعرف أكثر',
+      titleKey: 'home.hero.slide2.title',
+      descriptionKey: 'home.hero.slide2.description',
+      primaryButtonKey: 'home.hero.slide2.primaryButton',
+      secondaryButtonKey: 'home.hero.slide2.secondaryButton',
     },
     {
       image: 'herosection/2.png',
-      title: 'تقنية الذكاء الاصطناعي للبحث الذكي',
-      description: 'نستخدم الذكاء الاصطناعي لمطابقة الأشياء المفقودة مع الموجودة بدقة عالية',
-      primaryButton: 'جرب الآن',
-      secondaryButton: 'كيف يعمل؟',
+      titleKey: 'home.hero.slide3.title',
+      descriptionKey: 'home.hero.slide3.description',
+      primaryButtonKey: 'home.hero.slide3.primaryButton',
+      secondaryButtonKey: 'home.hero.slide3.secondaryButton',
     },
     {
       image: 'herosection/3.png',
-      title: 'مجتمع موثوق ومتعاون',
-      description: 'انضم لآلاف المستخدمين الذين يساعدون بعضهم في استعادة ممتلكاتهم',
-      primaryButton: 'انضم الآن',
-      secondaryButton: 'قصص نجاح',
+      titleKey: 'home.hero.slide4.title',
+      descriptionKey: 'home.hero.slide4.description',
+      primaryButtonKey: 'home.hero.slide4.primaryButton',
+      secondaryButtonKey: 'home.hero.slide4.secondaryButton',
     },
   ];
 
@@ -259,7 +264,8 @@ export class Home implements OnInit, OnDestroy {
   onDateChange(): void {
     if (this.dateFrom && this.dateTo) {
       if (new Date(this.dateFrom) > new Date(this.dateTo)) {
-        alert('تاريخ البداية يجب أن يكون قبل تاريخ النهاية');
+        const errorMessage = this.translate.instant('home.alerts.dateRangeError');
+        alert(errorMessage);
         return;
       }
     }
@@ -374,6 +380,6 @@ export class Home implements OnInit, OnDestroy {
   }
 
   getItemLocation(item: LostItemDto | FoundItemDto): string {
-    return item.location?.city || item.location?.address || 'غير محدد';
+    return item.location?.city || item.location?.address || this.translate.instant('home.item.location');
   }
 }

@@ -5,13 +5,13 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-text">
-          <h1 class="hero-title">الموجودات الخاصة بي</h1>
-          <p class="hero-subtitle">إدارة العناصر التي وجدتها وأبلغت عنها</p>
+          <h1 class="hero-title">{{ 'myFoundItems.title' | translate }}</h1>
+          <p class="hero-subtitle">{{ 'myFoundItems.subtitle' | translate }}</p>
         </div>
         <div class="hero-action">
           <button routerLink="/report-found-item" class="btn-accent-primary">
             <i class="bi bi-plus-circle"></i>
-            إبلاغ عن عنصر موجود
+            {{ 'myFoundItems.reportButton' | translate }}
           </button>
         </div>
       </div>
@@ -26,9 +26,9 @@
     @if (isLoading) {
     <div class="loading-state">
       <div class="spinner-border" role="status">
-        <span class="visually-hidden">جاري التحميل...</span>
+        <span class="visually-hidden">{{ 'myFoundItems.loading' | translate }}</span>
       </div>
-      <p>جاري تحميل العناصر الموجودة...</p>
+      <p>{{ 'myFoundItems.loadingText' | translate }}</p>
     </div>
     }
 
@@ -46,11 +46,11 @@
       <div class="empty-state-icon">
         <i class="bi bi-inbox"></i>
       </div>
-      <h3 class="empty-state-title">لا توجد عناصر موجودة</h3>
-      <p class="empty-state-text">لم تقم بالإبلاغ عن أي عناصر موجودة بعد</p>
+      <h3 class="empty-state-title">{{ 'myFoundItems.emptyState.title' | translate }}</h3>
+      <p class="empty-state-text">{{ 'myFoundItems.emptyState.text' | translate }}</p>
       <button routerLink="/report-found-item" class="btn-accent-primary btn-lg">
         <i class="bi bi-plus-circle"></i>
-        إبلاغ عن عنصر موجود الآن
+        {{ 'myFoundItems.emptyState.button' | translate }}
       </button>
     </div>
     }
@@ -65,7 +65,7 @@
               <i class="bi bi-box-seam"></i>
             </div>
             <div class="stat-content">
-              <p class="stat-label">إجمالي العناصر</p>
+              <p class="stat-label">{{ 'myFoundItems.stats.totalItems' | translate }}</p>
               <h4 class="stat-value">{{ totalItems }}</h4>
             </div>
           </div>
@@ -76,7 +76,7 @@
               <i class="bi bi-check-circle"></i>
             </div>
             <div class="stat-content">
-              <p class="stat-label">عناصر نشطة</p>
+              <p class="stat-label">{{ 'myFoundItems.stats.activeItems' | translate }}</p>
               <h4 class="stat-value">{{ activeItemsCount }}</h4>
             </div>
           </div>
@@ -87,7 +87,7 @@
               <i class="bi bi-star"></i>
             </div>
             <div class="stat-content">
-              <p class="stat-label"> تم ايجاده</p>
+              <p class="stat-label">{{ 'myFoundItems.stats.foundItems' | translate }}</p>
               <h4 class="stat-value">{{ foundStatusCount }}</h4>
             </div>
           </div>
@@ -98,7 +98,7 @@
               <i class="bi bi-lightning-fill"></i>
             </div>
             <div class="stat-content">
-              <p class="stat-label">إجمالي التطابقات</p>
+              <p class="stat-label">{{ 'myFoundItems.stats.totalMatches' | translate }}</p>
               <h4 class="stat-value">{{ totalMatches }}</h4>
             </div>
           </div>
@@ -116,7 +116,7 @@
             (error)="$event.target.src='images/lost-and-found-.png'">
           <span class="status-badge badge-found">
             <i class="bi bi-check-circle-fill"></i>
-            موجود
+            {{ 'myFoundItems.foundBadge' | translate }}
           </span>
         </div>
 
@@ -128,11 +128,11 @@
           <div class="item-meta">
             <div class="meta-item">
               <i class="bi bi-tag-fill"></i>
-              <span>{{ item.category }}</span>
+              <span>{{ item.category | categoryTranslate }}</span>
             </div>
             <div class="meta-item">
               <i class="bi bi-geo-alt-fill"></i>
-              <span>{{ getItemLocation(item) }}</span>
+              <span>{{ getItemLocation(item) | locationTranslate }}</span>
             </div>
             <div class="meta-item">
               <i class="bi bi-calendar-event"></i>
@@ -146,17 +146,19 @@
           <div class="item-footer">
             <div class="action-buttons">
               <button (click)="viewDetails(item.id); $event.stopPropagation()" class="btn-action-view"
-                title="عرض التفاصيل">
+                [title]="'myFoundItems.actions.viewDetails' | translate">
                 <i class="bi bi-eye"></i>
-                <span>عرض</span>
+                <span>{{ 'myFoundItems.actions.view' | translate }}</span>
               </button>
-              <button (click)="editItem(item.id, $event)" class="btn-action-edit" title="تعديل العنصر">
+              <button (click)="editItem(item.id, $event)" class="btn-action-edit" 
+                [title]="'myFoundItems.actions.editItem' | translate">
                 <i class="bi bi-pencil-square"></i>
-                <span>تعديل</span>
+                <span>{{ 'myFoundItems.actions.edit' | translate }}</span>
               </button>
-              <button (click)="deleteItem(item.id, item.title, $event)" class="btn-action-delete" title="حذف العنصر">
+              <button (click)="deleteItem(item.id, item.title, $event)" class="btn-action-delete" 
+                [title]="'myFoundItems.actions.deleteItem' | translate">
                 <i class="bi bi-trash"></i>
-                <span>حذف</span>
+                <span>{{ 'myFoundItems.actions.delete' | translate }}</span>
               </button>
             </div>
           </div>
@@ -167,7 +169,7 @@
 
     <!-- Items Count -->
     <div class="items-count">
-      <p><strong>{{ foundItems.length }}</strong> عنصر موجود</p>
+      <p><strong>{{ foundItems.length }}</strong> {{ 'myFoundItems.itemsCount' | translate }}</p>
     </div>
     }
   </div>

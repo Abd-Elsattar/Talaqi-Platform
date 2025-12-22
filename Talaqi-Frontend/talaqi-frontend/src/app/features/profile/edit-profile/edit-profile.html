@@ -4,8 +4,8 @@
   <div class="hero-section">
     <div class="container">
       <div class="hero-content">
-        <h1 class="hero-title">تعديل الملف الشخصي</h1>
-        <p class="hero-subtitle">قم بتحديث معلوماتك الشخصية</p>
+        <h1 class="hero-title">{{ 'editProfile.hero.title' | translate }}</h1>
+        <p class="hero-subtitle">{{ 'editProfile.hero.subtitle' | translate }}</p>
       </div>
     </div>
   </div>
@@ -16,9 +16,9 @@
     @if (isLoading) {
     <div class="loading-state">
       <div class="spinner-border" role="status">
-        <span class="visually-hidden">جاري التحميل...</span>
+        <span class="visually-hidden">{{ 'editProfile.loading.text' | translate }}</span>
       </div>
-      <p>جاري تحميل البيانات...</p>
+      <p>{{ 'editProfile.loading.loadingData' | translate }}</p>
     </div>
     }
 
@@ -28,7 +28,7 @@
       <!-- Profile Picture Section -->
       <div class="profile-picture-section">
         <div class="profile-picture-container">
-          <img [src]="imagePreview || getProfilePictureUrl()" alt="Profile Picture" class="profile-picture">
+          <img [src]="imagePreview || getProfilePictureUrl()" [alt]="'editProfile.profilePicture.alt' | translate" class="profile-picture">
           <label for="fileInput" class="upload-overlay">
             <i class="bi bi-camera-fill"></i>
           </label>
@@ -39,14 +39,14 @@
         @if (selectedFile && !uploadingImage) {
         <button type="button" class="btn-upload" (click)="uploadProfilePicture()">
           <i class="bi bi-upload"></i>
-          رفع الصورة
+          {{ 'editProfile.profilePicture.uploadButton' | translate }}
         </button>
         }
 
         @if (uploadingImage) {
         <button type="button" class="btn-upload" disabled>
           <span class="spinner-border spinner-border-sm"></span>
-          جاري الرفع...
+          {{ 'editProfile.profilePicture.uploading' | translate }}
         </button>
         }
       </div>
@@ -55,18 +55,18 @@
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
         <!-- Email (Read-only) -->
         <div class="form-group">
-          <label class="form-label">البريد الإلكتروني</label>
+          <label class="form-label">{{ 'editProfile.form.email.label' | translate }}</label>
           <input type="email" class="form-input" [value]="currentProfile.email" readonly disabled>
         </div>
 
         <!-- First Name -->
         <div class="form-group">
           <label class="form-label">
-            الاسم الأول <span class="required">*</span>
+            {{ 'editProfile.form.firstName.label' | translate }} <span class="required">{{ 'editProfile.form.required' | translate }}</span>
           </label>
           <input type="text" class="form-input" formControlName="firstName"
             (blur)="profileForm.get('firstName')?.markAsTouched()" [class.invalid]="isFieldInvalid('firstName')"
-            placeholder="أدخل الاسم الأول">
+            [placeholder]="'editProfile.form.firstName.placeholder' | translate">
           @if (isFieldInvalid('firstName')) {
           <div class="error-message">
             {{ getFieldError('firstName') }}
@@ -77,11 +77,11 @@
         <!-- Last Name -->
         <div class="form-group">
           <label class="form-label">
-            الاسم الأخير <span class="required">*</span>
+            {{ 'editProfile.form.lastName.label' | translate }} <span class="required">{{ 'editProfile.form.required' | translate }}</span>
           </label>
           <input type="text" class="form-input" formControlName="lastName"
             (blur)="profileForm.get('lastName')?.markAsTouched()" [class.invalid]="isFieldInvalid('lastName')"
-            placeholder="أدخل الاسم الأخير">
+            [placeholder]="'editProfile.form.lastName.placeholder' | translate">
           @if (isFieldInvalid('lastName')) {
           <div class="error-message">
             {{ getFieldError('lastName') }}
@@ -92,11 +92,11 @@
         <!-- Phone Number -->
         <div class="form-group">
           <label class="form-label">
-            رقم الهاتف <span class="required">*</span>
+            {{ 'editProfile.form.phoneNumber.label' | translate }} <span class="required">{{ 'editProfile.form.required' | translate }}</span>
           </label>
           <input type="tel" class="form-input" formControlName="phoneNumber"
             (blur)="profileForm.get('phoneNumber')?.markAsTouched()" [class.invalid]="isFieldInvalid('phoneNumber')"
-            placeholder="01xxxxxxxxx">
+            [placeholder]="'editProfile.form.phoneNumber.placeholder' | translate">
           @if (isFieldInvalid('phoneNumber')) {
           <div class="error-message">
             {{ getFieldError('phoneNumber') }}
@@ -107,7 +107,7 @@
         <!-- Member Since -->
         <div class="member-info">
           <i class="bi bi-calendar"></i>
-          عضو منذ: {{ currentProfile.createdAt | date: 'dd/MM/yyyy' }}
+          {{ 'editProfile.form.memberSince' | translate }} {{ currentProfile.createdAt | date: 'dd/MM/yyyy' }}
         </div>
 
         <!-- Action Buttons -->
@@ -115,21 +115,21 @@
           <button type="submit" class="btn-primary" [disabled]="!canSave">
             @if (isSubmitting) {
             <span class="spinner-border spinner-border-sm"></span>
-            جاري الحفظ...
+            {{ 'editProfile.buttons.saving' | translate }}
             } @else {
             <i class="bi bi-check-circle"></i>
-            حفظ التغييرات
+            {{ 'editProfile.buttons.save' | translate }}
             }
           </button>
 
           <button type="button" class="btn-secondary" routerLink="/home" [disabled]="isSubmitting">
             <i class="bi bi-x-circle"></i>
-            إلغاء
+            {{ 'editProfile.buttons.cancel' | translate }}
           </button>
 
           <button type="button" class="btn-danger" (click)="deleteAccount()" [disabled]="isSubmitting">
             <i class="bi bi-trash"></i>
-            حذف الحساب
+            {{ 'editProfile.buttons.deleteAccount' | translate }}
           </button>
         </div>
       </form>

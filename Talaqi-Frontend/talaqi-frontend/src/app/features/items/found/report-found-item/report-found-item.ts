@@ -9,6 +9,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FoundItemService } from '../../../../core/services/found-item.service';
 import { UploadService } from '../../../../core/services/upload.service';
 import { ImageUrlService } from '../../../../core/services/image-url.service';
@@ -19,7 +20,7 @@ import { MapPickerComponent } from '../../../../shared/map-picker/map-picker';
 @Component({
   selector: 'app-report-found-item',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MapPickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MapPickerComponent, TranslateModule],
   templateUrl: './report-found-item.html',
   styleUrl: './report-found-item.css',
 })
@@ -30,6 +31,7 @@ export class ReportFoundItem implements OnInit {
   private foundItemService = inject(FoundItemService);
   private uploadService = inject(UploadService);
   private imageUrlService = inject(ImageUrlService);
+  private translate = inject(TranslateService);
 
   // ===== Template-bound state =====
   reportForm: FormGroup;
@@ -52,11 +54,13 @@ export class ReportFoundItem implements OnInit {
   isLoadingItem = false;
 
   // ===== Categories =====
-  categories: { value: ItemCategory; label: string }[] = [
-    { value: 'PersonalBelongings', label: 'متعلقات شخصية' },
-    { value: 'People', label: 'أشخاص' },
-    { value: 'Pets', label: 'حيوانات أليفة' },
-  ];
+  get categories(): { value: ItemCategory; label: string }[] {
+    return [
+      { value: 'PersonalBelongings', label: this.translate.instant('reportFoundItem.category.personalBelongings') },
+      { value: 'People', label: this.translate.instant('reportFoundItem.category.people') },
+      { value: 'Pets', label: this.translate.instant('reportFoundItem.category.pets') },
+    ];
+  }
 
   constructor() {
     const contactInfoValidator = (control: AbstractControl) => {
@@ -129,7 +133,7 @@ export class ReportFoundItem implements OnInit {
       next: (res) => {
         this.isLoadingItem = false;
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = 'فشل تحميل بيانات العنصر';
+          this.errorMessage = this.translate.instant('reportFoundItem.errors.loadItemFailed');
           return;
         }
 
@@ -163,7 +167,7 @@ export class ReportFoundItem implements OnInit {
       },
       error: () => {
         this.isLoadingItem = false;
-        this.errorMessage = 'حدث خطأ أثناء تحميل بيانات العنصر';
+        this.errorMessage = this.translate.instant('reportFoundItem.errors.loadItemError');
       },
     });
   }
@@ -188,12 +192,12 @@ export class ReportFoundItem implements OnInit {
   private handleFile(file: File): void {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
     if (!validTypes.includes(file.type)) {
-      this.errorMessage = 'يرجى اختيار صورة بصيغة JPG، PNG أو GIF';
+      this.errorMessage = this.translate.instant('reportFoundItem.errors.imageFormat');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      this.errorMessage = 'حجم الصورة يجب أن يكون أقل من 5 ميجابايت';
+      this.errorMessage = this.translate.instant('reportFoundItem.errors.imageSize');
       return;
     }
 
@@ -219,7 +223,7 @@ export class ReportFoundItem implements OnInit {
       },
       error: () => {
         this.isUploadingImage = false;
-        this.errorMessage = 'فشل تحميل الصورة';
+        this.errorMessage = this.translate.instant('reportFoundItem.errors.uploadFailed');
       },
     });
   }
@@ -234,7 +238,7 @@ export class ReportFoundItem implements OnInit {
   // ================= Location =================
   detectLocation(): void {
     if (!navigator.geolocation) {
-      this.errorMessage = 'متصفحك لا يدعم تحديد الموقع';
+      this.errorMessage = this.translate.instant('reportFoundItem.errors.locationNotSupported');
       return;
     }
 
@@ -252,7 +256,7 @@ export class ReportFoundItem implements OnInit {
       },
       () => {
         this.isDetectingLocation = false;
-        this.errorMessage = 'فشل تحديد الموقع';
+        this.errorMessage = this.translate.instant('reportFoundItem.errors.locationDetectionFailed');
       }
     );
   }
@@ -298,7 +302,7 @@ export class ReportFoundItem implements OnInit {
   onSubmit(): void {
     if (this.reportForm.invalid) {
       this.reportForm.markAllAsTouched();
-      this.errorMessage = 'يرجى ملء جميع الحقول المطلوبة';
+      this.errorMessage = this.translate.instant('reportFoundItem.errors.completeRequired');
       return;
     }
 
@@ -322,7 +326,7 @@ export class ReportFoundItem implements OnInit {
       },
       error: () => {
         this.isSubmitting = false;
-        this.errorMessage = 'حدث خطأ أثناء الإرسال';
+        this.errorMessage = this.translate.instant('reportFoundItem.errors.submitFailed');
       },
     });
   }
@@ -335,11 +339,11 @@ export class ReportFoundItem implements OnInit {
 
   getFieldError(name: string): string {
     const f = this.reportForm.get(name);
-    if (f?.hasError('required')) return 'هذا الحقل مطلوب';
+    if (f?.hasError('required')) return this.translate.instant('reportFoundItem.errors.required');
     if (f?.hasError('maxlength'))
-      return `الحد الأقصى ${f.getError('maxlength').requiredLength} حرف`;
+      return this.translate.instant('reportFoundItem.errors.maxlength', { max: f.getError('maxlength').requiredLength });
     if (name === 'contactInfo' && f?.hasError('contactInvalid'))
-      return 'رقم هاتف أو بريد إلكتروني غير صالح';
+      return this.translate.instant('reportFoundItem.errors.contactInvalid');
     return '';
   }
 
@@ -349,6 +353,6 @@ export class ReportFoundItem implements OnInit {
   }
 
   getImageError(): string {
-    return 'هذا الحقل مطلوب';
+    return this.translate.instant('reportFoundItem.errors.imageRequired');
   }
 }

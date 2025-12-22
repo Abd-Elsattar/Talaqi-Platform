@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import Swal from 'sweetalert2';
 import { UserService } from '../../../core/services/user.service';
@@ -13,7 +14,7 @@ import { ImageUrlService } from '../../../core/services/image-url.service';
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
 })
@@ -23,6 +24,7 @@ export class EditProfile implements OnInit {
   private tokenService = inject(TokenService);
   private router = inject(Router);
   private imageUrlService = inject(ImageUrlService);
+  private translate = inject(TranslateService);
 
   isSubmitting = false;
   isLoading = true;
@@ -49,12 +51,16 @@ export class EditProfile implements OnInit {
     const field = this.profileForm.get(fieldName);
     if (!field) return '';
 
-    if (field.hasError('required')) return 'هذا الحقل مطلوب';
+    if (field.hasError('required'))
+      return this.translate.instant('editProfile.errors.required');
     if (field.hasError('maxlength')) {
       const maxLength = field.getError('maxlength').requiredLength;
-      return `الحد الأقصى ${maxLength} حرف`;
+      return this.translate.instant('editProfile.errors.maxLength', {
+        max: maxLength,
+      });
     }
-    if (field.hasError('pattern')) return 'رقم هاتف غير صحيح (مثال: 01012345678)';
+    if (field.hasError('pattern'))
+      return this.translate.instant('editProfile.errors.invalidPhone');
     return '';
   }
 
@@ -81,10 +87,10 @@ export class EditProfile implements OnInit {
       error: (err) => {
         this.isLoading = false;
         Swal.fire({
-          title: 'خطأ',
-          text: 'فشل تحميل بيانات الملف الشخصي',
+          title: this.translate.instant('editProfile.messages.uploadError.title'),
+          text: this.translate.instant('editProfile.messages.uploadError.text'),
           icon: 'error',
-          confirmButtonText: 'حسناً',
+          confirmButtonText: this.translate.instant('editProfile.messages.okay'),
         });
       },
     });
@@ -103,10 +109,10 @@ export class EditProfile implements OnInit {
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!validTypes.includes(file.type)) {
         Swal.fire({
-          title: 'خطأ',
-          text: 'يرجى اختيار صورة بصيغة JPG أو PNG أو GIF',
+          title: this.translate.instant('editProfile.messages.uploadError.title'),
+          text: this.translate.instant('editProfile.errors.invalidImageType'),
           icon: 'error',
-          confirmButtonText: 'حسناً',
+          confirmButtonText: this.translate.instant('editProfile.messages.okay'),
         });
         return;
       }
@@ -114,10 +120,10 @@ export class EditProfile implements OnInit {
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         Swal.fire({
-          title: 'خطأ',
-          text: 'حجم الصورة يجب أن يكون أقل من 5 ميجابايت',
+          title: this.translate.instant('editProfile.messages.uploadError.title'),
+          text: this.translate.instant('editProfile.errors.imageTooLarge'),
           icon: 'error',
-          confirmButtonText: 'حسناً',
+          confirmButtonText: this.translate.instant('editProfile.messages.okay'),
         });
         return;
       }
@@ -143,8 +149,8 @@ export class EditProfile implements OnInit {
         this.selectedFile = null;
 
         Swal.fire({
-          title: 'تم بنجاح!',
-          text: 'تم تحديث صورة الملف الشخصي',
+          title: this.translate.instant('editProfile.messages.uploadSuccess.title'),
+          text: this.translate.instant('editProfile.messages.uploadSuccess.text'),
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
@@ -168,10 +174,10 @@ export class EditProfile implements OnInit {
       error: (err) => {
         this.uploadingImage = false;
         Swal.fire({
-          title: 'خطأ',
-          text: 'فشل رفع الصورة. يرجى المحاولة مرة أخرى.',
+          title: this.translate.instant('editProfile.messages.uploadError.title'),
+          text: this.translate.instant('editProfile.messages.uploadError.text'),
           icon: 'error',
-          confirmButtonText: 'حسناً',
+          confirmButtonText: this.translate.instant('editProfile.messages.okay'),
         });
       },
     });
@@ -217,8 +223,8 @@ export class EditProfile implements OnInit {
           this.profileForm.markAsPristine();
 
           Swal.fire({
-            title: 'تم بنجاح!',
-            text: 'تم تحديث الملف الشخصي بنجاح',
+            title: this.translate.instant('editProfile.messages.updateSuccess.title'),
+            text: this.translate.instant('editProfile.messages.updateSuccess.text'),
             icon: 'success',
             timer: 1500,
             showConfirmButton: false,
@@ -247,11 +253,11 @@ export class EditProfile implements OnInit {
   deleteAccount(): void {
     Swal.fire({
       icon: 'warning',
-      title: 'تحذير',
-      text: 'هل أنت متأكد من رغبتك في حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء!',
+      title: this.translate.instant('editProfile.messages.deleteWarning.title'),
+      text: this.translate.instant('editProfile.messages.deleteWarning.text'),
       showCancelButton: true,
-      confirmButtonText: 'نعم، احذف الحساب',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('editProfile.messages.deleteWarning.confirmButton'),
+      cancelButtonText: this.translate.instant('editProfile.messages.deleteWarning.cancelButton'),
       confirmButtonColor: '#e74c3c',
       cancelButtonColor: '#6C8DB5',
       reverseButtons: true,
@@ -259,7 +265,7 @@ export class EditProfile implements OnInit {
       if (result.isConfirmed) {
         // Show loading
         Swal.fire({
-          title: 'جاري حذف الحساب...',
+          title: this.translate.instant('editProfile.messages.deleting.title'),
           allowOutsideClick: false,
           didOpen: () => {
             Swal.showLoading();
@@ -275,8 +281,8 @@ export class EditProfile implements OnInit {
 
               Swal.fire({
                 icon: 'success',
-                title: 'تم الحذف بنجاح',
-                text: 'تم حذف حسابك بنجاح',
+                title: this.translate.instant('editProfile.messages.deleteSuccess.title'),
+                text: this.translate.instant('editProfile.messages.deleteSuccess.text'),
                 showConfirmButton: false,
                 timer: 2000,
               }).then(() => {
@@ -285,9 +291,9 @@ export class EditProfile implements OnInit {
             } else {
               Swal.fire({
                 icon: 'error',
-                title: 'فشل الحذف',
-                text: response.message || 'حدث خطأ أثناء حذف الحساب',
-                confirmButtonText: 'حسناً',
+                title: this.translate.instant('editProfile.messages.deleteFailed.title'),
+                text: response.message || this.translate.instant('editProfile.messages.deleteFailed.text'),
+                confirmButtonText: this.translate.instant('editProfile.messages.okay'),
               });
             }
           },
@@ -295,9 +301,9 @@ export class EditProfile implements OnInit {
             console.error('Delete account error:', error);
             Swal.fire({
               icon: 'error',
-              title: 'خطأ في الاتصال',
-              text: 'تعذر الاتصال بالخادم، يرجى المحاولة لاحقاً',
-              confirmButtonText: 'حسناً',
+              title: this.translate.instant('editProfile.messages.connectionError.title'),
+              text: this.translate.instant('editProfile.messages.connectionError.text'),
+              confirmButtonText: this.translate.instant('editProfile.messages.okay'),
             });
           },
         });

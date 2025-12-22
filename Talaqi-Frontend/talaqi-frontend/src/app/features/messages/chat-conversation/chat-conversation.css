@@ -6,17 +6,22 @@
 
 .chat-container {
   /* Local overrides or specific chat variables */
-  --chat-bg: #f3f4f6;
-  --chat-header-bg: #ffffff;
-  --chat-sent-bg: #324260;
+  --chat-bg: var(--background);
+  --chat-header-bg: var(--white);
+  --chat-sent-bg: var(--primary);
   --chat-sent-text: #ffffff;
-  --chat-received-bg: #ffffff;
-  --chat-received-text: #1f2937;
-  --chat-border: #e5e7eb;
-  --chat-input-bg: #ffffff;
+  --chat-received-bg: var(--white);
+  --chat-received-text: var(--text-primary);
+  --chat-border: var(--border-color);
+  --chat-input-bg: var(--white);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+[data-bs-theme="dark"] .chat-container {
+  --chat-received-bg: #2d2d2d;
+  --chat-bg: #121212;
 }
 
 .chat-container {

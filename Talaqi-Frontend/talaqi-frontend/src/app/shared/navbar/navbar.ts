@@ -15,11 +15,14 @@ import { ImageUrlService } from '../../core/services/image-url.service';
 import { User } from '../../core/models/auth';
 import { ChatService } from '../../core/services/chat.service';
 import { SignalRService } from '../../core/services/signalr.service';
+import { ThemeService } from '../../core/services/theme.service';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, LanguageSwitcherComponent, TranslateModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -31,6 +34,7 @@ export class Navbar implements OnInit, OnDestroy {
   private elRef = inject(ElementRef);
   private chatService = inject(ChatService);
   private signalRService = inject(SignalRService);
+  public themeService = inject(ThemeService);
 
   private userSubscription?: Subscription;
   private queryParamsSubscription?: Subscription;

@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-verify',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './verify.html',
   styleUrl: './verify.css',
 })
@@ -18,6 +19,7 @@ export class Verify implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private auth = inject(AuthService);
+  private translate = inject(TranslateService);
 
   email = '';
   isSubmitting = false;
@@ -38,8 +40,8 @@ export class Verify implements OnInit, OnDestroy {
     const field = this.verifyForm.get(fieldName);
     if (!field) return '';
 
-    if (field.hasError('required')) return 'هذا الحقل مطلوب';
-    if (field.hasError('minlength')) return 'الكود يجب أن يكون 6 أرقام';
+    if (field.hasError('required')) return this.translate.instant('verify.errors.required');
+    if (field.hasError('minlength')) return this.translate.instant('verify.errors.minlength');
     return '';
   }
 
@@ -97,18 +99,18 @@ export class Verify implements OnInit, OnDestroy {
         if (res.isSuccess) {
           this.startCountdown();
           Swal.fire({
-            title: 'تم الإرسال!',
-            text: 'تم إرسال كود التفعيل إلى بريدك الإلكتروني',
+            title: this.translate.instant('verify.resendSuccess.title'),
+            text: this.translate.instant('verify.resendSuccess.message'),
             icon: 'success',
             timer: 3000,
             showConfirmButton: false,
           });
         } else {
           Swal.fire({
-            title: 'فشل الإرسال',
-            text: res.message || 'حدث خطأ أثناء إرسال الكود',
+            title: this.translate.instant('verify.resendFailure.title'),
+            text: res.message || this.translate.instant('verify.resendFailure.defaultMessage'),
             icon: 'error',
-            confirmButtonText: 'حسناً',
+            confirmButtonText: this.translate.instant('verify.resendFailure.confirmButton'),
           });
         }
       },
@@ -116,19 +118,19 @@ export class Verify implements OnInit, OnDestroy {
         console.error('Resend error:', err);
         this.isResending = false;
 
-        let errorMessage = 'حدث خطأ أثناء إرسال الكود';
+        let errorMessage = this.translate.instant('verify.resendFailure.defaultMessage');
 
         if (err.status === 0) {
-          errorMessage = 'لا يمكن الاتصال بالخادم';
+          errorMessage = this.translate.instant('verify.errors.serverError');
         } else if (err.error?.message) {
           errorMessage = err.error.message;
         }
 
         Swal.fire({
-          title: 'خطأ',
+          title: this.translate.instant('verify.resendFailure.title'),
           text: errorMessage,
           icon: 'error',
-          confirmButtonText: 'حسناً',
+          confirmButtonText: this.translate.instant('verify.resendFailure.confirmButton'),
         });
       },
     });
@@ -153,20 +155,20 @@ export class Verify implements OnInit, OnDestroy {
         this.isSubmitting = false;
         if (res.isSuccess) {
           Swal.fire({
-            title: 'تم التفعيل بنجاح!',
-            text: 'أهلاً بك في تلاقي.. يمكنك تسجيل الدخول الآن',
+            title: this.translate.instant('verify.success.title'),
+            text: this.translate.instant('verify.success.message'),
             icon: 'success',
-            confirmButtonText: 'دخول',
+            confirmButtonText: this.translate.instant('verify.success.confirmButton'),
           }).then(() => {
             this.router.navigate(['/login'], { queryParams: { email: this.email } });
           });
         } else {
           console.error('Verification failed:', res.message);
           Swal.fire({
-            title: 'فشل التفعيل',
-            text: res.message || 'حدث خطأ أثناء التفعيل',
+            title: this.translate.instant('verify.failure.title'),
+            text: res.message || this.translate.instant('verify.failure.defaultMessage'),
             icon: 'error',
-            confirmButtonText: 'حاول مرة أخرى',
+            confirmButtonText: this.translate.instant('verify.failure.confirmButton'),
           });
         }
       },
@@ -178,20 +180,19 @@ export class Verify implements OnInit, OnDestroy {
 
         this.isSubmitting = false;
 
-        let errorMessage = 'تأكد من كتابة الكود بشكل صحيح من بريدك الإلكتروني';
+        let errorMessage = this.translate.instant('verify.errors.invalidCode');
 
         if (err.status === 0) {
-          errorMessage =
-            'لا يمكن الاتصال بالخادم. تأكد من أن الخادم يعمل على https://localhost:7282';
+          errorMessage = this.translate.instant('verify.errors.serverError');
         } else if (err.error?.message) {
           errorMessage = err.error.message;
         }
 
         Swal.fire({
-          title: 'كود خاطئ',
+          title: this.translate.instant('verify.failure.invalidCode'),
           text: errorMessage,
           icon: 'error',
-          confirmButtonText: 'حاول مرة أخرى',
+          confirmButtonText: this.translate.instant('verify.failure.confirmButton'),
         });
       },
     });

@@ -4,35 +4,33 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FoundItemService } from '../../../../core/services/found-item.service';
 import { FoundItemDto, FoundItemStatus, UpdateFoundItemDto } from '../../../../core/models/item';
 import { ImageUrlService } from '../../../../core/services/image-url.service';
+import { CategoryTranslatePipe } from '../../../../shared/pipes/category-translate.pipe';
+import { LocationTranslatePipe } from '../../../../shared/pipes/location-translate.pipe';
 
 @Component({
   selector: 'app-my-found-items',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, CategoryTranslatePipe, LocationTranslatePipe],
   templateUrl: './my-found-items.html',
   styleUrl: './my-found-items.css',
 })
 export class MyFoundItems implements OnInit {
   FoundItemStatus = FoundItemStatus;
-  statusOptions = [
-    { value: FoundItemStatus.Available, label: 'نشط' },
-    { value: FoundItemStatus.Returned, label: 'تم العثور عليه' },
-    { value: FoundItemStatus.Closed, label: 'مغلق' },
-    { value: FoundItemStatus.Expired, label: 'منتهي الصلاحية' },
-  ];
+  
   async onStatusChange(item: FoundItemDto, event: any) {
     const newStatus = event.target ? event.target.value : event;
     if (item.status === newStatus) return;
     const result = await Swal.fire({
-      title: 'تأكيد تغيير الحالة',
-      text: `هل أنت متأكد أنك تريد تغيير حالة العنصر إلى "${this.getStatusText(newStatus)}"؟`,
+      title: this.translate.instant('myFoundItems.statusChangeConfirm.title'),
+      text: this.translate.instant('myFoundItems.statusChangeConfirm.text', { status: this.getStatusText(newStatus) }),
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'تأكيد',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('myFoundItems.statusChangeConfirm.confirmButton'),
+      cancelButtonText: this.translate.instant('myFoundItems.statusChangeConfirm.cancelButton'),
       customClass: {
         confirmButton: 'btn btn-success',
         cancelButton: 'btn btn-secondary',
@@ -45,8 +43,8 @@ export class MyFoundItems implements OnInit {
         if (res.isSuccess && res.data) {
           item.status = res.data.status;
           Swal.fire({
-            title: 'تم التغيير!',
-            text: 'تم تحديث حالة العنصر بنجاح.',
+            title: this.translate.instant('myFoundItems.statusChangeSuccess.title'),
+            text: this.translate.instant('myFoundItems.statusChangeSuccess.text'),
             icon: 'success',
             timer: 1500,
             showConfirmButton: false,
@@ -55,8 +53,8 @@ export class MyFoundItems implements OnInit {
       },
       error: (err) => {
         Swal.fire({
-          title: 'خطأ!',
-          text: 'حدث خطأ أثناء تحديث الحالة.',
+          title: this.translate.instant('myFoundItems.statusChangeError.title'),
+          text: this.translate.instant('myFoundItems.statusChangeError.text'),
           icon: 'error',
         });
         console.error('Status update failed', err);
@@ -67,6 +65,7 @@ export class MyFoundItems implements OnInit {
   private foundItemService = inject(FoundItemService);
   private router = inject(Router);
   private imageUrlService = inject(ImageUrlService);
+  private translate = inject(TranslateService);
   //#endregion
 
   foundItems: FoundItemDto[] = [];
@@ -108,12 +107,12 @@ export class MyFoundItems implements OnInit {
         if (response.isSuccess) {
           this.foundItems = response.data || [];
         } else {
-          this.errorMessage = response.message || 'فشل في تحميل العناصر الموجودة';
+          this.errorMessage = response.message || this.translate.instant('myFoundItems.errorMessage');
         }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'حدث خطأ أثناء تحميل العناصر الموجودة';
+        this.errorMessage = this.translate.instant('myFoundItems.errorMessage');
         console.error('Error loading found items:', error);
       },
     });
@@ -138,14 +137,14 @@ export class MyFoundItems implements OnInit {
     }
 
     Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: `سيتم حذف "${title}" نهائياً`,
+      title: this.translate.instant('myFoundItems.deleteDialog.title'),
+      text: this.translate.instant('myFoundItems.deleteDialog.text', { title }),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'نعم، احذف',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('myFoundItems.deleteDialog.confirmButton'),
+      cancelButtonText: this.translate.instant('myFoundItems.deleteDialog.cancelButton'),
       customClass: {
         confirmButton: 'btn btn-danger',
         cancelButton: 'btn btn-secondary',
@@ -156,8 +155,8 @@ export class MyFoundItems implements OnInit {
           next: (response) => {
             if (response.isSuccess) {
               Swal.fire({
-                title: 'تم الحذف!',
-                text: 'تم حذف العنصر بنجاح',
+                title: this.translate.instant('myFoundItems.deleteDialog.successTitle'),
+                text: this.translate.instant('myFoundItems.deleteDialog.successText'),
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false,
@@ -165,8 +164,8 @@ export class MyFoundItems implements OnInit {
               this.foundItems = this.foundItems.filter((item) => item.id !== id);
             } else {
               Swal.fire({
-                title: 'خطأ!',
-                text: response.message || 'فشل حذف العنصر',
+                title: this.translate.instant('myFoundItems.deleteDialog.errorTitle'),
+                text: response.message || this.translate.instant('myFoundItems.deleteDialog.errorText'),
                 icon: 'error',
               });
             }
@@ -174,8 +173,8 @@ export class MyFoundItems implements OnInit {
           error: (error) => {
             console.error('Delete error:', error);
             Swal.fire({
-              title: 'خطأ!',
-              text: 'حدث خطأ أثناء حذف العنصر',
+              title: this.translate.instant('myFoundItems.deleteDialog.errorTitle'),
+              text: this.translate.instant('myFoundItems.deleteDialog.errorText'),
               icon: 'error',
             });
           },
@@ -200,18 +199,9 @@ export class MyFoundItems implements OnInit {
   }
 
   getStatusText(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'available':
-        return 'نشط';
-      case 'returned':
-        return 'تم العثور عليه';
-      case 'closed':
-        return 'مغلق';
-      case 'expired':
-        return 'منتهي الصلاحية';
-      default:
-        return status;
-    }
+    const statusKey = status.toLowerCase();
+    const translationKey = `myFoundItems.status.${statusKey}`;
+    return this.translate.instant(translationKey);
   }
 
   //#region Helpers
@@ -220,7 +210,7 @@ export class MyFoundItems implements OnInit {
   }
 
   getItemLocation(item: FoundItemDto): string {
-    return item.location?.address || 'غير محدد';
+    return item.location?.address || this.translate.instant('myFoundItems.notSpecified');
   }
   //#endregion
 }

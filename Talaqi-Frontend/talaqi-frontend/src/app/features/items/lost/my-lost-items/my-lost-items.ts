@@ -3,14 +3,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LostItemService } from '../../../../core/services/lost-item.service';
 import { LostItemDto, LostItemStatus } from '../../../../core/models/item';
 import { ImageUrlService } from '../../../../core/services/image-url.service';
+import { CategoryTranslatePipe } from '../../../../shared/pipes/category-translate.pipe';
+import { LocationTranslatePipe } from '../../../../shared/pipes/location-translate.pipe';
 
 @Component({
   selector: 'app-my-lost-items',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule, CategoryTranslatePipe, LocationTranslatePipe],
   templateUrl: './my-lost-items.html',
   styleUrl: './my-lost-items.css',
 })
@@ -19,13 +22,13 @@ export class MyLostItems implements OnInit {
   //#region Injected Services
   private lostItemService = inject(LostItemService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
   imageUrlService = inject(ImageUrlService);
   //#endregion
 
   items: LostItemDto[] = [];
   isLoading = true;
   errorMessage: string | null = null;
-  emptyMessage = 'لم تقم بالإبلاغ عن أي عناصر مفقودة بعد';
 
   ngOnInit() {
     this.loadMyLostItems();
@@ -41,13 +44,13 @@ export class MyLostItems implements OnInit {
         if (res.isSuccess && res.data) {
           this.items = res.data;
         } else {
-          this.errorMessage = res.message || 'فشل في تحميل عناصرك المفقودة';
+          this.errorMessage = res.message || this.translate.instant('myLostItems.errorMessage');
         }
       },
       error: (err) => {
         this.isLoading = false;
         console.error('Error loading my items:', err);
-        this.errorMessage = 'حدث خطأ أثناء تحميل عناصرك المفقودة';
+        this.errorMessage = this.translate.instant('myLostItems.errorMessage');
       },
     });
   }
@@ -57,23 +60,9 @@ export class MyLostItems implements OnInit {
     return this.imageUrlService.resolve(imageUrl);
   }
 
-  getCategoryLabel(category: string): string {
-    const categoryMap: { [key: string]: string } = {
-      PersonalBelongings: 'متعلقات شخصية',
-      People: 'أشخاص',
-      Pets: 'حيوانات أليفة',
-    };
-    return categoryMap[category] || category;
-  }
-
   getStatusLabel(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      Active: 'نشط',
-      Found: 'تم العثور عليه',
-      Closed: 'مغلق',
-      Expired: 'منتهي الصلاحية',
-    };
-    return statusMap[status] || status;
+    const statusKey = status.toLowerCase();
+    return this.translate.instant(`myLostItems.status.${statusKey}`);
   }
 
   getStatusBadgeClass(status: string): string {
@@ -105,14 +94,14 @@ export class MyLostItems implements OnInit {
     }
 
     Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: `سيتم حذف "${title}" نهائياً`,
+      title: this.translate.instant('myLostItems.deleteConfirm.title'),
+      text: this.translate.instant('myLostItems.deleteConfirm.text', { title }),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'نعم، احذف',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('myLostItems.deleteConfirm.confirmButton'),
+      cancelButtonText: this.translate.instant('myLostItems.deleteConfirm.cancelButton'),
       customClass: {
         confirmButton: 'btn btn-danger',
         cancelButton: 'btn btn-secondary',
@@ -123,8 +112,8 @@ export class MyLostItems implements OnInit {
           next: (res) => {
             if (res.isSuccess) {
               Swal.fire({
-                title: 'تم الحذف!',
-                text: 'تم حذف العنصر بنجاح',
+                title: this.translate.instant('myLostItems.deleteSuccess.title'),
+                text: this.translate.instant('myLostItems.deleteSuccess.text'),
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false,
@@ -132,8 +121,8 @@ export class MyLostItems implements OnInit {
               this.items = this.items.filter((item) => item.id !== itemId);
             } else {
               Swal.fire({
-                title: 'خطأ!',
-                text: res.message || 'فشل حذف العنصر',
+                title: this.translate.instant('myLostItems.deleteError.title'),
+                text: res.message || this.translate.instant('myLostItems.deleteError.text'),
                 icon: 'error',
               });
             }
@@ -141,8 +130,8 @@ export class MyLostItems implements OnInit {
           error: (err) => {
             console.error('Delete error:', err);
             Swal.fire({
-              title: 'خطأ!',
-              text: 'حدث خطأ أثناء حذف العنصر',
+              title: this.translate.instant('myLostItems.deleteError.title'),
+              text: this.translate.instant('myLostItems.deleteError.errorOccurred'),
               icon: 'error',
             });
           },
@@ -162,10 +151,10 @@ export class MyLostItems implements OnInit {
       newStatus === LostItemStatus.Active
     ) {
       Swal.fire({
-        title: 'غير مسموح',
-        text: 'لا يمكن إعادة العنصر إلى حالة "نشط" بعد أن تم وضعه كـ "تم العثور عليه" أو "مغلق".',
+        title: this.translate.instant('myLostItems.statusChangeNotAllowed.title'),
+        text: this.translate.instant('myLostItems.statusChangeNotAllowed.text'),
         icon: 'warning',
-        confirmButtonText: 'حسناً',
+        confirmButtonText: this.translate.instant('myLostItems.statusChangeNotAllowed.confirmButton'),
         customClass: { confirmButton: 'btn btn-primary' },
       });
       return;
@@ -173,12 +162,12 @@ export class MyLostItems implements OnInit {
 
     if (item.status === newStatus) return;
     const result = await Swal.fire({
-      title: 'تأكيد تغيير الحالة',
-      text: `هل أنت متأكد أنك تريد تغيير حالة العنصر إلى "${this.getStatusLabel(newStatus)}"؟`,
+      title: this.translate.instant('myLostItems.statusChangeConfirm.title'),
+      text: this.translate.instant('myLostItems.statusChangeConfirm.text', { status: this.getStatusLabel(newStatus) }),
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'تأكيد',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('myLostItems.statusChangeConfirm.confirmButton'),
+      cancelButtonText: this.translate.instant('myLostItems.statusChangeConfirm.cancelButton'),
       customClass: {
         confirmButton: 'btn btn-success',
         cancelButton: 'btn btn-secondary',
@@ -198,8 +187,8 @@ export class MyLostItems implements OnInit {
         if (res.isSuccess && res.data) {
           item.status = res.data.status;
           Swal.fire({
-            title: 'تم التغيير!',
-            text: 'تم تحديث حالة العنصر بنجاح.',
+            title: this.translate.instant('myLostItems.statusChangeSuccess.title'),
+            text: this.translate.instant('myLostItems.statusChangeSuccess.text'),
             icon: 'success',
             timer: 1500,
             showConfirmButton: false,
@@ -208,8 +197,8 @@ export class MyLostItems implements OnInit {
       },
       error: (err) => {
         Swal.fire({
-          title: 'خطأ!',
-          text: 'حدث خطأ أثناء تحديث الحالة.',
+          title: this.translate.instant('myLostItems.statusChangeError.title'),
+          text: this.translate.instant('myLostItems.statusChangeError.text'),
           icon: 'error',
         });
         console.error('Status update failed', err);

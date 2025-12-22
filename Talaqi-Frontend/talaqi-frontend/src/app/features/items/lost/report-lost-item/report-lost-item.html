@@ -10,10 +10,9 @@
               <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
             <div class="header-text-wrapper">
-              <h1 class="header-title">الإبلاغ عن عنصر مفقود</h1>
+              <h1 class="header-title">{{ 'reportLostItem.title' | translate }}</h1>
               <p class="header-subtitle">
-                املأ النموذج بدقة للحصول على أفضل النتائج. سيقوم نظامنا بالبحث عن تطابقات محتملة تلقائياً باستخدام تقنية
-                الذكاء الاصطناعي.
+                {{ 'reportLostItem.subtitle' | translate }}
               </p>
             </div>
           </div>
@@ -27,7 +26,7 @@
               <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="alert-text">
-              <strong>نجاح!</strong>
+              <strong>{{ 'reportLostItem.success' | translate }}</strong>
               <p>{{ successMessage }}</p>
             </div>
             <button type="button" class="alert-close-btn" (click)="successMessage = null">
@@ -45,7 +44,7 @@
               <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
             <div class="alert-text">
-              <strong>خطأ!</strong>
+              <strong>{{ 'reportLostItem.error' | translate }}</strong>
               <p>{{ errorMessage }}</p>
             </div>
             <button type="button" class="alert-close-btn" (click)="errorMessage = null">
@@ -64,12 +63,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-grid-3x3-gap label-icon"></i>
-                  <span>الفئة</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.category.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
                 </label>
                 <select class="form-control-enhanced" formControlName="category"
                   (blur)="reportForm.get('category')?.markAsTouched()" [class.is-invalid]="isFieldInvalid('category')">
-                  <option value="">-- اختر فئة العنصر المفقود --</option>
+                  <option value="">{{ 'reportLostItem.category.placeholder' | translate }}</option>
                   <option *ngFor="let cat of categories" [value]="cat.value">
                     {{ cat.label }}
                   </option>
@@ -80,19 +79,19 @@
                   {{ getFieldError('category') }}
                 </div>
                 }
-                <small class="form-hint">اختر الفئة الأنسب لتحسين نتائج البحث</small>
+                <small class="form-hint">{{ 'reportLostItem.category.hint' | translate }}</small>
               </div>
 
               <!-- Title -->
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-card-heading label-icon"></i>
-                  <span>العنوان</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.title_field.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.title_field.required' | translate }}</span>
                 </label>
                 <input type="text" class="form-control-enhanced" formControlName="title"
                   (blur)="reportForm.get('title')?.markAsTouched()"
-                  placeholder="مثال: محفظة جلدية سوداء أو هاتف آيفون 13" [class.is-invalid]="isFieldInvalid('title')"
+                  [placeholder]="'reportLostItem.title_field.placeholder' | translate" [class.is-invalid]="isFieldInvalid('title')"
                   maxlength="200">
                 @if (isFieldInvalid('title')) {
                 <div class="error-feedback">
@@ -101,7 +100,7 @@
                 </div>
                 }
                 <small class="form-hint">
-                  <span>الحد الأقصى: 200 حرف</span>
+                  <span>{{ 'reportLostItem.title_field.hint' | translate }}</span>
                   <span class="char-counter">{{ reportForm.get('title')?.value?.length || 0 }}/200</span>
                 </small>
               </div>
@@ -110,12 +109,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-text-paragraph label-icon"></i>
-                  <span>الوصف التفصيلي</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.description.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
                 </label>
                 <textarea class="form-control-enhanced textarea-enhanced" formControlName="description"
                   (blur)="reportForm.get('description')?.markAsTouched()"
-                  placeholder="صف العنصر المفقود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل."
+                  [placeholder]="'reportLostItem.description.placeholder' | translate"
                   rows="5" [class.is-invalid]="isFieldInvalid('description')"></textarea>
                 @if (isFieldInvalid('description')) {
                 <div class="error-feedback">
@@ -125,7 +124,7 @@
                 }
                 <small class="form-hint">
                   <i class="bi bi-lightbulb me-1"></i>
-                  الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل
+                  {{ 'reportLostItem.description.hint' | translate }}
                 </small>
               </div>
 
@@ -133,8 +132,8 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-image label-icon"></i>
-                  <span>صورة العنصر</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.image.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
                 </label>
 
                 <!-- Upload Zone -->
@@ -147,12 +146,12 @@
                       <i class="bi bi-cloud-upload-fill"></i>
                     </div>
 
-                    <h5 class="upload-title">اسحب وأفلت الصورة هنا</h5>
-                    <p class="upload-subtitle">أو</p>
+                    <h5 class="upload-title">{{ 'reportLostItem.image.dragDrop' | translate }}</h5>
+                    <p class="upload-subtitle">{{ 'reportLostItem.image.or' | translate }}</p>
 
                     <label class="btn-upload-file">
                       <i class="bi bi-folder2-open me-2"></i>
-                      تصفح الملفات
+                      {{ 'reportLostItem.image.browse' | translate }}
                       <input type="file" class="d-none" accept="image/jpeg,image/jpg,image/png,image/gif"
                         (change)="onFileSelected($event)" (blur)="reportForm.get('imageUrl')?.markAsTouched()">
                     </label>
@@ -167,7 +166,7 @@
 
                     <p class="upload-hint">
                       <i class="bi bi-info-circle me-1"></i>
-                      JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)
+                      {{ 'reportLostItem.image.hint' | translate }}
                     </p>
                   </div>
                 </div>
@@ -178,18 +177,18 @@
                 @if (imagePreviewUrl) {
                 <div class="image-preview-wrapper">
                   <div class="image-preview-container">
-                    <img [src]="imagePreviewUrl" alt="معاينة الصورة" class="preview-image">
+                    <img [src]="imagePreviewUrl" [alt]="'reportLostItem.image.preview' | translate" class="preview-image">
                     <button type="button" class="btn-remove-image" (click)="removeImage()" [disabled]="isUploadingImage"
-                      title="حذف الصورة">
+                      [title]="'reportLostItem.image.removeTitle' | translate">
                       <i class="bi bi-trash-fill"></i>
                     </button>
                     @if (isUploadingImage) {
                     <div class="upload-progress-overlay">
                       <div class="upload-spinner-wrapper">
                         <div class="spinner-border text-light" role="status">
-                          <span class="visually-hidden">جاري الرفع...</span>
+                          <span class="visually-hidden">{{ 'reportLostItem.image.uploading' | translate }}</span>
                         </div>
-                        <p class="upload-status-text">جاري رفع الصورة...</p>
+                        <p class="upload-status-text">{{ 'reportLostItem.image.uploading' | translate }}</p>
                       </div>
                     </div>
                     }
@@ -197,7 +196,7 @@
                   @if (!isUploadingImage && !isDefaultImage) {
                   <div class="image-info-badge">
                     <i class="bi bi-check-circle-fill me-1"></i>
-                    تم رفع الصورة بنجاح
+                    {{ 'reportLostItem.image.uploadSuccess' | translate }}
                   </div>
                   }
                 </div>
@@ -208,7 +207,7 @@
               <div class="form-group-wrapper location-section" formGroupName="location">
                 <label class="form-label-enhanced section-label">
                   <i class="bi bi-geo-alt-fill label-icon"></i>
-                  <span>معلومات الموقع</span>
+                  <span>{{ 'reportLostItem.location.label' | translate }}</span>
                 </label>
 
                 <!-- Map Picker -->
@@ -219,40 +218,40 @@
                 <div class="gps-detection-wrapper">
                   <div class="gps-info-box">
                     <i class="bi bi-info-circle me-2"></i>
-                    <span>تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل</span>
+                    <span>{{ 'reportLostItem.location.hint' | translate }}</span>
                   </div>
                   <button type="button" class="btn-detect-location" (click)="detectLocation()"
                     [disabled]="isDetectingLocation || locationDetected">
                     @if (!isDetectingLocation && !locationDetected) {
                     <span>
                       <i class="bi bi-crosshair me-2"></i>
-                      تحديد موقعي الحالي
+                      {{ 'reportLostItem.location.detectCurrent' | translate }}
                     </span>
                     }
                     @if (isDetectingLocation) {
                     <span>
                       <span class="spinner-border spinner-border-sm me-2"></span>
-                      جاري تحديد الموقع...
+                      {{ 'reportLostItem.location.detecting' | translate }}
                     </span>
                     }
                     @if (locationDetected) {
                     <span>
                       <i class="bi bi-check-circle-fill me-2"></i>
-                      تم تحديد الموقع
+                      {{ 'reportLostItem.location.detected' | translate }}
                     </span>
                     }
                   </button>
                   @if (locationDetected) {
                   <button type="button" class="btn-clear-location" (click)="clearLocation()">
                     <i class="bi bi-x-circle me-2"></i>
-                    إزالة الموقع
+                    {{ 'reportLostItem.location.clear' | translate }}
                   </button>
                   }
                   <!-- Coordinates validation message -->
                   @if (areCoordinatesInvalid()) {
                   <div class="error-feedback mt-2">
                     <i class="bi bi-exclamation-circle me-1"></i>
-                    يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً
+                    {{ 'reportLostItem.location.coordinatesError' | translate }}
                   </div>
                   }
                 </div>
@@ -262,11 +261,11 @@
                 <div class="gps-coordinates-display">
                   <div class="coordinate-item">
                     <i class="bi bi-geo-alt me-2"></i>
-                    <strong>خط العرض:</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
+                    <strong>{{ 'reportLostItem.location.latitude' | translate }}</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
                   </div>
                   <div class="coordinate-item">
                     <i class="bi bi-geo me-2"></i>
-                    <strong>خط الطول:</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
+                    <strong>{{ 'reportLostItem.location.longitude' | translate }}</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
                   </div>
                 </div>
                 }
@@ -274,16 +273,16 @@
                 <!-- Address -->
                 <div class="location-field-wrapper">
                   <label class="form-label-secondary">
-                    العنوان <span class="required-mark">*</span>
+                    {{ 'reportLostItem.location.address.label' | translate }} <span class="required-mark">{{ 'reportLostItem.location.address.required' | translate }}</span>
                   </label>
                   <input type="text" class="form-control-enhanced" formControlName="address"
                     (blur)="reportForm.get('location')?.get('address')?.markAsTouched()"
-                    placeholder="مثال: شارع التحرير، أمام محطة المترو، القاهرة"
+                    [placeholder]="'reportLostItem.location.address.placeholder' | translate"
                     [class.is-invalid]="isLocationFieldInvalid('address')">
                   @if (isLocationFieldInvalid('address')) {
                   <div class="error-feedback">
                     <i class="bi bi-exclamation-circle me-1"></i>
-                    هذا الحقل مطلوب
+                    {{ 'reportLostItem.errors.required' | translate }}
                   </div>
                   }
                 </div>
@@ -291,26 +290,26 @@
                 <!-- City and Governorate -->
                 <div class="row location-row">
                   <div class="col-md-6 location-field-wrapper">
-                    <label class="form-label-secondary">المدينة</label>
+                    <label class="form-label-secondary">{{ 'reportLostItem.location.city.label' | translate }}</label>
                     <input type="text" class="form-control-enhanced" formControlName="city"
-                      (blur)="reportForm.get('location')?.get('city')?.markAsTouched()" placeholder="مثال: القاهرة"
+                      (blur)="reportForm.get('location')?.get('city')?.markAsTouched()" [placeholder]="'reportLostItem.location.city.placeholder' | translate"
                       [class.is-invalid]="isLocationFieldInvalid('city')">
                     @if (isLocationFieldInvalid('city')) {
                     <div class="error-feedback">
                       <i class="bi bi-exclamation-circle me-1"></i>
-                      هذا الحقل مطلوب
+                      {{ 'reportLostItem.errors.required' | translate }}
                     </div>
                     }
                   </div>
                   <div class="col-md-6 location-field-wrapper">
-                    <label class="form-label-secondary">المحافظة</label>
+                    <label class="form-label-secondary">{{ 'reportLostItem.location.governorate.label' | translate }}</label>
                     <input type="text" class="form-control-enhanced" formControlName="governorate"
                       (blur)="reportForm.get('location')?.get('governorate')?.markAsTouched()"
-                      placeholder="مثال: القاهرة" [class.is-invalid]="isLocationFieldInvalid('governorate')">
+                      [placeholder]="'reportLostItem.location.governorate.placeholder' | translate" [class.is-invalid]="isLocationFieldInvalid('governorate')">
                     @if (isLocationFieldInvalid('governorate')) {
                     <div class="error-feedback">
                       <i class="bi bi-exclamation-circle me-1"></i>
-                      هذا الحقل مطلوب
+                      {{ 'reportLostItem.errors.required' | translate }}
                     </div>
                     }
                   </div>
@@ -321,8 +320,8 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-calendar-event label-icon"></i>
-                  <span>تاريخ الفقدان</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.dateLost.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.dateLost.required' | translate }}</span>
                 </label>
                 <input type="date" class="form-control-enhanced date-input" formControlName="dateLost"
                   (blur)="reportForm.get('dateLost')?.markAsTouched()" [max]="maxDate"
@@ -335,7 +334,7 @@
                 }
                 <small class="form-hint">
                   <i class="bi bi-info-circle me-1"></i>
-                  التاريخ يجب أن يكون اليوم أو في الماضي
+                  {{ 'reportLostItem.dateLost.hint' | translate }}
                 </small>
               </div>
 
@@ -343,12 +342,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-telephone-fill label-icon"></i>
-                  <span>معلومات الاتصال</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportLostItem.contactInfo.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.contactInfo.required' | translate }}</span>
                 </label>
                 <input type="text" class="form-control-enhanced" formControlName="contactInfo"
                   (blur)="reportForm.get('contactInfo')?.markAsTouched()"
-                  placeholder="رقم الهاتف أو البريد الإلكتروني للتواصل"
+                  [placeholder]="'reportLostItem.contactInfo.placeholder' | translate"
                   [class.is-invalid]="isFieldInvalid('contactInfo')">
                 @if (isFieldInvalid('contactInfo')) {
                 <div class="error-feedback">
@@ -358,7 +357,7 @@
                 }
                 <small class="form-hint">
                   <i class="bi bi-shield-check me-1"></i>
-                  سيُستخدم للتواصل معك عند إيجاد تطابقات محتملة
+                  {{ 'reportLostItem.contactInfo.hint' | translate }}
                 </small>
               </div>
 
@@ -369,15 +368,15 @@
                     id="legalResponsibility" [class.is-invalid]="isFieldInvalid('legalResponsibility')">
                   <label class="legal-checkbox-label" for="legalResponsibility">
                     <span class="legal-text">
-                      أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ
-                      <span class="required-mark">*</span>
+                      {{ 'reportLostItem.legalResponsibility.label' | translate }}
+                      <span class="required-mark">{{ 'reportLostItem.legalResponsibility.required' | translate }}</span>
                     </span>
                   </label>
                 </div>
                 @if (isFieldInvalid('legalResponsibility')) {
                 <div class="error-feedback">
                   <i class="bi bi-exclamation-circle me-1"></i>
-                  يجب الموافقة على تحمل المسؤولية القانونية للمتابعة
+                  {{ 'reportLostItem.legalResponsibility.error' | translate }}
                 </div>
                 }
               </div>
@@ -389,27 +388,27 @@
               <div class="actions-content">
                 <button type="button" class="btn-action-secondary" routerLink="/home" [disabled]="isSubmitting">
                   <i class="bi bi-x-circle me-2"></i>
-                  <span>إلغاء</span>
+                  <span>{{ 'reportLostItem.actions.cancel' | translate }}</span>
                 </button>
                 <button type="submit" class="btn-action-primary"
                   [disabled]="isSubmitting || isUploadingImage || !isLocationReady">
                   @if (!isSubmitting) {
                   <span class="btn-content">
                     <i class="bi bi-send-fill me-2"></i>
-                    <span>إرسال البلاغ</span>
+                    <span>{{ 'reportLostItem.actions.submit' | translate }}</span>
                   </span>
                   }
                   @if (isSubmitting) {
                   <span class="btn-content">
                     <span class="spinner-border spinner-border-sm me-2"></span>
-                    <span>جاري الإرسال...</span>
+                    <span>{{ 'reportLostItem.actions.submitting' | translate }}</span>
                   </span>
                   }
                 </button>
               </div>
               <p class="actions-note">
                 <i class="bi bi-info-circle me-1"></i>
-                يجب تحديد الموقع وملء العنوان/المدينة/المحافظة أو تعديلهم يدوياً قبل الإرسال
+                {{ 'reportLostItem.actions.note' | translate }}
               </p>
             </div>
           </div>

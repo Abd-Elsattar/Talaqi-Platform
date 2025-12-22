@@ -3,7 +3,8 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
+  background-color: var(--surface-ground);
+  color: var(--text-primary);
 }
 
 .contact-hero {
@@ -49,7 +50,7 @@
 .section-heading {
   font-size: 28px;
   font-weight: 700;
-  color: #324260;
+  color: var(--text-primary);
   margin: 0 0 40px 0;
   text-align: center;
   position: relative;
@@ -88,8 +89,8 @@
 }
 
 .method-card {
-  background: #ffffff;
-  border: 2px solid #DDDDDD;
+  background: var(--surface-card);
+  border: 2px solid var(--border);
   border-radius: 12px;
   padding: 25px;
   text-align: center;
@@ -97,7 +98,7 @@
 }
 
 .method-card:hover {
-  border-color: #6C8DB5;
+  border-color: var(--primary);
   box-shadow: 0 8px 20px rgba(108, 141, 181, 0.15);
   transform: translateY(-5px);
 }
@@ -111,13 +112,13 @@
 .method-title {
   font-size: 18px;
   font-weight: 700;
-  color: #324260;
+  color: var(--text-primary);
   margin: 0 0 10px 0;
 }
 
 .method-description {
   font-size: 13px;
-  color: #787878;
+  color: var(--text-secondary);
   margin: 0 0 12px 0;
 }
 
@@ -131,7 +132,7 @@
 }
 
 .method-value:hover {
-  color: #324260;
+  color: var(--text-primary);
 }
 
 /* Contact form styles removed to simplify page (form deleted).
@@ -142,7 +143,7 @@
 .map-section {
   margin-bottom: 80px;
   padding-bottom: 60px;
-  border-bottom: 1px solid #DDDDDD;
+  border-bottom: 1px solid var(--border);
 }
 
 .map-container {
@@ -156,12 +157,12 @@
 .map-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--surface-ground) 0%, var(--surface-card) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #787878;
+  color: var(--text-secondary);
 }
 
 .map-placeholder i {
@@ -180,7 +181,7 @@
 .social-section {
   margin-bottom: 80px;
   padding-bottom: 60px;
-  border-bottom: 1px solid #DDDDDD;
+  border-bottom: 1px solid var(--border);
 }
 
 .social-links-container {
@@ -300,6 +301,88 @@
   background-color: #f8f9fa;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   DARK MODE OVERRIDES
+   ======================================== */
+:host-context([data-bs-theme="dark"]) .contact-container {
+  background-color: var(--surface-ground);
+}
+
+:host-context([data-bs-theme="dark"]) .contact-hero,
+:host-context([data-bs-theme="dark"]) .faq-cta-card {
+  background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+:host-context([data-bs-theme="dark"]) .contact-title,
+:host-context([data-bs-theme="dark"]) .cta-heading {
+  color: var(--text-primary);
+}
+
+:host-context([data-bs-theme="dark"]) .hero-subtitle,
+:host-context([data-bs-theme="dark"]) .hero-description,
+:host-context([data-bs-theme="dark"]) .cta-text {
+  color: var(--text-secondary);
+}
+
+:host-context([data-bs-theme="dark"]) .section-heading {
+  color: var(--text-primary);
+}
+
+:host-context([data-bs-theme="dark"]) .section-heading::after {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+}
+
+:host-context([data-bs-theme="dark"]) .method-card {
+  background: var(--surface-card);
+  border-color: var(--border);
+}
+
+:host-context([data-bs-theme="dark"]) .method-title {
+  color: var(--text-primary);
+}
+
+:host-context([data-bs-theme="dark"]) .method-description {
+  color: var(--text-secondary);
+}
+
+:host-context([data-bs-theme="dark"]) .method-value {
+  color: var(--primary-light);
+}
+
+:host-context([data-bs-theme="dark"]) .method-value:hover {
+  color: var(--primary);
+}
+
+:host-context([data-bs-theme="dark"]) .method-icon {
+  color: var(--primary);
+}
+
+:host-context([data-bs-theme="dark"]) .map-placeholder {
+  background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-ground) 100%);
+  color: var(--text-secondary);
+}
+
+:host-context([data-bs-theme="dark"]) .map-placeholder i {
+  color: var(--primary);
+}
+
+:host-context([data-bs-theme="dark"]) .social-section,
+:host-context([data-bs-theme="dark"]) .map-section {
+  border-bottom-color: var(--border);
+}
+
+:host-context([data-bs-theme="dark"]) .cta-link {
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+:host-context([data-bs-theme="dark"]) .cta-link:hover {
+  background-color: var(--surface-ground);
+  color: var(--primary);
 }
 
 /* Responsive Design */

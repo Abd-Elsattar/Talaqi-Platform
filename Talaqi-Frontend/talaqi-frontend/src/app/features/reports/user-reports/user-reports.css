@@ -1,7 +1,7 @@
 /* user-reports.css */
 .table th {
     font-weight: 600;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .table td {

@@ -7,9 +7,9 @@
         <div class="hero-text">
           <h1 class="hero-title">
             <i class="bi bi-robot"></i>
-            متطابقات الذكاء الاصطناعي
+            {{ 'aiMatches.title' | translate }}
           </h1>
-          <p class="hero-subtitle">المطابقات التي وجدها نظام الذكاء الاصطناعي بين العناصر المفقودة والموجودة</p>
+          <p class="hero-subtitle">{{ 'aiMatches.subtitle' | translate }}</p>
         </div>
       </div>
     </div>
@@ -23,25 +23,25 @@
           <button type="button" class="chip" [class.active]="selectedStatus === 'All'"
             (click)="onStatusFilterChange('All')">
             <i class="bi bi-list-ul"></i>
-            <span>الكل</span>
+            <span>{{ 'aiMatches.filters.all' | translate }}</span>
             <span class="count">{{ getMatchesCount('All') }}</span>
           </button>
           <button type="button" class="chip" [class.active]="selectedStatus === 'Pending'"
             (click)="onStatusFilterChange('Pending')">
             <i class="bi bi-hourglass-split"></i>
-            <span>قيد الانتظار</span>
+            <span>{{ 'aiMatches.filters.pending' | translate }}</span>
             <span class="count">{{ getMatchesCount('Pending') }}</span>
           </button>
           <button type="button" class="chip" [class.active]="selectedStatus === 'Confirmed'"
             (click)="onStatusFilterChange('Confirmed')">
             <i class="bi bi-check-circle"></i>
-            <span>مؤكد</span>
+            <span>{{ 'aiMatches.filters.confirmed' | translate }}</span>
             <span class="count">{{ getMatchesCount('Confirmed') }}</span>
           </button>
           <button type="button" class="chip" [class.active]="selectedStatus === 'Resolved'"
             (click)="onStatusFilterChange('Resolved')">
             <i class="bi bi-check-all"></i>
-            <span>تم الحل</span>
+            <span>{{ 'aiMatches.filters.resolved' | translate }}</span>
             <span class="count">{{ getMatchesCount('Resolved') }}</span>
           </button>
           <!-- Owner Filters -->
@@ -49,19 +49,19 @@
             <button type="button" class="chip small" [class.active]="ownerFilter === 'my-lost'"
               (click)="setOwnerFilter('my-lost')">
               <i class="bi bi-person-badge"></i>
-              <span>مفقودي</span>
+              <span>{{ 'aiMatches.filters.myLost' | translate }}</span>
             </button>
             <button type="button" class="chip small" [class.active]="ownerFilter === 'my-found'"
               (click)="setOwnerFilter('my-found')">
               <i class="bi bi-bag-check"></i>
-              <span>موجوداتي</span>
+              <span>{{ 'aiMatches.filters.myFound' | translate }}</span>
             </button>
           </div>
         </div>
         <div class="toolbar-divider"></div>
         <div class="toolbar-search">
           <i class="bi bi-search"></i>
-          <input type="text" class="toolbar-input" placeholder="بحث في المطابقات" [(ngModel)]="searchQuery"
+          <input type="text" class="toolbar-input" [placeholder]="'aiMatches.searchPlaceholder' | translate" [(ngModel)]="searchQuery"
             (input)="onSearchChange()" />
         </div>
       </div>
@@ -71,9 +71,9 @@
     @if (isLoading) {
     <div class="loading-state">
       <div class="spinner-border" role="status">
-        <span class="visually-hidden">جاري التحميل...</span>
+        <span class="visually-hidden">{{ 'aiMatches.loading' | translate }}</span>
       </div>
-      <p>جاري تحميل المطابقات...</p>
+      <p>{{ 'aiMatches.loadingText' | translate }}</p>
     </div>
     }
 
@@ -91,18 +91,18 @@
       <div class="empty-state-icon">
         <i class="bi bi-robot"></i>
       </div>
-      <h3 class="empty-state-title">لا توجد مطابقات</h3>
+      <h3 class="empty-state-title">{{ 'aiMatches.emptyState.title' | translate }}</h3>
       <p class="empty-state-text">
         @if (selectedStatus === 'All') {
-        <span>لم يتم العثور على أي مطابقات بعد</span>
+        <span>{{ 'aiMatches.emptyState.noMatches' | translate }}</span>
         }
         @if (selectedStatus !== 'All') {
-        <span>لا توجد مطابقات بحالة "{{ getStatusText(selectedStatus) }}"</span>
+        <span>{{ 'aiMatches.emptyState.noMatchesWithStatus' | translate }} "{{ getStatusText(selectedStatus) }}"</span>
         }
       </p>
       <button routerLink="/report-lost-item" class="btn-accent-primary btn-lg">
         <i class="bi bi-plus-circle"></i>
-        إبلاغ عن عنصر مفقود
+        {{ 'aiMatches.emptyState.reportButton' | translate }}
       </button>
     </div>
     }
@@ -116,7 +116,7 @@
         <div class="match-header">
           <div class="ai-indicator">
             <i class="bi bi-stars ai-icon"></i>
-            <span>مطابقة ذكية</span>
+            <span>{{ 'aiMatches.smartMatch' | translate }}</span>
           </div>
           <div class="match-time">
             <i class="bi bi-clock"></i>
@@ -131,7 +131,7 @@
             <div class="item-badge-wrapper">
               <span class="item-badge badge-lost">
                 <i class="bi bi-exclamation-circle"></i>
-                مفقود
+                {{ 'aiMatches.lostBadge' | translate }}
               </span>
             </div>
             <div class="item-image-container">
@@ -147,7 +147,7 @@
               <div class="item-meta">
                 <div class="meta-item">
                   <i class="bi bi-geo-alt-fill"></i>
-                  <span>{{ getItemLocation(match.lostItem?.location) }}</span>
+                  <span>{{ getItemLocation(match.lostItem?.location) | locationTranslate }}</span>
                 </div>
                 <div class="meta-item">
                   <i class="bi bi-calendar-x"></i>
@@ -175,7 +175,7 @@
                   <div class="confidence-label">{{ getConfidenceLabel(match.confidenceScore) }}</div>
                 </div>
               </div>
-              <div class="ai-text">مطابقة الذكاء الاصطناعي</div>
+              <div class="ai-text">{{ 'aiMatches.aiMatchText' | translate }}</div>
             </div>
             <div class="comparison-line"></div>
           </div>
@@ -185,7 +185,7 @@
             <div class="item-badge-wrapper">
               <span class="item-badge badge-found">
                 <i class="bi bi-check-circle"></i>
-                موجود
+                {{ 'aiMatches.foundBadge' | translate }}
               </span>
             </div>
             <div class="item-image-container">
@@ -201,7 +201,7 @@
               <div class="item-meta">
                 <div class="meta-item">
                   <i class="bi bi-geo-alt-fill"></i>
-                  <span>{{ getItemLocation(match.foundItem?.location) }}</span>
+                  <span>{{ getItemLocation(match.foundItem?.location) | locationTranslate }}</span>
                 </div>
                 <div class="meta-item">
                   <i class="bi bi-calendar-check"></i>
@@ -223,29 +223,29 @@
 
           <!-- Action Buttons -->
           <div class="match-actions">
-            <button (click)="startChat(match)" class="btn-action btn-chat" title="بدء المحادثة">
+            <button (click)="startChat(match)" class="btn-action btn-chat" [title]="'aiMatches.actions.chat' | translate">
               <i class="bi bi-chat-dots-fill"></i>
-              <span>محادثة</span>
+              <span>{{ 'aiMatches.actions.chat' | translate }}</span>
             </button>
             @if (canConfirm(match)) {
             <button (click)="updateMatchStatus(match.id, MatchStatus.Confirmed)" class="btn-action btn-confirm"
-              title="تأكيد المطابقة">
+              [title]="'aiMatches.actions.confirm' | translate">
               <i class="bi bi-check-circle-fill"></i>
-              <span>تأكيد</span>
+              <span>{{ 'aiMatches.actions.confirm' | translate }}</span>
             </button>
             }
             @if (canReject(match)) {
             <button (click)="updateMatchStatus(match.id, MatchStatus.Rejected)" class="btn-action btn-reject"
-              title="رفض المطابقة">
+              [title]="'aiMatches.actions.reject' | translate">
               <i class="bi bi-x-circle-fill"></i>
-              <span>رفض</span>
+              <span>{{ 'aiMatches.actions.reject' | translate }}</span>
             </button>
             }
             @if (canResolve(match)) {
             <button (click)="updateMatchStatus(match.id, MatchStatus.Resolved)" class="btn-action btn-resolve"
-              title="تم الحل">
+              [title]="'aiMatches.actions.resolve' | translate">
               <i class="bi bi-check-all"></i>
-              <span>تم</span>
+              <span>{{ 'aiMatches.actions.resolve' | translate }}</span>
             </button>
             }
           </div>
@@ -256,7 +256,7 @@
       <!-- Results Count -->
       <div class="results-count">
         <p>
-          عرض <strong>{{ filteredMatches.length }}</strong> من أصل <strong>{{ allMatches.length }}</strong> مطابقة
+          {{ 'aiMatches.resultsCount' | translate: { shown: filteredMatches.length, total: allMatches.length } }}
         </p>
       </div>
     </div>

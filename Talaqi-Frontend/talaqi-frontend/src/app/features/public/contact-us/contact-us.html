@@ -2,9 +2,9 @@
 <div class="contact-container">
   <div class="contact-hero">
     <div class="hero-content">
-      <h1 class="contact-title">اتصل بنا</h1>
-      <p class="hero-subtitle">Contact Us</p>
-      <p class="hero-description">نحن هنا للإجابة على أسئلتك ومساعدتك</p>
+      <h1 class="contact-title">{{ 'contactUs.title' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'contactUs.subtitle' | translate }}</p>
+      <p class="hero-description">{{ 'contactUs.description' | translate }}</p>
     </div>
   </div>
 
@@ -12,16 +12,16 @@
     <div class="contact-grid">
       <!-- Contact Methods -->
       <section class="contact-methods-section">
-        <h2 class="section-heading">معلومات التواصل</h2>
+        <h2 class="section-heading">{{ 'contactUs.contactMethods.title' | translate }}</h2>
         <div class="methods-container">
           <div *ngFor="let method of contactMethods" class="method-card">
             <div class="method-icon">
               <i [class]="'bi ' + method.icon"></i>
             </div>
-            <h3 class="method-title">{{ method.title }}</h3>
-            <p class="method-description">{{ method.description }}</p>
+            <h3 class="method-title">{{ method.titleKey | translate }}</h3>
+            <p class="method-description">{{ method.descKey | translate }}</p>
             <a [href]="method.link" class="method-value">
-              {{ method.value }}
+              {{ method.isTranslatedValue ? (method.valueKey | translate) : method.value }}
             </a>
           </div>
         </div>
@@ -32,7 +32,7 @@
 
     <!-- Social Media Section -->
     <section class="social-section">
-      <h2 class="section-heading">تابعنا على وسائل التواصل</h2>
+      <h2 class="section-heading">{{ 'contactUs.social.title' | translate }}</h2>
       <div class="social-links-container">
         <a href="https://www.facebook.com/profile.php?id=61584479934710" target="_blank" class="social-link facebook">
           <i class="bi bi-facebook"></i>
@@ -56,11 +56,11 @@
     <!-- FAQ CTA -->
     <section class="faq-cta-section">
       <div class="faq-cta-card">
-        <h2 class="cta-heading">هل تحتاج إلى إجابات سريعة؟</h2>
-        <p class="cta-text">تحقق من الأسئلة الشائعة أولاً قد تجد الإجابة التي تبحث عنها</p>
+        <h2 class="cta-heading">{{ 'contactUs.faq.title' | translate }}</h2>
+        <p class="cta-text">{{ 'contactUs.faq.text' | translate }}</p>
         <a href="/faq" class="cta-link">
           <i class="bi bi-question-circle me-2"></i>
-          عرض الأسئلة الشائعة
+          {{ 'contactUs.faq.link' | translate }}
         </a>
       </div>
     </section>

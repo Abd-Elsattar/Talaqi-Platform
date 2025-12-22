@@ -10,6 +10,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LostItemService } from '../../../../core/services/lost-item.service';
 import { UploadService } from '../../../../core/services/upload.service';
 import { ImageUrlService } from '../../../../core/services/image-url.service';
@@ -20,7 +21,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-report-lost-item',
   standalone: true,
-  imports: [CommonModule, NgFor, DecimalPipe, ReactiveFormsModule, RouterLink, MapPickerComponent],
+  imports: [CommonModule, NgFor, DecimalPipe, ReactiveFormsModule, RouterLink, MapPickerComponent, TranslateModule],
   templateUrl: './report-lost-item.html',
   styleUrl: './report-lost-item.css',
 })
@@ -31,6 +32,7 @@ export class ReportLostItem implements OnInit {
   private lostItemService = inject(LostItemService);
   private uploadService = inject(UploadService);
   private imageUrlService = inject(ImageUrlService);
+  private translate = inject(TranslateService);
 
   reportForm: FormGroup;
   isSubmitting = false;
@@ -61,11 +63,13 @@ export class ReportLostItem implements OnInit {
   editItemId: string | null = null;
   isLoadingItem = false;
 
-  categories: { value: ItemCategory; label: string }[] = [
-    { value: 'PersonalBelongings', label: 'متعلقات شخصية' },
-    { value: 'People', label: 'أشخاص' },
-    { value: 'Pets', label: 'حيوانات أليفة' },
-  ];
+  get categories(): { value: ItemCategory; label: string }[] {
+    return [
+      { value: 'PersonalBelongings', label: this.translate.instant('reportLostItem.category.personalBelongings') },
+      { value: 'People', label: this.translate.instant('reportLostItem.category.people') },
+      { value: 'Pets', label: this.translate.instant('reportLostItem.category.pets') },
+    ];
+  }
 
   constructor() {
     const contactInfoValidator = (control: AbstractControl) => {
@@ -138,7 +142,7 @@ export class ReportLostItem implements OnInit {
       },
       error: () => {
         this.isLoadingItem = false;
-        this.errorMessage = 'فشل تحميل بيانات العنصر';
+        this.errorMessage = this.translate.instant('reportLostItem.errors.loadItemFailed');
       },
     });
   }
@@ -162,11 +166,11 @@ export class ReportLostItem implements OnInit {
   private handleFile(file: File): void {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
     if (!validTypes.includes(file.type)) {
-      this.errorMessage = 'صيغة الصورة غير مدعومة';
+      this.errorMessage = this.translate.instant('reportLostItem.errors.imageFormat');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      this.errorMessage = 'حجم الصورة أكبر من 5 ميجابايت';
+      this.errorMessage = this.translate.instant('reportLostItem.errors.imageSize');
       return;
     }
 
@@ -192,7 +196,7 @@ export class ReportLostItem implements OnInit {
       },
       error: () => {
         this.isUploadingImage = false;
-        this.errorMessage = 'فشل رفع الصورة';
+        this.errorMessage = this.translate.instant('reportLostItem.errors.uploadFailed');
       },
     });
   }
@@ -209,7 +213,7 @@ export class ReportLostItem implements OnInit {
   onSubmit(): void {
     if (this.reportForm.invalid) {
       this.reportForm.markAllAsTouched();
-      this.errorMessage = 'يرجى استكمال البيانات المطلوبة';
+      this.errorMessage = this.translate.instant('reportLostItem.errors.completeRequired');
       return;
     }
 
@@ -221,9 +225,9 @@ export class ReportLostItem implements OnInit {
       this.isSubmitting = false;
       Swal.fire({
         icon: 'success',
-        title: 'تم بنجاح',
+        title: this.translate.instant('reportLostItem.success'),
         text: msg,
-        confirmButtonText: 'حسناً',
+        confirmButtonText: this.translate.instant('lostItemDetail.closeModal'),
       }).then(() => this.router.navigate([nav]));
     };
 
@@ -237,11 +241,11 @@ export class ReportLostItem implements OnInit {
       this.lostItemService.update(this.editItemId, dto).subscribe({
         next: (res) =>
           res.isSuccess
-            ? onSuccess(res.message || 'تم تحديث البلاغ', '/my-lost-items')
+            ? onSuccess(res.message || this.translate.instant('reportLostItem.messages.reportUpdated'), '/my-lost-items')
             : (this.errorMessage = res.message),
         error: () => {
           this.isSubmitting = false;
-          this.errorMessage = 'فشل التحديث';
+          this.errorMessage = this.translate.instant('reportLostItem.errors.updateFailed');
         },
       });
     } else {
@@ -254,11 +258,11 @@ export class ReportLostItem implements OnInit {
       this.lostItemService.create(dto).subscribe({
         next: (res) =>
           res.isSuccess
-            ? onSuccess(res.message || 'تم إرسال البلاغ', '/home')
+            ? onSuccess(res.message || this.translate.instant('reportLostItem.messages.reportSubmitted'), '/home')
             : (this.errorMessage = res.message),
         error: () => {
           this.isSubmitting = false;
-          this.errorMessage = 'فشل الإرسال';
+          this.errorMessage = this.translate.instant('reportLostItem.errors.submitFailed');
         },
       });
     }
@@ -278,9 +282,9 @@ export class ReportLostItem implements OnInit {
 
   getFieldError(name: string): string {
     const c = this.reportForm.get(name);
-    if (c?.hasError('required')) return 'هذا الحقل مطلوب';
-    if (c?.hasError('maxlength')) return 'عدد الأحرف تجاوز الحد المسموح';
-    if (name === 'contactInfo' && c?.hasError('contactInvalid')) return 'رقم هاتف أو بريد غير صالح';
+    if (c?.hasError('required')) return this.translate.instant('reportLostItem.errors.required');
+    if (c?.hasError('maxlength')) return this.translate.instant('reportLostItem.errors.maxlength');
+    if (name === 'contactInfo' && c?.hasError('contactInvalid')) return this.translate.instant('reportLostItem.errors.contactInvalid');
     return '';
   }
 
@@ -306,7 +310,7 @@ export class ReportLostItem implements OnInit {
       },
       () => {
         this.isDetectingLocation = false;
-        this.errorMessage = 'تعذر تحديد الموقع';
+        this.errorMessage = this.translate.instant('reportLostItem.errors.locationDetectionFailed');
       }
     );
   }
@@ -335,6 +339,6 @@ export class ReportLostItem implements OnInit {
   }
 
   getImageError(): string {
-    return 'الصورة مطلوبة';
+    return this.translate.instant('reportLostItem.errors.imageRequired');
   }
 }

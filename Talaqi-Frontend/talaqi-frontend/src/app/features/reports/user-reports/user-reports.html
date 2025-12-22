@@ -2,9 +2,9 @@
   <div class="row mb-4">
     <div class="col-12">
       <h2 class="fw-bold mb-3 text-primary">
-        <i class="bi bi-flag-fill me-2"></i>بلاغاتي
+        <i class="bi bi-flag-fill me-2"></i>{{ 'userReports.title' | translate }}
       </h2>
-      <p class="text-muted">عرض ومتابعة حالة البلاغات التي قمت بتقديمها</p>
+      <p class="text-muted">{{ 'userReports.subtitle' | translate }}</p>
     </div>
   </div>
 
@@ -14,12 +14,12 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="bg-light">
             <tr>
-              <th class="py-3 px-4">رقم البلاغ</th>
-              <th class="py-3 px-4">تاريخ البلاغ</th>
-              <th class="py-3 px-4">السبب</th>
-              <th class="py-3 px-4">الوصف</th>
-              <th class="py-3 px-4">الحالة</th>
-              <th class="py-3 px-4">ملاحظات الإدارة</th>
+              <th class="py-3 px-4">{{ 'userReports.table.reportNumber' | translate }}</th>
+              <th class="py-3 px-4">{{ 'userReports.table.reportDate' | translate }}</th>
+              <th class="py-3 px-4">{{ 'userReports.table.reason' | translate }}</th>
+              <th class="py-3 px-4">{{ 'userReports.table.description' | translate }}</th>
+              <th class="py-3 px-4">{{ 'userReports.table.status' | translate }}</th>
+              <th class="py-3 px-4">{{ 'userReports.table.adminNotes' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -38,19 +38,19 @@
                 </span>
               </td>
               <td class="px-4 text-muted fst-italic">
-                {{ report.adminNotes || 'لا توجد ملاحظات بعد' }}
+                {{ report.adminNotes || ('userReports.noAdminNotes' | translate) }}
               </td>
             </tr>
             <tr *ngIf="reports.length === 0 && !loading">
               <td colspan="6" class="text-center py-5 text-muted">
                 <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-                لا توجد بلاغات سابقة
+                {{ 'userReports.noReports' | translate }}
               </td>
             </tr>
             <tr *ngIf="loading">
                 <td colspan="6" class="text-center py-5">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">{{ 'userReports.loading' | translate }}</span>
                     </div>
                 </td>
             </tr>

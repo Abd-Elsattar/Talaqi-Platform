@@ -1,0 +1,257 @@
+<div class="stat-card stat-card-primary d-block p-0 overflow-hidden border-0 shadow">
+  <!-- Header -->
+  <div class="card-header bg-transparent border-bottom py-3">
+    <div class="row align-items-center">
+      <div class="col-12">
+        <h5 class="mb-0 fw-bold text-primary">
+          <i class="bi bi-people me-2"></i>{{ 'adminPanel.users.title' | translate }}
+        </h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <!-- Filter Bar -->
+    <div class="filter-bar border-bottom">
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-12">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" class="form-control border-start-0 ps-0"
+              [(ngModel)]="userSearchTerm"
+              [placeholder]="'adminPanel.users.searchPlaceholder' | translate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loadingUsers" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'adminPanel.common.loading' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div *ngIf="!loadingUsers" class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light">
+          <tr>
+            <th class="px-4 py-3 border-bottom-0">{{ 'adminPanel.users.table.user' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.users.table.email' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.users.table.role' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.users.table.joinDate' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.users.table.status' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.users.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers" class="cursor-pointer" (click)="viewUserDetails(user)">
+            <td class="px-4">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 me-3">
+                  <div class="avatar-lg bg-light rounded-circle overflow-hidden position-relative border" style="width: 40px; height: 40px;">
+                    <img *ngIf="getUserImageUrl(user)" [src]="getUserImageUrl(user)"
+                      class="w-100 h-100 object-fit-cover"
+                      (error)="onUserImageError($event)"
+                      [alt]="user.firstName">
+                    <div *ngIf="!getUserImageUrl(user)" class="w-100 h-100 d-flex align-items-center justify-content-center text-primary bg-primary bg-opacity-10 fw-bold">
+                      {{ user.firstName.charAt(0) || 'U' }}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold">{{ user.firstName }} {{ user.lastName }}</h6>
+                  <small class="text-muted" *ngIf="user.id">
+                    {{ 'adminPanel.users.idLabel' | translate }} <span class="font-monospace">{{ user.id.substring(0, 8) }}...</span>
+                  </small>
+                </div>
+              </div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="getUserRoleBadge(user.role)">
+                {{ getUserRoleText(user.role) }}
+              </span>
+            </td>
+            <td>{{ user.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td class="text-center">
+              <span class="badge rounded-pill" [ngClass]="getUserStatusBadgeClass(user.isActive)">
+                {{ getUserStatusText(user.isActive) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group" role="group">
+                <button class="btn btn-sm btn-icon btn-ghost-primary rounded-circle"
+                  (click)="$event.stopPropagation(); viewUserDetails(user)"
+                  [title]="'adminPanel.users.table.viewDetails' | translate">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button *ngIf="canBlockUser(user)"
+                  class="btn btn-sm btn-icon rounded-circle ms-1"
+                  [ngClass]="user.isActive ? 'btn-ghost-danger' : 'btn-ghost-success'"
+                  (click)="$event.stopPropagation(); toggleUserStatus(user)"
+                  [disabled]="updatingUserStatus === user.id"
+                  [title]="user.isActive ? ('adminPanel.users.table.deactivate' | translate) : ('adminPanel.users.table.activate' | translate)">
+                  <span *ngIf="updatingUserStatus === user.id" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <i *ngIf="updatingUserStatus !== user.id" class="bi" [class.bi-slash-circle]="user.isActive" [class.bi-check-circle]="!user.isActive"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUsers.length === 0">
+            <td colspan="6" class="text-center py-5">
+              <div class="empty-state">
+                <div class="mb-3">
+                  <i class="bi bi-people display-4 text-muted opacity-25"></i>
+                </div>
+                <h6 class="text-muted">{{ 'adminPanel.users.empty.title' | translate }}</h6>
+                <small class="text-muted">{{ 'adminPanel.users.empty.subtitle' | translate }}</small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="card-footer bg-transparent border-top-0 py-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <small class="text-muted">
+          {{ 'adminPanel.users.pagination.showing' | translate }}
+          <span class="fw-bold text-dark">{{ (usersPage - 1) * usersPageSize + 1 }}</span> -
+          <span class="fw-bold text-dark">{{ Math.min(usersPage * usersPageSize, totalUsers) }}</span>
+          {{ 'adminPanel.users.pagination.of' | translate }}
+          <span class="fw-bold text-dark">{{ totalUsers }}</span>
+          {{ 'adminPanel.users.pagination.users' | translate }}
+        </small>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="usersPage === 1">
+            <button class="page-link" (click)="prevUsersPage()">
+              <i class="bi bi-chevron-right rtl-flip"></i>
+            </button>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ usersPage }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="usersPage * usersPageSize >= totalUsers">
+            <button class="page-link" (click)="nextUsersPage()">
+              <i class="bi bi-chevron-left rtl-flip"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Details Modal -->
+<div *ngIf="showUserModal" class="modal-backdrop-custom position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="z-index: 1050;">
+  <div class="modal-dialog modal-lg w-100 m-3" role="document">
+    <div class="modal-content shadow-lg border-0 overflow-hidden">
+      <div class="modal-header bg-header-primary text-white">
+        <h5 class="modal-title d-flex align-items-center">
+          <i class="bi bi-person-circle me-2"></i> {{ 'adminPanel.modals.userDetails.title' | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeUserModal()"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-surface-ground" *ngIf="selectedUser">
+        <div class="row g-4">
+          <!-- Main Info -->
+          <div class="col-12 col-md-4 text-center">
+            <div class="card border shadow-sm h-100">
+              <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                <div class="avatar-xl mb-3 position-relative">
+                   <div class="rounded-circle overflow-hidden border border-3 border-white shadow-sm" style="width: 120px; height: 120px;">
+                    <img *ngIf="getUserImageUrl(selectedUser)" [src]="getUserImageUrl(selectedUser)"
+                      class="w-100 h-100 object-fit-cover"
+                      (error)="onUserImageError($event)">
+                    <div *ngIf="!getUserImageUrl(selectedUser)" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-secondary display-4 fw-bold">
+                      {{ selectedUser.firstName.charAt(0) || 'U' }}
+                    </div>
+                  </div>
+                  <span class="position-absolute bottom-0 end-0 p-2 rounded-circle border border-2 border-white"
+                    [ngClass]="selectedUser.isActive ? 'bg-success' : 'bg-danger'">
+                  </span>
+                </div>
+                <h5 class="fw-bold mb-1">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h5>
+                <span class="badge rounded-pill mb-3" [ngClass]="getUserRoleBadge(selectedUser.role)">
+                  {{ getUserRoleText(selectedUser.role) }}
+                </span>
+
+                <div class="w-100 mt-auto pt-3 border-top">
+                  <div class="d-grid gap-2">
+                     <button *ngIf="canBlockUser(selectedUser)"
+                      class="btn btn-sm"
+                      [ngClass]="selectedUser.isActive ? 'btn-outline-danger' : 'btn-outline-success'"
+                      (click)="toggleUserStatus(selectedUser)"
+                      [disabled]="updatingUserStatus === selectedUser.id">
+                      <span *ngIf="updatingUserStatus === selectedUser.id" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                      <i *ngIf="updatingUserStatus !== selectedUser.id" class="bi me-1" [class.bi-slash-circle]="selectedUser.isActive" [class.bi-check-circle]="!selectedUser.isActive"></i>
+                      {{ selectedUser.isActive ? ('adminPanel.modals.userDetails.deactivateAccount' | translate) : ('adminPanel.modals.userDetails.activateAccount' | translate) }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Info -->
+          <div class="col-12 col-md-8">
+            <div class="card border shadow-sm h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-4 fw-bold border-bottom pb-2">
+                  <i class="bi bi-info-circle me-2"></i>{{ 'adminPanel.modals.userDetails.accountTitle' | translate }}
+                </h6>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.userDetails.email' | translate }}</label>
+                    <p class="mb-0 fw-medium text-break">{{ selectedUser.email }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.userDetails.phone' | translate }}</label>
+                    <p class="mb-0 fw-medium font-monospace">{{ selectedUser.phoneNumber || ('adminPanel.modals.userDetails.notAvailable' | translate) }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.userDetails.joinDate' | translate }}</label>
+                    <p class="mb-0 fw-medium">{{ selectedUser.createdAt | date:'mediumDate' }}</p>
+                  </div>
+                   <div class="col-md-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.userDetails.userId' | translate }}</label>
+                    <p class="mb-0 fw-medium font-monospace small text-muted">{{ selectedUser.id }}</p>
+                  </div>
+                </div>
+
+                <h6 class="card-title text-primary mb-4 fw-bold border-bottom pb-2 mt-2">
+                  <i class="bi bi-graph-up me-2"></i>{{ 'adminPanel.modals.userDetails.statsTitle' | translate }}
+                </h6>
+                 <div class="row g-3">
+                   <!-- Placeholder stats as they are not in user model yet but good for UI -->
+                   <div class="col-6 col-md-4 text-center p-3 border rounded bg-light">
+                     <h3 class="fw-bold text-primary mb-0">0</h3>
+                     <small class="text-muted">{{ 'adminPanel.modals.userDetails.itemsCount' | translate }}</small>
+                   </div>
+                   <div class="col-6 col-md-4 text-center p-3 border rounded bg-light">
+                     <h3 class="fw-bold text-warning mb-0">0</h3>
+                     <small class="text-muted">{{ 'adminPanel.modals.userDetails.reportsCount' | translate }}</small>
+                   </div>
+                 </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light border-top-0">
+        <button type="button" class="btn btn-secondary px-4" (click)="closeUserModal()">
+          {{ 'adminPanel.modals.close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

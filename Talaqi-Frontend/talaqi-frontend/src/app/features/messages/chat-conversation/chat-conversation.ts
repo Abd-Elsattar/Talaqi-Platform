@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChatService } from '../../../core/services/chat.service';
 import { SignalRService } from '../../../core/services/signalr.service';
 import { TokenService } from '../../../core/services/token.service';
@@ -16,7 +17,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-chat-conversation',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './chat-conversation.html',
   styleUrl: './chat-conversation.css'
 })
@@ -46,14 +47,9 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
   reportTargetId: string | null = null;
   reportReason: ReportReason = ReportReason.Spam;
   reportDescription = '';
-  reportReasons = [
-    { value: ReportReason.Spam, label: 'محتوى مزعج (Spam)' },
-    { value: ReportReason.Harassment, label: 'مضايقة أو تنمر' },
-    { value: ReportReason.InappropriateContent, label: 'محتوى غير لائق' },
-    { value: ReportReason.Scam, label: 'احتيال' },
-    { value: ReportReason.Other, label: 'أخرى' }
-  ];
+  reportReasons: { value: ReportReason; label: string }[] = [];
   isReporting = false;
+  private translate = inject(TranslateService);
 
   constructor(
     private route: ActivatedRoute,
@@ -64,8 +60,19 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
     private reportService: ReportService
   ) {}
 
+  private initializeReportReasons() {
+    this.reportReasons = [
+      { value: ReportReason.Spam, label: this.translate.instant('messages.report.reasons.spam') },
+      { value: ReportReason.Harassment, label: this.translate.instant('messages.report.reasons.harassment') },
+      { value: ReportReason.InappropriateContent, label: this.translate.instant('messages.report.reasons.inappropriate') },
+      { value: ReportReason.Scam, label: this.translate.instant('messages.report.reasons.scam') },
+      { value: ReportReason.Other, label: this.translate.instant('messages.report.reasons.other') }
+    ];
+  }
+
   ngOnInit(): void {
     this.currentUser = this.tokenService.getCurrentUser();
+    this.initializeReportReasons();
 
     this.route.paramMap.subscribe(params => {
       const newId = params.get('id');
@@ -156,16 +163,28 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
     this.reportService.createReport(dto).subscribe({
       next: (res) => {
         if (res.isSuccess) {
-          Swal.fire('تم الإرسال', 'تم إرسال البلاغ بنجاح. شكراً لمساعدتك في الحفاظ على أمان المنصة.', 'success');
+          Swal.fire(
+            this.translate.instant('messages.report.success.title'),
+            this.translate.instant('messages.report.success.text'),
+            'success'
+          );
           this.closeReportModal();
         } else {
-          Swal.fire('خطأ', 'حدث خطأ أثناء إرسال البلاغ: ' + res.message, 'error');
+          Swal.fire(
+            this.translate.instant('messages.report.error.title'),
+            this.translate.instant('messages.report.error.text') + ': ' + res.message,
+            'error'
+          );
         }
         this.isReporting = false;
       },
       error: (err) => {
         console.error(err);
-        Swal.fire('خطأ', 'حدث خطأ غير متوقع.', 'error');
+        Swal.fire(
+          this.translate.instant('messages.report.error.title'),
+          this.translate.instant('messages.report.error.unexpected'),
+          'error'
+        );
         this.isReporting = false;
       }
     });
@@ -241,7 +260,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 
     this.typingSub = this.signalRService.typing$.subscribe(data => {
         if (data && data.conversationId === this.conversationId && data.userId !== this.currentUser.id) {
-            this.typingUser = "جاري الكتابة..."; // You could fetch user name
+            this.typingUser = this.translate.instant('messages.chat.typing');
         }
     });
 
@@ -314,7 +333,11 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
       } else {
           // Restore on failure
           this.newMessage = content;
-          Swal.fire('Error', 'Failed to send message', 'error');
+          Swal.fire(
+            this.translate.instant('messages.chat.error.title'),
+            this.translate.instant('messages.chat.error.sendFailed'),
+            'error'
+          );
       }
     });
   }
@@ -337,12 +360,12 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 
   deleteMessage(messageId: string) {
     Swal.fire({
-      title: 'تأكيد الحذف',
-      text: 'هل أنت متأكد من حذف هذه الرسالة؟',
+      title: this.translate.instant('messages.chat.delete.title'),
+      text: this.translate.instant('messages.chat.delete.text'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'نعم، احذف',
-      cancelButtonText: 'إلغاء'
+      confirmButtonText: this.translate.instant('messages.chat.delete.confirm'),
+      cancelButtonText: this.translate.instant('messages.chat.delete.cancel')
     }).then(result => {
       if (result.isConfirmed) {
         this.chatService.deleteMessage(messageId).subscribe({
@@ -351,11 +374,19 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
               this.messages = this.messages.filter(m => m.id !== messageId);
               this.groupMessages();
             } else {
-              Swal.fire('خطأ', 'فشل حذف الرسالة', 'error');
+              Swal.fire(
+                this.translate.instant('messages.chat.error.title'),
+                this.translate.instant('messages.chat.error.deleteFailed'),
+                'error'
+              );
             }
           },
           error: () => {
-            Swal.fire('خطأ', 'حدث خطأ أثناء حذف الرسالة', 'error');
+            Swal.fire(
+              this.translate.instant('messages.chat.error.title'),
+              this.translate.instant('messages.chat.error.deleteFailed'),
+              'error'
+            );
           }
         });
       }

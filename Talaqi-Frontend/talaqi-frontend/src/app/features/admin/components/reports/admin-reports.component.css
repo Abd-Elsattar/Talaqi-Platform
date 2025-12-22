@@ -1,0 +1,123 @@
+:host {
+  display: block;
+  animation: fadeIn 0.4s ease-in;
+}
+
+/* Inherit variables from AdminDashboard */
+.card-header {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.bg-header-danger {
+  background: var(--header-bg-danger) !important;
+  color: var(--header-text) !important;
+}
+
+/* Filter Bar */
+.filter-bar {
+  background-color: var(--card-bg);
+  padding: 1rem 1.5rem;
+}
+
+/* Table Enhancements */
+.table > :not(caption) > * > * {
+  padding: 1rem 1.5rem;
+  background-color: transparent;
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background-color: var(--body-bg);
+}
+
+.table tbody tr:hover {
+  background-color: var(--table-hover-bg);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Avatar Styles */
+.avatar-md {
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.avatar-lg {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Badge Tweaks */
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  letter-spacing: 0.3px;
+}
+
+/* Modal Overlay */
+.modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Dark Theme Overlay */
+:host-context([data-bs-theme="dark"]) .modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.bg-content-box {
+  background-color: var(--body-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-dialog {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-bar {
+    padding: 1rem;
+  }
+
+  .table > :not(caption) > * > * {
+    padding: 0.75rem 1rem;
+  }
+}

@@ -1,0 +1,281 @@
+<div class="stat-card stat-card-primary d-block p-0 overflow-hidden border-0 shadow">
+  <!-- Header -->
+  <div class="card-header bg-transparent border-bottom py-3">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6">
+        <h5 class="mb-0 fw-bold text-primary">
+          <i class="bi bi-box-seam me-2"></i>{{ 'adminPanel.items.title' | translate }}
+        </h5>
+      </div>
+      <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+        <div class="btn-group shadow-sm" role="group">
+          <button type="button" class="btn"
+            [class.btn-primary]="activeTab === 'lost'"
+            [class.btn-outline-primary]="activeTab !== 'lost'"
+            (click)="switchTab('lost')">
+            <i class="bi bi-search me-1"></i>
+            {{ 'adminPanel.items.tabs.lost' | translate }}
+          </button>
+          <button type="button" class="btn"
+            [class.btn-primary]="activeTab === 'found'"
+            [class.btn-outline-primary]="activeTab !== 'found'"
+            (click)="switchTab('found')">
+            <i class="bi bi-check-circle me-1"></i>
+            {{ 'adminPanel.items.tabs.found' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <!-- Filter Bar -->
+    <div class="filter-bar border-bottom">
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" class="form-control border-start-0 ps-0"
+              [(ngModel)]="searchTerm"
+              [placeholder]="'adminPanel.items.filters.searchPlaceholder' | translate">
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filterCategory">
+            <option value="">{{ 'adminPanel.items.filters.allCategories' | translate }}</option>
+            <option value="1">{{ 'adminPanel.items.filters.categoryPersonal' | translate }}</option>
+            <option value="2">{{ 'adminPanel.items.filters.categoryPeople' | translate }}</option>
+            <option value="3">{{ 'adminPanel.items.filters.categoryPets' | translate }}</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filterStatus">
+            <option value="">{{ 'adminPanel.items.filters.allStatuses' | translate }}</option>
+            <option value="1">{{ 'adminPanel.items.filters.statusActive' | translate }}</option>
+            <option value="2">{{ 'adminPanel.items.filters.statusFound' | translate }}</option>
+            <option value="3">{{ 'adminPanel.items.filters.statusClosed' | translate }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loadingItems" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'adminPanel.items.loading' | translate }}</span>
+      </div>
+      <p class="mt-2 text-muted small">{{ 'adminPanel.items.loading' | translate }}</p>
+    </div>
+
+    <!-- Items Table -->
+    <div *ngIf="!loadingItems" class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light">
+          <tr>
+            <th class="px-4 py-3 border-bottom-0">{{ 'adminPanel.items.table.item' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.items.table.category' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.items.table.location' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.items.table.date' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.items.table.status' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.items.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredItems" class="cursor-pointer" (click)="viewItemDetails(item)">
+            <td class="px-4">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 me-3">
+                  <div class="avatar-lg bg-light rounded overflow-hidden position-relative border" style="width: 50px; height: 50px;">
+                    <img *ngIf="getItemImageUrl(item)" [src]="getItemImageUrl(item)"
+                      class="w-100 h-100 object-fit-cover"
+                      (error)="onImageError($event)"
+                      [alt]="item.title">
+                    <div *ngIf="!getItemImageUrl(item)" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                      <i class="bi bi-image fs-4"></i>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold text-truncate" style="max-width: 200px;">{{ item.title }}</h6>
+                  <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{ item.description }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-opacity-10 text-primary bg-primary border border-primary border-opacity-10 rounded-pill">
+                {{ getCategoryName(item.category) }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex align-items-center text-muted">
+                <i class="bi bi-geo-alt-fill me-1 text-danger opacity-75"></i>
+                <span>{{ item.location?.city || ('adminPanel.common.unknown' | translate) }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex flex-column">
+                <span class="fw-medium">{{ item.createdAt | date:'dd/MM/yyyy' }}</span>
+                <small class="text-muted">{{ item.createdAt | date:'shortTime' }}</small>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(item.status)">
+                {{ getStatusName(item.status) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-icon btn-ghost-primary rounded-circle"
+                (click)="$event.stopPropagation(); viewItemDetails(item)"
+                [title]="'adminPanel.items.table.viewDetails' | translate">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredItems.length === 0">
+            <td colspan="6" class="text-center py-5">
+              <div class="empty-state">
+                <div class="mb-3">
+                  <i class="bi bi-box-seam display-4 text-muted opacity-25"></i>
+                </div>
+                <h6 class="text-muted">{{ 'adminPanel.items.empty.title' | translate }}</h6>
+                <small class="text-muted">{{ 'adminPanel.items.empty.subtitle' | translate }}</small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="card-footer bg-transparent border-top-0 py-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <small class="text-muted">
+          {{ 'adminPanel.items.pagination.showing' | translate }}
+          <span class="fw-bold text-dark">{{ (itemsPage - 1) * itemsPageSize + 1 }}</span> -
+          <span class="fw-bold text-dark">{{ Math.min(itemsPage * itemsPageSize, totalItems) }}</span>
+          {{ 'adminPanel.items.pagination.of' | translate }}
+          <span class="fw-bold text-dark">{{ totalItems }}</span>
+        </small>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="itemsPage === 1">
+            <button class="page-link" (click)="prevItemsPage()">
+              <i class="bi bi-chevron-right rtl-flip"></i>
+            </button>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ itemsPage }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="itemsPage * itemsPageSize >= totalItems">
+            <button class="page-link" (click)="nextItemsPage()">
+              <i class="bi bi-chevron-left rtl-flip"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Item Details Modal -->
+<div *ngIf="showItemModal" class="modal-backdrop-custom position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="z-index: 1050;">
+  <div class="modal-dialog modal-lg w-100 m-3" role="document">
+    <div class="modal-content shadow-lg border-0 overflow-hidden">
+      <div class="modal-header bg-header-primary text-white">
+        <h5 class="modal-title d-flex align-items-center">
+          <i class="bi bi-info-circle me-2"></i> {{ 'adminPanel.modals.itemDetails.title' | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeItemModal()"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-surface-ground" *ngIf="selectedItem">
+        <div class="row g-4">
+          <!-- Main Info -->
+          <div class="col-12 col-md-7">
+            <div class="card border shadow-sm h-100">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3 fw-bold">
+                  <i class="bi bi-card-text me-2"></i>{{ 'adminPanel.modals.itemDetails.infoTitle' | translate }}
+                </h6>
+
+                <!-- Image Gallery Preview -->
+                <div class="mb-4 text-center bg-light rounded p-2" *ngIf="getItemImageUrl(selectedItem)">
+                  <img [src]="getItemImageUrl(selectedItem)" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;">
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.itemDetails.category' | translate }}</label>
+                    <p class="mb-0 fw-medium">{{ getCategoryName(selectedItem.category) }}</p>
+                  </div>
+                  <div class="col-6">
+                    <label class="small text-muted text-uppercase fw-bold">{{ activeTab === 'lost' ? ('adminPanel.modals.itemDetails.dateLost' | translate) : ('adminPanel.modals.itemDetails.dateFound' | translate) }}</label>
+                    <p class="mb-0 fw-medium">{{ selectedItem.createdAt | date:'mediumDate' }}</p>
+                  </div>
+                  <div class="col-12">
+                    <label class="small text-muted text-uppercase fw-bold">{{ 'adminPanel.modals.itemDetails.descriptionTitle' | translate }}</label>
+                    <p class="mb-0 bg-content-box p-3 rounded border small">{{ selectedItem.description || ('adminPanel.modals.itemDetails.notSpecified' | translate) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Info -->
+          <div class="col-12 col-md-5">
+            <div class="d-flex flex-column gap-3 h-100">
+              <!-- Location -->
+              <div class="card border shadow-sm">
+                <div class="card-body">
+                  <h6 class="card-title text-danger mb-3 fw-bold">
+                    <i class="bi bi-geo-alt me-2"></i>{{ 'adminPanel.modals.itemDetails.locationTitle' | translate }}
+                  </h6>
+                  <div class="mb-2">
+                    <label class="small text-muted">{{ 'adminPanel.modals.itemDetails.city' | translate }}</label>
+                    <div class="fw-medium">{{ selectedItem.location?.city || ('adminPanel.modals.itemDetails.notSpecified' | translate) }}</div>
+                  </div>
+                  <div>
+                    <label class="small text-muted">{{ 'adminPanel.modals.itemDetails.address' | translate }}</label>
+                    <div class="fw-medium text-break small">{{ selectedItem.location?.address || ('adminPanel.modals.itemDetails.notSpecified' | translate) }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Publisher -->
+              <div class="card border shadow-sm flex-fill">
+                <div class="card-body">
+                  <h6 class="card-title text-success mb-3 fw-bold">
+                    <i class="bi bi-person me-2"></i>{{ 'adminPanel.modals.itemDetails.publisherTitle' | translate }}
+                  </h6>
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="avatar-sm bg-success bg-opacity-10 text-success rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <span class="fw-bold">{{ (selectedItem.contactName || '?').charAt(0) }}</span>
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ selectedItem.contactName || ('adminPanel.modals.itemDetails.notSpecified' | translate) }}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="small text-muted">{{ 'adminPanel.modals.itemDetails.contactInfo' | translate }}</label>
+                    <div class="fw-medium text-primary font-monospace">{{ selectedItem.contactPhone || selectedItem.contactEmail || ('adminPanel.modals.itemDetails.notSpecified' | translate) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light border-top-0">
+        <button type="button" class="btn btn-secondary px-4" (click)="closeItemModal()">
+          {{ 'adminPanel.modals.close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

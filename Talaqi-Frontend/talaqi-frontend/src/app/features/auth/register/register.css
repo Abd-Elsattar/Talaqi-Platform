@@ -5,7 +5,7 @@
 :host {
   display: block;
   min-height: 70.5vh;
-  background: #FFFFFF;
+  background: var(--surface-ground);
   font-family: var(--font-arabic);
   margin-top: 8px;
 }
@@ -13,7 +13,7 @@
 .register-wrapper {
   width: 100%;
   min-height: 65vh;
-  background: #ffffff !important;
+  background: var(--surface-ground) !important;
   direction: rtl;
   display: flex;
   align-items: center;
@@ -26,9 +26,22 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   min-height: 65vh;
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+/* LTR layout - swap form and image positions */
+.register-grid.ltr {
+  direction: ltr;
+}
+
+.register-grid.ltr .register-form-section {
+  order: 2;
+}
+
+.register-grid.ltr .register-image-section {
+  order: 1;
 }
 
 /* ==============================
@@ -36,10 +49,15 @@
    ============================== */
 .register-form-section {
   padding: 20px 70px;
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: right;
+}
+
+.register-grid.ltr .register-form-section {
+  text-align: left;
 }
 
 /* Header */
@@ -51,13 +69,13 @@
 .register-header h2 {
   font-size: 32px;
   font-weight: 800;
-  color: #324260;
+  color: var(--primary);
   margin-top: 0;
 }
 
 .register-header p {
   font-size: 15px;
-  color: #777;
+  color: var(--text-secondary);
 }
 
 /* ==============================
@@ -67,21 +85,24 @@
   border-radius: 10px;
   padding: 8px 14px;
   font-size: 15px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border);
   transition: .25s ease;
-  background: #ffffff !important;
+  background: var(--surface-ground) !important;
+  color: var(--text-primary);
 }
 
 .form-control:focus {
-  border-color: #6C8DB5;
+  border-color: var(--accent);
   box-shadow: none;
+  background: var(--surface-ground) !important;
+  color: var(--text-primary);
 }
 
 /* Error */
 .invalid-feedback {
   font-size: 12px;
   margin-top: 4px;
-  color: #d9534f;
+  color: var(--danger);
 }
 
 /* ==============================
@@ -91,13 +112,13 @@
   padding: 10px;
   font-size: 16px;
   font-weight: 700;
-  background: #6C8DB5;
+  background: var(--accent);
   border-radius: 10px;
   border: none;
 }
 
 .btn-primary:hover {
-  background: #5b7a9e;
+  background: var(--accent-dark);
 }
 
 /* ==============================
@@ -110,24 +131,24 @@
 }
 
 .register-footer span {
-  color: #787878;
+  color: var(--text-secondary);
 }
 
 .register-footer a {
-  color: #6C8DB5;
+  color: var(--accent);
   font-weight: 700;
   text-decoration: none;
 }
 
 .register-footer a:hover {
-  color: #324260;
+  color: var(--primary);
 }
 
 /* ==============================
    Image Section (Pure White)
    ============================== */
 .register-image-section {
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
   display: flex;
   align-items: center;
   justify-content: center;

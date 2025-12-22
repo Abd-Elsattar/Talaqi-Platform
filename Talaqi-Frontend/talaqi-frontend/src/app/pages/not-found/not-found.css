@@ -9,7 +9,7 @@
    ============================================ */
 
 .not-found-container {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: var(--background);
   min-height: 100vh;
   padding: 2rem 1rem;
   direction: rtl;
@@ -18,11 +18,11 @@
 /* Content Wrapper */
 .not-found-content {
   text-align: center;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-radius: 20px;
   padding: 3rem 2rem;
-  box-shadow: 0 8px 30px rgba(50, 66, 96, 0.15);
-  border: 1px solid #DDDDDD;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
 }
 
 /* Error Icon */
@@ -62,7 +62,7 @@
 .error-code {
   font-size: 8rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #324260 0%, #6C8DB5 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -75,14 +75,14 @@
 .error-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #324260;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 /* Error Description */
 .error-description {
   font-size: 1.125rem;
-  color: #787878;
+  color: var(--text-secondary);
   line-height: 1.8;
   max-width: 500px;
   margin: 0 auto 2.5rem;
@@ -90,8 +90,8 @@
 
 /* Suggestions Section */
 .suggestions-wrapper {
-  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
-  border: 2px solid #6C8DB5;
+  background: var(--surface-ground);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -101,7 +101,7 @@
 .suggestions-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #324260;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -152,26 +152,26 @@
 }
 
 .btn-primary-action {
-  background: linear-gradient(135deg, #6C8DB5 0%, #324260 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
   color: #FFFFFF;
-  box-shadow: 0 4px 15px rgba(108, 141, 181, 0.3);
+  box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.3);
 }
 
 .btn-primary-action:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(108, 141, 181, 0.4);
+  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .btn-secondary-action {
-  background: #FFFFFF;
-  color: #787878;
-  border: 2px solid #DDDDDD;
+  background: var(--surface-card);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .btn-secondary-action:hover {
-  background: #f8f9fa;
-  border-color: #6C8DB5;
-  color: #324260;
+  background: var(--surface-ground);
+  border-color: var(--accent);
+  color: var(--primary);
   transform: translateY(-2px);
 }
 
@@ -182,14 +182,14 @@
 
 /* Quick Links */
 .quick-links {
-  border-top: 2px solid #DDDDDD;
+  border-top: 2px solid var(--border-color);
   padding-top: 2rem;
 }
 
 .quick-links-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #324260;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 

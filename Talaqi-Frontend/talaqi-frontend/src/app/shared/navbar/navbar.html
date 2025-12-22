@@ -26,24 +26,24 @@
         <li class="nav-item">
           <button class="nav-link" (click)="navigateToAdminSection('statistics')"
             [class.active]="activeAdminSection === 'statistics'">
-            <i class="bi bi-graph-up"></i> الإحصائيات العامة
+            <i class="bi bi-graph-up"></i> {{ 'navbar.admin.statistics' | translate }}
         </button>
         </li>
 
         <li class="nav-item">
           <button class="nav-link" (click)="navigateToAdminSection('users')" [class.active]="activeAdminSection === 'users'">
-            <i class="bi bi-people"></i> إدارة المستخدمين
+            <i class="bi bi-people"></i> {{ 'navbar.admin.users' | translate }}
           </button>
         </li>
 
         <li class="nav-item">
           <button class="nav-link" (click)="navigateToAdminSection('items')" [class.active]="activeAdminSection === 'items'">
-            <i class="bi bi-box"></i> إدارة العناصر
+            <i class="bi bi-box"></i> {{ 'navbar.admin.items' | translate }}
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" (click)="navigateToAdminSection('reports')" [class.active]="activeAdminSection === 'reports'">
-            <i class="bi bi-flag me-2"></i> البلاغات
+            <i class="bi bi-flag me-2"></i> {{ 'navbar.admin.reports' | translate }}
           </button>
         </li>
         }
@@ -52,32 +52,32 @@
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <i class="bi bi-house-door"></i> الرئيسية
+            <i class="bi bi-house-door"></i> {{ 'navbar.home' | translate }}
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/my-lost-items" routerLinkActive="active" (click)="navigateToMyLostItems()">
-            <i class="bi bi-search"></i> المفقودات
+            <i class="bi bi-search"></i> {{ 'navbar.lostItems' | translate }}
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/my-found-items" routerLinkActive="active">
-            <i class="bi bi-box-seam"></i> الموجودات
+            <i class="bi bi-box-seam"></i> {{ 'navbar.foundItems' | translate }}
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/ai-matches" routerLinkActive="active">
-            <i class="bi bi-cpu"></i> متطابقات الذكاء الاصطناعي
+            <i class="bi bi-cpu"></i> {{ 'navbar.aiMatches' | translate }}
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/messages" routerLinkActive="active">
             <div class="position-relative d-inline-flex align-items-center gap-2">
-              <i class="bi bi-chat-dots-fill"></i> الرسائل
+              <i class="bi bi-chat-dots-fill"></i> {{ 'navbar.messages' | translate }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                 *ngIf="unreadCount > 0" style="font-size: 0.65rem; padding: 0.25em 0.5em;">
                 {{ unreadCount > 99 ? '99+' : unreadCount }}
@@ -89,7 +89,7 @@
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/my-reports" routerLinkActive="active">
-            <i class="bi bi-flag"></i> بلاغاتي
+            <i class="bi bi-flag"></i> {{ 'navbar.myReports' | translate }}
           </a>
         </li>
 
@@ -98,13 +98,13 @@
             aria-expanded="{{isReportDropdownOpen}}" (click)="toggleReportDropdown()"
             (keydown.enter)="toggleReportDropdown()" (keydown.space)="$event.preventDefault(); toggleReportDropdown()"
             [class.show]="isReportDropdownOpen">
-            <i class="bi bi-plus-circle"></i> الإبلاغ عن العناصر
+            <i class="bi bi-plus-circle"></i> {{ 'navbar.reportItems' | translate }}
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end" role="menu" [class.show]="isReportDropdownOpen">
             <li>
               <a class="dropdown-item" role="menuitem" routerLink="/report-lost-item" (click)="closeDropdown()">
-                <i class="bi bi-exclamation-circle text-danger"></i> الإبلاغ عن العناصر المفقودة
+                <i class="bi bi-exclamation-circle text-danger"></i> {{ 'navbar.reportLostItem' | translate }}
               </a>
             </li>
 
@@ -114,13 +114,22 @@
 
             <li>
               <a class="dropdown-item" role="menuitem" routerLink="/report-found-item" (click)="closeDropdown()">
-                <i class="bi bi-check-circle text-success"></i> الإبلاغ عن العناصر الموجودة
+                <i class="bi bi-check-circle text-success"></i> {{ 'navbar.reportFoundItem' | translate }}
               </a>
             </li>
           </ul>
         </li>
         }
       </ul>
+
+      <!-- Language/Theme Switchers -->
+      <div class="d-flex align-items-center ms-3 gap-2">
+        <button class="btn navbar-action-btn" (click)="themeService.toggleTheme()" [title]="themeService.theme() === 'dark' ? 'التبديل إلى الوضع الفاتح' : 'التبديل إلى الوضع الداكن'">
+          <i class="bi" [class.bi-moon-fill]="themeService.theme() === 'dark'" [class.bi-sun-fill]="themeService.theme() === 'light'"></i>
+          <span>{{ themeService.theme() === 'dark' ? 'داكن' : 'فاتح' }}</span>
+        </button>
+        <app-language-switcher></app-language-switcher>
+      </div>
 
       <!-- Right side -->
       @if (currentUser) {
@@ -136,13 +145,13 @@
 
         <div class="dropdown-menu" role="menu" [class.show]="isDropdownOpen">
           <a routerLink="/edit-profile" class="dropdown-item" role="menuitem" (click)="closeDropdown()">
-            <i class="bi bi-person-gear"></i> تعديل الملف الشخصي
+            <i class="bi bi-person-gear"></i> {{ 'navbar.editProfile' | translate }}
           </a>
 
           <div class="dropdown-divider"></div>
 
           <a class="dropdown-item text-danger" role="menuitem" (click)="logout()">
-            <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+            <i class="bi bi-box-arrow-right"></i> {{ 'navbar.logout' | translate }}
           </a>
         </div>
 
@@ -151,8 +160,8 @@
 
       @if (!currentUser) {
       <div class="auth-buttons">
-        <a class="btn btn-outline-light me-2" routerLink="/login">تسجيل الدخول</a>
-        <a class="btn btn-light" routerLink="/register">إنشاء حساب</a>
+        <a class="btn btn-outline-light me-2" routerLink="/login">{{ 'navbar.login' | translate }}</a>
+        <a class="btn btn-light" routerLink="/register">{{ 'navbar.register' | translate }}</a>
       </div>
       }
 

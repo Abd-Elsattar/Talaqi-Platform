@@ -3,10 +3,10 @@
 }
 
 .talaqi-navbar {
-  background: var(--primary) !important;
+  background: var(--navbar-bg) !important;
   height: var(--navbar-height);
   padding: 0 .75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, .15);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   position: fixed;
@@ -30,7 +30,7 @@ body {
 .brand-name {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff;
   letter-spacing: .3px;
 }
 
@@ -48,18 +48,19 @@ body {
   display: flex;
   align-items: center;
   gap: .5rem;
-  color: rgba(255, 255, 255, .94) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
   transition: background .25s ease, color .25s ease;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, .22);
+  background: rgba(255, 255, 255, 0.15);
   font-weight: 600;
-  color: #fff !important;
+  color: #ffffff !important;
 }
 
 .nav-link i {
@@ -96,7 +97,7 @@ body {
 .user-name {
   font-size: 1rem;
   font-weight: 650;
-  color: #fff;
+  color: #ffffff;
 }
 
 /* DROPDOWN */
@@ -106,10 +107,10 @@ body {
   left: 0;
   width: 230px;
   padding: .5rem 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .04) 8%, rgba(255, 255, 255, 0) 100%), var(--primary);
+  background: var(--surface-card);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, .15);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   opacity: 0;
   transform: translateY(-6px);
   transition: opacity .2s ease, transform .2s ease, background .2s ease;
@@ -125,14 +126,16 @@ body {
 .dropdown-item {
   padding: .65rem 1rem;
   font-size: .95rem;
-  color: rgba(255, 255, 255, .94);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: .6rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .dropdown-item:hover {
-  background: rgba(255, 255, 255, .14);
+  background: var(--surface-ground);
+  color: var(--text-primary);
 }
 
 /* AUTH BUTTONS */
@@ -195,7 +198,7 @@ body {
     border: none;
     box-shadow: none;
     width: 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .04) 8%, rgba(255, 255, 255, 0) 100%), var(--primary);
+    background: var(--surface-card);
   }
 
   .navbar-collapse.show {
