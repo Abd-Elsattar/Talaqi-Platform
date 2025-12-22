@@ -4,12 +4,12 @@
   <div class="match-context-header" *ngIf="matchDetails">
     <div class="match-info">
       <div class="context-label">
-        <i class="bi bi-stars text-primary"></i> تفاصيل التطابق
+        <i class="bi bi-stars text-primary"></i> {{ 'messages.chat.matchDetails' | translate }}
       </div>
 
       <div class="match-items-wrapper">
         <div class="match-item lost">
-          <span class="item-badge">مفقود</span>
+          <span class="item-badge">{{ 'messages.chat.lostBadge' | translate }}</span>
           <span class="item-title">{{ matchDetails.lostItem?.title }}</span>
         </div>
 
@@ -18,13 +18,13 @@
         </div>
 
         <div class="match-item found">
-          <span class="item-badge">معثور عليه</span>
+          <span class="item-badge">{{ 'messages.chat.foundBadge' | translate }}</span>
           <span class="item-title">{{ matchDetails.foundItem?.title }}</span>
         </div>
       </div>
     </div>
 
-    <div class="match-score" title="نسبة التطابق">
+    <div class="match-score" [title]="'messages.chat.matchScore' | translate">
       <div class="score-circle">
         <span>{{ matchDetails.confidenceScore | number:'1.0-0' }}%</span>
       </div>
@@ -45,13 +45,13 @@
 
       <div class="header-info">
         <span class="header-name">{{ getParticipantName() }}</span>
-        <span class="header-status" *ngIf="conversation?.type === 0">نشط الآن</span>
+        <span class="header-status" *ngIf="conversation?.type === 0">{{ 'messages.chat.activeNow' | translate }}</span>
       </div>
     </div>
 
     <div class="header-actions">
-      <button class=" text-danger btn btn-outline-danger " (click)="openReportUserModal()" title="إبلاغ عن المستخدم">
-        ابلاغ عن المستخدم <i class="bi bi-flag"></i>
+      <button class=" text-danger btn btn-outline-danger " (click)="openReportUserModal()" [title]="'messages.chat.reportUser' | translate">
+        {{ 'messages.chat.reportUserButton' | translate }} <i class="bi bi-flag"></i>
       </button>
     </div>
   </div>
@@ -66,8 +66,8 @@
       <div class="empty-icon">
         <i class="bi bi-chat-dots"></i>
       </div>
-      <h3>لا توجد رسائل</h3>
-      <p>ابدأ المحادثة بإرسال رسالة الآن.</p>
+      <h3>{{ 'messages.chat.noMessages' | translate }}</h3>
+      <p>{{ 'messages.chat.startConversation' | translate }}</p>
     </div>
 
     <ng-container *ngFor="let group of groupedMessages">
@@ -82,11 +82,11 @@
 
         <div class="message-actions">
           <button *ngIf="msg.senderId === currentUser?.id" class="btn-action delete" (click)="deleteMessage(msg.id)"
-            title="حذف">
+            [title]="'messages.chat.delete.buttonTitle' | translate">
             <i class="bi bi-trash"></i>
           </button>
           <button *ngIf="msg.senderId !== currentUser?.id" class="btn-action report"
-            (click)="openReportMessageModal(msg.id)" title="إبلاغ">
+            (click)="openReportMessageModal(msg.id)" [title]="'messages.chat.reportMessage' | translate">
             <i class="bi bi-flag"></i>
           </button>
         </div>
@@ -121,7 +121,7 @@
   <!-- Input Area -->
   <div class="input-area">
     <div class="input-wrapper">
-      <input type="text" class="input-field" placeholder="اكتب رسالتك هنا..." [(ngModel)]="newMessage"
+      <input type="text" class="input-field" [placeholder]="'messages.chat.inputPlaceholder' | translate" [(ngModel)]="newMessage"
         (keyup.enter)="sendMessage()" (input)="onTyping()">
     </div>
 
@@ -135,29 +135,29 @@
 <div class="modal-overlay" *ngIf="showReportModal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3>إبلاغ</h3>
+      <h3>{{ 'messages.report.title' | translate }}</h3>
       <button class="btn-close-modal" (click)="closeReportModal()">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>سبب الإبلاغ</label>
+        <label>{{ 'messages.report.reasonLabel' | translate }}</label>
         <select [(ngModel)]="reportReason" class="form-control">
           <option *ngFor="let reason of reportReasons" [value]="reason.value">{{ reason.label }}</option>
         </select>
       </div>
       <div class="form-group">
-        <label>تفاصيل إضافية (اختياري)</label>
+        <label>{{ 'messages.report.descriptionLabel' | translate }}</label>
         <textarea [(ngModel)]="reportDescription" class="form-control" rows="4"
-          placeholder="اشرح المشكلة..."></textarea>
+          [placeholder]="'messages.report.descriptionPlaceholder' | translate"></textarea>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeReportModal()">إلغاء</button>
+      <button class="btn-cancel" (click)="closeReportModal()">{{ 'messages.report.cancelButton' | translate }}</button>
       <button class="btn-submit" (click)="submitReport()" [disabled]="isReporting">
         <span *ngIf="isReporting" class="spinner-border spinner-border-sm"></span>
-        <span>إرسال البلاغ</span>
+        <span>{{ 'messages.report.submitButton' | translate }}</span>
       </button>
     </div>
   </div>

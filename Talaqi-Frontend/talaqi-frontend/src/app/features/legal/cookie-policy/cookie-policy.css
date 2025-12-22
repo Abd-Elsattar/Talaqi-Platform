@@ -1,13 +1,13 @@
 /* Cookie Policy styles - match platform look */
 .policy-container {
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--white);
   padding: 0;
   margin: 0;
 }
 
 .policy-hero {
-  background: linear-gradient(135deg, #324260 0%, #6C8DB5 100%);
+  background: var(--gradient-primary);
   padding: 50px 20px;
   text-align: center;
   color: #ffffff;
@@ -39,13 +39,13 @@
 
 .section-title {
   font-size: 20px;
-  color: #324260;
+  color: var(--primary);
   margin: 0 0 10px 0;
   font-weight: 700;
 }
 
 .section-text {
-  color: #505050;
+  color: var(--text-secondary);
   line-height: 1.8;
   margin: 8px 0 0 0;
   font-size: 15px;
@@ -58,19 +58,19 @@
 
 .policy-list li {
   margin-bottom: 8px;
-  color: #505050;
+  color: var(--text-secondary);
 }
 
 .contact-email a {
-  color: #324260;
+  color: var(--primary);
   font-weight: 600;
   text-decoration: none;
 }
 
 .policy-footer {
-  border-top: 1px solid #EEEEEE;
+  border-top: 1px solid var(--border-color);
   padding-top: 18px;
-  color: #787878;
+  color: var(--text-secondary);
   font-size: 13px;
   text-align: center;
 }

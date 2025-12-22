@@ -11,7 +11,7 @@
 /* Section = جزء من الصفحة */
 .login-section {
   padding: 60px 24px 40px;
-  background: #ffffff;
+  background: var(--surface-ground);
 
   display: flex;
   align-items: center;
@@ -22,13 +22,35 @@
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
-  direction: ltr;
+  direction: rtl;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   column-gap: 64px;
   align-items: center;
   margin-top: 20px;
   margin-bottom: 40px;
+}
+
+/* Arabic (RTL): Form on left, image on right */
+.login-layout .login-image {
+  order: 2;
+}
+
+.login-layout .login-form {
+  order: 1;
+}
+
+/* LTR (English): Switch to form on right, image on left */
+.login-layout.ltr {
+  direction: ltr;
+}
+
+.login-layout.ltr .login-image {
+  order: 1;
+}
+
+.login-layout.ltr .login-form {
+  order: 2;
 }
 
 /* ======================
@@ -55,6 +77,11 @@
 .login-form {
   max-width: 460px;
   width: 100%;
+  text-align: right;
+}
+
+.login-layout.ltr .login-form {
+  text-align: left;
 }
 
 .login-header {
@@ -67,14 +94,14 @@
 .login-header h2 {
   font-size: 32px;
   font-weight: 800;
-  color: #324260;
+  color: var(--primary);
   letter-spacing: -0.6px;
 }
 
 .login-header p {
   margin-top: 6px;
   font-size: 15px;
-  color: #7a7a7a;
+  color: var(--text-secondary);
 }
 
 .form-alert {
@@ -82,9 +109,9 @@
   padding: 12px 14px;
   width: 100%;
   border-radius: 8px;
-  background: #fdecea;
-  color: #b71c1c;
-  border: 1px solid #f5c6cb;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   font-size: 14px;
   font-weight: 600;
 }
@@ -98,12 +125,12 @@
   display: block;
   font-size: 15px;
   font-weight: 600;
-  color: #324260;
+  color: var(--text-primary);
   margin-bottom: 6px;
 }
 
 .form-group .required {
-  color: #d9534f;
+  color: var(--danger);
 }
 
 /* Inputs */
@@ -111,31 +138,32 @@
   width: 100%;
   padding: 13px 16px;
   font-size: 15px;
-  border: 2px solid #dddddd;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
-  color: #324260;
+  color: var(--text-primary);
+  background: var(--surface-card);
   transition: 0.25s ease;
 }
 
 .form-input::placeholder {
-  color: #8d8d8d;
+  color: var(--text-secondary);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #6c8db5;
+  border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(108, 141, 181, 0.12);
 }
 
 .form-input.invalid {
-  border-color: #dc3545;
+  border-color: var(--danger);
 }
 
 .error-message {
   margin-top: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #dc3545;
+  color: var(--danger);
 }
 
 /* Actions */
@@ -144,23 +172,27 @@
   margin-bottom: 28px;
 }
 
+.login-layout.ltr .forgot-password {
+  text-align: left;
+}
+
 .forgot-password a {
   font-size: 14px;
   font-weight: 600;
-  color: #6c8db5;
+  color: var(--accent);
   text-decoration: none;
 }
 
 .forgot-password a:hover {
-  color: #324260;
+  color: var(--primary);
 }
 
 .btn-login {
   width: 100%;
   padding: 14px;
   border-radius: 8px;
-  background: #6c8db5;
-  color: #ffffff;
+  background: var(--accent);
+  color: var(--text-light);
   font-size: 16px;
   font-weight: 700;
   border: none;
@@ -169,7 +201,7 @@
 }
 
 .btn-login:hover {
-  background: #5b7a9e;
+  background: var(--accent-dark);
   transform: translateY(-1px);
 }
 
@@ -182,18 +214,18 @@
   margin-top: 26px;
   text-align: center;
   font-size: 15px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .register-link a {
   margin-inline-start: 6px;
   font-weight: 700;
-  color: #6c8db5;
+  color: var(--accent);
   text-decoration: none;
 }
 
 .register-link a:hover {
-  color: #324260;
+  color: var(--primary);
 }
 
 /* ======================

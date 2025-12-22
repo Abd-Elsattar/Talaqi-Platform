@@ -1,18 +1,20 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ReportService } from '../../../core/services/report.service';
 import { ReportDto } from '../../../core/models/report';
 
 @Component({
   selector: 'app-user-reports',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe],
+  imports: [CommonModule, RouterModule, DatePipe, TranslateModule],
   templateUrl: './user-reports.html',
   styleUrls: ['./user-reports.css']
 })
 export class UserReportsComponent implements OnInit {
   private reportService = inject(ReportService);
+  private translate = inject(TranslateService);
   
   reports: ReportDto[] = [];
   loading = true;
@@ -50,18 +52,24 @@ export class UserReportsComponent implements OnInit {
 
   getStatusLabel(status: number): string {
     switch (status) {
-      case 0: return 'قيد الانتظار';
-      case 1: return 'قيد المراجعة';
-      case 2: return 'تم الحل';
-      case 3: return 'مرفوض';
-      default: return 'غير معروف';
+      case 0: return this.translate.instant('userReports.status.pending');
+      case 1: return this.translate.instant('userReports.status.underReview');
+      case 2: return this.translate.instant('userReports.status.resolved');
+      case 3: return this.translate.instant('userReports.status.rejected');
+      default: return this.translate.instant('userReports.status.unknown');
     }
   }
   
   getReasonLabel(reason: number): string {
-      // Assuming enum values, map to Arabic
-      // Spam = 0, Harassment = 1, InappropriateContent = 2, Fraud = 3, Other = 4
-      const reasons = ['محتوى مزعج', 'مضايقة', 'محتوى غير لائق', 'احتيال', 'أخرى'];
-      return reasons[reason] || 'أخرى';
+      // Spam = 0, Harassment = 1, InappropriateContent = 2, FakeItem = 3, Scam = 4, Other = 5
+      switch (reason) {
+        case 0: return this.translate.instant('userReports.reason.spam');
+        case 1: return this.translate.instant('userReports.reason.harassment');
+        case 2: return this.translate.instant('userReports.reason.inappropriate');
+        case 3: return this.translate.instant('userReports.reason.fakeItem');
+        case 4: return this.translate.instant('userReports.reason.scam');
+        case 5: return this.translate.instant('userReports.reason.other');
+        default: return this.translate.instant('userReports.reason.other');
+      }
   }
 }

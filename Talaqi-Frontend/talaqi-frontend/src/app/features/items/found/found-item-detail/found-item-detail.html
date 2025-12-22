@@ -4,9 +4,9 @@
 <div class="d-flex flex-column align-items-center justify-content-center"
   style="min-height: 60vh; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
   <div class="spinner-border text-success mb-3" role="status" style="width: 3rem; height: 3rem;">
-    <span class="visually-hidden">جاري التحميل...</span>
+    <span class="visually-hidden">{{ 'foundItemDetail.loading' | translate }}</span>
   </div>
-  <p class="text-muted fw-bold">جاري تحميل التفاصيل...</p>
+  <p class="text-muted fw-bold">{{ 'foundItemDetail.loadingDetails' | translate }}</p>
 </div>
 }
 <!-- #endregion -->
@@ -16,10 +16,10 @@
 <div class="container-lg py-5">
   <div class="alert alert-danger" role="alert">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    <strong>خطأ!</strong> {{ errorMessage }}
+    <strong>{{ 'foundItemDetail.deleteConfirm.errorTitle' | translate }}</strong> {{ errorMessage }}
   </div>
   <button class="btn btn-success" routerLink="/my-found-items">
-    العودة إلى الموجودات
+    {{ 'foundItemDetail.backButton' | translate }}
   </button>
 </div>
 }
@@ -32,12 +32,12 @@
     <!-- Header -->
     <div class="page-title-section mb-4 d-flex justify-content-between align-items-center">
       <div>
-        <h1 class="page-title">تفاصيل العنصر الموجود</h1>
-        <p class="page-subtitle mb-0">معلومات شاملة عن العنصر الموجود</p>
+        <h1 class="page-title">{{ 'foundItemDetail.title' | translate }}</h1>
+        <p class="page-subtitle mb-0">{{ 'foundItemDetail.subtitle' | translate }}</p>
       </div>
       <a class="btn btn-outline-secondary" routerLink="/my-found-items">
         <i class="bi bi-arrow-right"></i>
-        <span class="me-1">العودة</span>
+        <span class="me-1">{{ 'foundItemDetail.backButton' | translate }}</span>
       </a>
     </div>
 
@@ -50,7 +50,7 @@
         <div class="position-absolute top-0 start-0 p-3">
           <span class="badge bg-success">
             <i class="bi bi-check-circle me-1"></i>
-            موجود
+            {{ 'foundItemDetail.status.found' | translate }}
           </span>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <div class="detail-top-row">
           <div>
             <h2 class="detail-title">{{ foundItem.title }}</h2>
-            <small class="text-muted">منشور بواسطة <strong>{{ foundItem.userName }}</strong></small>
+            <small class="text-muted">{{ 'foundItemDetail.publishedBy' | translate }} <strong>{{ foundItem.userName }}</strong></small>
           </div>
           <span [class]="'badge p-2 ' + getStatusBadgeClass()">{{ getStatusText() }}</span>
         </div>
@@ -69,35 +69,35 @@
         <!-- Info Row -->
         <div class="info-row">
           <div class="info-card">
-            <small class="text-muted d-block mb-1">تاريخ العثور</small>
+            <small class="text-muted d-block mb-1">{{ 'foundItemDetail.dateFound' | translate }}</small>
             <strong class="text-dark">{{ foundItem.dateFound | date: 'dd/MM/yyyy' }}</strong>
           </div>
           <div class="info-card">
-            <small class="text-muted d-block mb-1">الموقع</small>
-            <strong class="text-dark">{{ foundItem.location.city || 'غير محدد' }}</strong>
+            <small class="text-muted d-block mb-1">{{ 'foundItemDetail.location' | translate }}</small>
+            <strong class="text-dark">{{ foundItem.location.city || ('foundItemDetail.notSpecified' | translate) }}</strong>
           </div>
           <div class="info-card">
-            <small class="text-muted d-block mb-1">تم النشر</small>
+            <small class="text-muted d-block mb-1">{{ 'foundItemDetail.publishedAt' | translate }}</small>
             <strong class="text-dark">{{ foundItem.createdAt | date: 'dd/MM HH:mm' }}</strong>
           </div>
         </div>
 
         <!-- Description -->
         <div class="section-block">
-          <h5 class="fw-bold">الوصف</h5>
+          <h5 class="fw-bold">{{ 'foundItemDetail.descriptionTitle' | translate }}</h5>
           <p class="text-muted">{{ foundItem.description }}</p>
         </div>
 
         <!-- Location -->
         <div class="section-block">
-          <h5 class="fw-bold">تفاصيل الموقع</h5>
+          <h5 class="fw-bold">{{ 'foundItemDetail.locationDetailsTitle' | translate }}</h5>
           <div class="card bg-light border-0">
             <div class="card-body">
               @if (foundItem.location.city) {
-              <p class="mb-2"><strong>المدينة:</strong> {{ foundItem.location.city }}</p>
+              <p class="mb-2"><strong>{{ 'foundItemDetail.city' | translate }}:</strong> {{ foundItem.location.city }}</p>
               }
               @if (foundItem.location.address) {
-              <p class="mb-0"><strong>العنوان:</strong> {{ foundItem.location.address }}</p>
+              <p class="mb-0"><strong>{{ 'foundItemDetail.address' | translate }}:</strong> {{ foundItem.location.address }}</p>
               }
             </div>
           </div>
@@ -105,7 +105,7 @@
 
         <!-- Contact -->
         <div class="section-block">
-          <h5 class="fw-bold">معلومات الاتصال</h5>
+          <h5 class="fw-bold">{{ 'foundItemDetail.contactInfoTitle' | translate }}</h5>
           <div class="card bg-light border-0">
             <div class="card-body">
               <p class="mb-0">{{ foundItem.contactInfo }}</p>
@@ -117,10 +117,10 @@
         <div class="action-row">
           @if (isOwner) {
           <button class="btn btn-primary" [routerLink]="['/edit-found-item', foundItem.id]">
-            <i class="bi bi-pencil me-1"></i> تعديل
+            <i class="bi bi-pencil me-1"></i> {{ 'foundItemDetail.editButton' | translate }}
           </button>
           <button class="btn btn-danger" (click)="deleteItem()">
-            <i class="bi bi-trash me-1"></i> حذف
+            <i class="bi bi-trash me-1"></i> {{ 'foundItemDetail.deleteButton' | translate }}
           </button>
           }
         </div>
@@ -134,9 +134,9 @@
 <!-- Image Modal -->
 <div class="image-modal-backdrop" *ngIf="modalImageUrl" (click)="closeImageModal()">
   <div class="image-modal" (click)="$event.stopPropagation()">
-    <img [src]="modalImageUrl" alt="عرض الصورة" class="image-modal-img"
+    <img [src]="modalImageUrl" [alt]="'foundItemDetail.viewImage' | translate" class="image-modal-img"
       (error)="$event.target.src='images/lost-and-found-.png'" />
-    <button class="image-modal-close" (click)="closeImageModal()" aria-label="إغلاق">
+    <button class="image-modal-close" (click)="closeImageModal()" [attr.aria-label]="'foundItemDetail.closeModal' | translate">
       <i class="bi bi-x-lg"></i>
     </button>
   </div>

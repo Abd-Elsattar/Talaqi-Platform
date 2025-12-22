@@ -4,16 +4,18 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatchService } from '../../../core/services/match.service';
 import { MatchDto, MatchStatus, normalizeMatchStatus } from '../../../core/models/match';
 import { ImageUrlService } from '../../../core/services/image-url.service';
 import { TokenService } from '../../../core/services/token.service';
 import { ChatService } from '../../../core/services/chat.service';
+import { LocationTranslatePipe } from '../../../shared/pipes/location-translate.pipe';
 
 @Component({
   selector: 'app-ai-matches',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, LocationTranslatePipe],
   templateUrl: './ai-matches.html',
   styleUrl: './ai-matches.css',
 })
@@ -23,6 +25,7 @@ export class AiMatches implements OnInit {
   private imageUrlService = inject(ImageUrlService);
   private tokenService = inject(TokenService);
   private chatService = inject(ChatService);
+  private translate = inject(TranslateService);
 
   //#region State
   allMatches: MatchDto[] = [];
@@ -60,12 +63,12 @@ export class AiMatches implements OnInit {
           this.allMatches = response.data || [];
           this.applyFilters();
         } else {
-          this.errorMessage = response.message || 'فشل في تحميل المطابقات';
+          this.errorMessage = response.message || this.translate.instant('aiMatches.errorMessage');
         }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'حدث خطأ أثناء تحميل المطابقات';
+        this.errorMessage = this.translate.instant('aiMatches.errorMessage');
         console.error('Error loading matches:', error);
       },
     });
@@ -129,7 +132,7 @@ export class AiMatches implements OnInit {
   startChat(match: MatchDto) {
     const currentUser = this.tokenService.getCurrentUser();
     if (!currentUser || !currentUser.id) {
-        Swal.fire('Error', 'You must be logged in to chat', 'error');
+        Swal.fire(this.translate.instant('aiMatches.chat.errorTitle'), this.translate.instant('aiMatches.chat.loginRequired'), 'error');
         return;
     }
 
@@ -142,7 +145,7 @@ export class AiMatches implements OnInit {
     }
 
     if (!otherUserId) {
-        Swal.fire('Error', 'Cannot determine chat participant', 'error');
+        Swal.fire(this.translate.instant('aiMatches.chat.errorTitle'), this.translate.instant('aiMatches.chat.participantError'), 'error');
         return;
     }
 
@@ -151,12 +154,12 @@ export class AiMatches implements OnInit {
             if (res.isSuccess && res.data) {
                 this.router.navigate(['/messages/chat', res.data.id]);
             } else {
-                Swal.fire('Error', 'Failed to start conversation', 'error');
+                Swal.fire(this.translate.instant('aiMatches.chat.errorTitle'), this.translate.instant('aiMatches.chat.failed'), 'error');
             }
         },
         error: (err) => {
              console.error(err);
-             Swal.fire('Error', 'Failed to start conversation', 'error');
+             Swal.fire(this.translate.instant('aiMatches.chat.errorTitle'), this.translate.instant('aiMatches.chat.failed'), 'error');
         }
     });
   }
@@ -166,8 +169,8 @@ export class AiMatches implements OnInit {
     // Prevent non-lost owners from changing status
     if (!match || !this.isLostOwner(match)) {
       Swal.fire({
-        title: 'غير مسموح',
-        text: 'فقط مالك العنصر المفقود يمكنه تغيير حالة المطابقة.',
+        title: this.translate.instant('aiMatches.statusUpdate.notAllowed'),
+        text: this.translate.instant('aiMatches.statusUpdate.ownerOnly'),
         icon: 'warning',
       });
       return;
@@ -176,14 +179,17 @@ export class AiMatches implements OnInit {
     const statusText = this.getStatusText(newStatus);
 
     Swal.fire({
-      title: 'تأكيد الإجراء',
-      text: `هل تريد تحديث حالة المطابقة إلى "${statusText}"؟`,
+      title: this.translate.instant('aiMatches.statusUpdate.confirmTitle'),
+      text: this.translate.instant('aiMatches.statusUpdate.confirmText', { status: statusText }),
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#6366f1',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'نعم، تأكيد',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('aiMatches.statusUpdate.confirmButton'),
+      cancelButtonText: this.translate.instant('aiMatches.statusUpdate.cancelButton'),
+      customClass: {
+        confirmButton: 'btn btn-primary px-4 mx-2',
+        cancelButton: 'btn btn-secondary px-4 mx-2'
+      },
+      buttonsStyling: false
     }).then((result) => {
       if (result.isConfirmed) {
         const apiStatus = normalizeMatchStatus(newStatus);
@@ -191,8 +197,8 @@ export class AiMatches implements OnInit {
           next: (response) => {
             if (response.isSuccess) {
               Swal.fire({
-                title: 'تم التحديث!',
-                text: 'تم تحديث حالة المطابقة بنجاح',
+                title: this.translate.instant('aiMatches.statusUpdate.successTitle'),
+                text: this.translate.instant('aiMatches.statusUpdate.successText'),
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false,
@@ -211,8 +217,8 @@ export class AiMatches implements OnInit {
           },
           error: (error) => {
             Swal.fire({
-              title: 'خطأ!',
-              text: 'فشل تحديث حالة المطابقة',
+              title: this.translate.instant('aiMatches.statusUpdate.errorTitle'),
+              text: this.translate.instant('aiMatches.statusUpdate.errorText'),
               icon: 'error',
             });
           },
@@ -272,9 +278,9 @@ export class AiMatches implements OnInit {
   }
 
   getConfidenceLabel(score: number): string {
-    if (score >= 80) return 'عالية';
-    if (score >= 60) return 'متوسطة';
-    return 'منخفضة';
+    if (score >= 80) return this.translate.instant('aiMatches.confidence.high');
+    if (score >= 60) return this.translate.instant('aiMatches.confidence.medium');
+    return this.translate.instant('aiMatches.confidence.low');
   }
 
   getStatusBadgeClass(status: string): string {
@@ -294,18 +300,7 @@ export class AiMatches implements OnInit {
 
   getStatusText(status: string | MatchStatus): string {
     const statusStr = normalizeMatchStatus(status).toLowerCase();
-    switch (statusStr) {
-      case 'pending':
-        return 'قيد الانتظار';
-      case 'confirmed':
-        return 'مؤكد';
-      case 'rejected':
-        return 'مرفوض';
-      case 'resolved':
-        return 'تم الحل';
-      default:
-        return statusStr;
-    }
+    return this.translate.instant(`aiMatches.status.${statusStr}`);
   }
 
   getItemImageUrl(imageUrl: string | null | undefined): string {
@@ -313,7 +308,7 @@ export class AiMatches implements OnInit {
   }
 
   getItemLocation(location: any): string {
-    return location?.address || 'غير محدد';
+    return location?.address || this.translate.instant('aiMatches.notSpecified');
   }
 
   getMatchesCount(status: string): number {

@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AssistantService } from '../../core/services/assistant.service';
 import { ChatMessage } from '../../core/models/assistant';
 
 @Component({
   selector: 'app-assistant-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './assistant-chat.html',
   styleUrls: ['./assistant-chat.css'],
 })
 export class AssistantChatComponent {
   private assistant = inject(AssistantService);
+  private translate = inject(TranslateService);
 
   isOpen = signal(false);
   isSending = signal(false);
@@ -85,7 +87,7 @@ export class AssistantChatComponent {
         const err: ChatMessage = {
           id: crypto.randomUUID(),
           role: 'assistant',
-          text: 'عذرًا، لم أستطع معالجة الطلب الآن. حاول لاحقًا.',
+          text: this.translate.instant('assistant.messages.error'),
           error: true,
           createdAt: Date.now(),
         };

@@ -1,18 +1,12 @@
 /* Styles for reporting a lost item. */
 /* ============================================
    Report Lost Item - Professional Design
-   Color Palette:
-   - Background: #FFFFFF
-   - Header: #324260
-   - Text: #787878
-   - Accent: #6C8DB5
-   - Borders: #DDDDDD
-============================================ */
+   ============================================ */
 
 /* ============= Container ============= */
 .report-lost-item-container {
   min-height: calc(100vh - 70px);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--background);
   padding: 3rem 0;
 }
 
@@ -22,10 +16,10 @@
 }
 
 .page-header-content {
-  background: linear-gradient(135deg, #324260 0%, #3d5270 100%);
+  background: var(--gradient-primary);
   border-radius: 16px;
   padding: 2.5rem;
-  box-shadow: 0 4px 20px rgba(50, 66, 96, 0.15);
+  box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.15);
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -130,45 +124,45 @@
 }
 
 .success-alert {
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  border: 1px solid #b1d8a8;
+  background: var(--surface-card);
+  border: 1px solid var(--success);
 }
 
 .success-alert .alert-icon {
-  color: #28a745;
+  color: var(--success);
 }
 
 .success-alert .alert-text {
-  color: #155724;
+  color: var(--text-primary);
 }
 
 .success-alert .alert-close-btn {
-  color: #155724;
+  color: var(--success);
 }
 
 .success-alert .alert-close-btn:hover {
-  background: rgba(21, 87, 36, 0.1);
+  background: rgba(var(--success-rgb), 0.1);
 }
 
 .error-alert {
-  background: linear-gradient(135deg, #f8d7da 0%, #f1b5bb 100%);
-  border: 1px solid #e5a3ab;
+  background: var(--surface-card);
+  border: 1px solid var(--danger);
 }
 
 .error-alert .alert-icon {
-  color: #dc3545;
+  color: var(--danger);
 }
 
 .error-alert .alert-text {
-  color: #721c24;
+  color: var(--text-primary);
 }
 
 .error-alert .alert-close-btn {
-  color: #721c24;
+  color: var(--danger);
 }
 
 .error-alert .alert-close-btn:hover {
-  background: rgba(114, 28, 36, 0.1);
+  background: rgba(var(--danger-rgb), 0.1);
 }
 
 /* ============= Form Card ============= */
@@ -187,10 +181,11 @@
 }
 
 .form-card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .form-card-body {
@@ -206,32 +201,45 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #324260;
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 1rem;
   margin-bottom: 0.75rem;
 }
 
 .label-icon {
-  color: #6C8DB5;
+  color: var(--primary);
   font-size: 1.1rem;
 }
 
 .section-label {
   font-size: 1.1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 2px solid #6C8DB5;
+  border-bottom: 2px solid var(--primary);
   margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.section-title i {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
 .required-mark {
-  color: #dc3545;
+  color: var(--danger);
   font-weight: 700;
   margin-left: 0.25rem;
 }
 
 .optional-mark {
-  color: #787878;
+  color: var(--text-secondary);
   font-weight: 400;
   font-size: 0.9rem;
 }
@@ -241,24 +249,24 @@
 .textarea-enhanced {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid #DDDDDD;
+  border: 2px solid var(--border-color);
   border-radius: 10px;
   font-size: 1rem;
-  color: #1A1A1A;
-  background: #FFFFFF;
+  color: var(--text-primary);
+  background: var(--surface-ground);
   transition: all 0.3s ease;
 }
 
 .form-control-enhanced:focus,
 .textarea-enhanced:focus {
-  border-color: #6C8DB5;
-  box-shadow: 0 0 0 4px rgba(108, 141, 181, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
   outline: none;
 }
 
 .form-control-enhanced::placeholder,
 .textarea-enhanced::placeholder {
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .textarea-enhanced {
@@ -276,7 +284,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  color: #787878;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
@@ -284,20 +292,20 @@
 .char-counter {
   margin-left: auto;
   font-weight: 600;
-  color: #6C8DB5;
+  color: var(--primary);
 }
 
 /* ============= Error Feedback ============= */
 .form-control-enhanced.is-invalid,
 .textarea-enhanced.is-invalid {
-  border-color: #dc3545;
+  border-color: var(--danger);
 }
 
 .error-feedback {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  color: #dc3545;
+  color: var(--danger);
   font-size: 0.875rem;
   margin-top: 0.5rem;
   font-weight: 500;
@@ -305,17 +313,17 @@
 
 /* ============= Upload Zone ============= */
 .upload-zone-enhanced {
-  border: 3px dashed #DDDDDD;
+  border: 3px dashed var(--border-color);
   border-radius: 16px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: var(--surface-ground);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .upload-zone-enhanced:hover {
-  border-color: #6C8DB5;
-  background: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(108, 141, 181, 0.15);
+  border-color: var(--primary);
+  background: var(--surface-card);
+  box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.15);
 }
 
 .upload-zone-content {
@@ -329,18 +337,18 @@
 
 .upload-icon-wrapper i {
   font-size: 4rem;
-  color: #6C8DB5;
+  color: var(--primary);
 }
 
 .upload-title {
-  color: #324260;
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
 .upload-subtitle {
-  color: #787878;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -348,7 +356,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #6C8DB5 0%, #5a7a9d 100%);
+  background: var(--primary);
   color: #FFFFFF;
   border: none;
   padding: 0.75rem 2rem;
@@ -356,17 +364,17 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(108, 141, 181, 0.3);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-upload-file:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 141, 181, 0.4);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4);
 }
 
 .upload-hint {
   margin-top: 1.5rem;
-  color: #787878;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
@@ -381,11 +389,11 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 2px solid #DDDDDD;
+  border: 2px solid var(--border-color);
   width: 100%;
   max-width: 360px;
   aspect-ratio: 3 / 4;
-  background: #f8f9fa;
+  background: var(--surface-ground);
 }
 
 .preview-image {
@@ -399,35 +407,25 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: var(--danger);
   color: #FFFFFF;
   border: none;
   border-radius: 50%;
-
-  .image-preview-container {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-    animation: scaleIn 0.3s ease-out;
-    /* Fixed 4:3 preview box with white background */
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(var(--danger-rgb), 0.4);
 }
 
 .btn-remove-image:hover:not(:disabled) {
   transform: scale(1.1) rotate(15deg);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.5);
+  box-shadow: 0 4px 12px rgba(var(--danger-rgb), 0.5);
 }
-
-
 
 .btn-remove-image i {
   font-size: 1.2rem;
@@ -459,20 +457,20 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  color: #28a745;
+  background: rgba(var(--success-rgb), 0.1);
+  color: var(--success);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
   margin-top: 1rem;
-  border: 1px solid #b1d8a8;
+  border: 1px solid var(--success);
 }
 
 /* ============= Location Section ============= */
 .location-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border: 2px solid #DDDDDD;
+  background: var(--surface-ground);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -487,7 +485,7 @@
 
 .form-label-secondary {
   display: block;
-  color: #324260;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.95rem;
   margin-bottom: 0.5rem;
@@ -510,21 +508,21 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3f8ff 100%);
-  border: 2px solid #6C8DB5;
+  background: var(--surface-ground);
+  border: 2px solid var(--primary);
   border-radius: 10px;
 }
 
 .gps-info-box {
   display: flex;
   align-items: center;
-  color: #324260;
+  color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .gps-info-box i {
-  color: #6C8DB5;
+  color: var(--primary);
   font-size: 1.1rem;
 }
 
@@ -544,14 +542,14 @@
 }
 
 .btn-detect-location {
-  background: linear-gradient(135deg, #6C8DB5 0%, #5a7a9d 100%);
+  background: var(--primary);
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(108, 141, 181, 0.3);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-detect-location:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 141, 181, 0.4);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4);
 }
 
 .btn-detect-location:disabled {
@@ -561,14 +559,14 @@
 }
 
 .btn-clear-location {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: var(--danger);
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  box-shadow: 0 2px 8px rgba(var(--danger-rgb), 0.3);
 }
 
 .btn-clear-location:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+  box-shadow: 0 4px 12px rgba(var(--danger-rgb), 0.4);
 }
 
 /* ============= GPS Coordinates Display ============= */
@@ -576,8 +574,8 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  border: 2px solid #28a745;
+  background: rgba(var(--success-rgb), 0.1);
+  border: 2px solid var(--success);
   border-radius: 10px;
   margin-bottom: 1.5rem;
 }
@@ -585,13 +583,13 @@
 .coordinate-item {
   display: flex;
   align-items: center;
-  color: #155724;
+  color: var(--success);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .coordinate-item i {
-  color: #28a745;
+  color: var(--success);
   font-size: 1.1rem;
 }
 
@@ -602,8 +600,8 @@
 
 /* ============= Legal Section ============= */
 .legal-section {
-  background: linear-gradient(135deg, #fff8e1 0%, #fff9f0 100%);
-  border: 2px solid #ffc107;
+  background: var(--surface-ground);
+  border: 2px solid var(--warning);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -617,7 +615,7 @@
 .form-check-input-enhanced {
   width: 24px;
   height: 24px;
-  border: 2px solid #6C8DB5;
+  border: 2px solid var(--primary);
   border-radius: 6px;
   cursor: pointer;
   flex-shrink: 0;
@@ -625,16 +623,16 @@
 }
 
 .form-check-input-enhanced:checked {
-  background-color: #6C8DB5;
-  border-color: #6C8DB5;
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .form-check-input-enhanced:focus {
-  box-shadow: 0 0 0 4px rgba(108, 141, 181, 0.15);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.15);
 }
 
 .form-check-input-enhanced.is-invalid {
-  border-color: #dc3545;
+  border-color: var(--danger);
 }
 
 .legal-checkbox-label {
@@ -643,7 +641,7 @@
 }
 
 .legal-text {
-  color: #324260;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -651,9 +649,9 @@
 
 /* ============= Form Actions ============= */
 .form-actions-wrapper {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--surface-ground);
   padding: 2rem 2.5rem;
-  border-top: 2px solid #DDDDDD;
+  border-top: 2px solid var(--border-color);
 }
 
 .actions-content {
@@ -665,7 +663,7 @@
 
 .actions-note {
   text-align: center;
-  color: #787878;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -686,28 +684,28 @@
 }
 
 .btn-action-secondary {
-  background: #FFFFFF;
-  color: #787878;
-  border: 2px solid #DDDDDD;
+  background: var(--surface-card);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .btn-action-secondary:hover:not(:disabled) {
-  background: #324260;
+  background: var(--primary);
   color: #FFFFFF;
-  border-color: #324260;
+  border-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(50, 66, 96, 0.2);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
 }
 
 .btn-action-primary {
-  background: linear-gradient(135deg, #6C8DB5 0%, #5a7a9d 100%);
+  background: var(--primary);
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(108, 141, 181, 0.3);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-action-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(108, 141, 181, 0.4);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.4);
 }
 
 .btn-action-secondary:disabled,
@@ -807,4 +805,86 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* Dark Mode Overrides */
+:host-context([data-bs-theme="dark"]) .page-header-content {
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+:host-context([data-bs-theme="dark"]) .form-card {
+  background: var(--surface-card);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host-context([data-bs-theme="dark"]) .upload-zone-enhanced {
+  background: rgba(var(--primary-rgb), 0.05);
+  border-color: rgba(var(--primary-rgb), 0.2);
+}
+
+:host-context([data-bs-theme="dark"]) .upload-zone-enhanced:hover {
+  background: rgba(var(--primary-rgb), 0.1);
+  border-color: var(--primary);
+}
+
+:host-context([data-bs-theme="dark"]) .image-preview-container {
+  background: var(--surface-ground);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host-context([data-bs-theme="dark"]) .location-section,
+:host-context([data-bs-theme="dark"]) .legal-section {
+  background: rgba(var(--primary-rgb), 0.05);
+  border: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+:host-context([data-bs-theme="dark"]) .section-title {
+  color: var(--text-primary);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context([data-bs-theme="dark"]) .section-title i {
+  background: rgba(var(--primary-rgb), 0.2);
+  color: var(--primary-light);
+}
+
+:host-context([data-bs-theme="dark"]) .form-check-label {
+  color: var(--text-secondary);
+}
+
+:host-context([data-bs-theme="dark"]) .btn-action-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:host-context([data-bs-theme="dark"]) .btn-action-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Dark Mode GPS Section */
+:host-context([data-bs-theme="dark"]) .gps-detection-wrapper {
+  background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-ground) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context([data-bs-theme="dark"]) .gps-coordinates-display {
+  background: rgba(var(--success-rgb), 0.1);
+  border-color: rgba(var(--success-rgb), 0.2);
+}
+
+:host-context([data-bs-theme="dark"]) .btn-clear-location {
+  background: rgba(30, 30, 30, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-secondary);
+}
+
+:host-context([data-bs-theme="dark"]) .btn-clear-location:hover {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+  border-color: var(--danger);
 }

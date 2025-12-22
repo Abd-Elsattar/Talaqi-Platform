@@ -1,15 +1,15 @@
 <div class="chat-list-container">
-  <h2>المحادثات</h2>
+  <h2 style="text-align: left;">{{ 'messages.chatList.title' | translate }}</h2>
 
   <div *ngIf="loading" class="text-center">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">تحميل...</span>
+      <span class="visually-hidden">{{ 'messages.chatList.loading' | translate }}</span>
     </div>
   </div>
 
   <div *ngIf="!loading && conversations.length === 0" class="no-chats">
     <i class="bi bi-chat-dots" style="font-size: 3rem;"></i>
-    <p>لا توجد محادثات بعد.</p>
+    <p>{{ 'messages.chatList.noChats' | translate }}</p>
   </div>
 
   <div *ngIf="!loading && conversations.length > 0">
@@ -25,15 +25,15 @@
         <div class="chat-header">
           <span class="chat-name">
             {{ getParticipantName(chat) }}
-            <i *ngIf="chat.matchId" class="bi bi-stars text-primary ms-1" title="AI Match Chat"></i>
+            <i *ngIf="chat.matchId" class="bi bi-stars text-primary ms-1" [title]="'messages.chatList.aiMatchChat' | translate"></i>
           </span>
           <span class="chat-time" *ngIf="chat.lastMessage">{{ chat.lastMessage.createdAt | date:'shortTime' }}</span>
         </div>
 
         <div class="chat-preview">
           <span class="last-message">
-            <span *ngIf="chat.lastMessage?.senderId === currentUser?.id">You: </span>
-            {{ chat.lastMessage?.content || 'No messages yet' }}
+            <span *ngIf="chat.lastMessage?.senderId === currentUser?.id">{{ 'messages.chatList.you' | translate }}: </span>
+            {{ chat.lastMessage?.content || ('messages.chatList.noMessages' | translate) }}
           </span>
           <span class="unread-badge" *ngIf="chat.unreadCount > 0">{{ chat.unreadCount }}</span>
         </div>

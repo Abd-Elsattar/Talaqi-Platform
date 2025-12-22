@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+/* Inherit variables from AdminDashboard */
+.card-header {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.bg-header-primary {
+  background: var(--header-bg-primary) !important;
+  color: var(--header-text) !important;
+}
+
+/* Table Enhancements */
+.avatar-lg {
+  width: 48px;
+  height: 48px;
+}
+
+.table > :not(caption) > * > * {
+  padding: 1rem 1.5rem;
+  background-color: transparent;
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background-color: var(--body-bg);
+}
+
+.table tbody tr:hover {
+  background-color: var(--table-hover-bg);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Badge Tweaks */
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+}
+
+/* Modal Overlay */
+.modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.bg-content-box {
+  background-color: var(--body-bg);
+}
+
+/* RTL Support for Chevron */
+:host-context([dir="rtl"]) .rtl-flip {
+  transform: rotate(180deg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-dialog {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

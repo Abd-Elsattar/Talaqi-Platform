@@ -1,25 +1,26 @@
 .messages-container {
   display: flex;
-  height: calc(100vh - 110px); /* Adjusted for margin + navbar */
+  height: calc(100vh - 70px);
+  background-color: var(--background);
+  position: relative;
   overflow: hidden;
-  background-color: #f0f2f5;
-  margin-top: 2rem; /* Move away from navbar */
 }
 
 .sidebar {
   width: 360px;
-  border-right: 1px solid #dee2e6;
-  background-color: #fff;
+  background-color: var(--white);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  z-index: 10;
 }
 
 .main-content {
   flex: 1;
+  background-color: var(--white);
+  position: relative;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  position: relative;
 }
 
 /* Mobile Responsive */

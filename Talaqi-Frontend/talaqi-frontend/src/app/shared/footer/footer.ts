@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './footer.html',
   styleUrls: ['./footer.css'],
 })
@@ -27,15 +28,15 @@ export class FooterComponent {
   ];
 
   quickLinks = [
-    { label: 'الرئيسية', route: '/home' },
-    { label: 'تسجيل الدخول', route: '/login' },
-    { label: 'إنشاء حساب', route: '/register' },
+    { label: 'footer.links.home', route: '/home' },
+    { label: 'footer.links.login', route: '/login' },
+    { label: 'footer.links.register', route: '/register' },
   ];
 
   helpLinks = [
-    { label: 'كيف يعمل؟', route: '/how-it-works' },
-    { label: 'الأسئلة الشائعة', route: '/faq' },
-    { label: 'اتصل بنا', route: '/contact-us' },
+    { label: 'footer.links.howItWorks', route: '/how-it-works' },
+    { label: 'footer.links.faq', route: '/faq' },
+    { label: 'footer.links.contact', route: '/contact-us' },
   ];
 
   scrollToTop(): void {

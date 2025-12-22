@@ -9,19 +9,19 @@
       <div *ngFor="let slide of heroSlides; let i = index" class="hero-slide-item"
         [class.active]="i === currentSlideIndex">
 
-        <div class="hero-row">
-          <!-- Left Content Column -->
+        <div class="hero-row" [class.ltr]="!languageService.isRtl()">
+          <!-- Content Column -->
           <div class="hero-content-col">
-            <h1 class="hero-main-title">{{ slide.title }}</h1>
-            <p class="hero-main-description">{{ slide.description }}</p>
-            <button routerLink="/login" class="hero-main-button">
-              {{ slide.primaryButton }}
+            <h1 class="hero-main-title">{{ slide.titleKey | translate }}</h1>
+            <p class="hero-main-description">{{ slide.descriptionKey | translate }}</p>
+            <button routerLink="/login" class="hero-main-button m-1">
+              {{ slide.primaryButtonKey | translate }}
             </button>
           </div>
 
-          <!-- Right Image Column -->
+          <!-- Image Column -->
           <div class="hero-image-col">
-            <img [src]="slide.image" [alt]="slide.title" class="hero-slide-img">
+            <img [src]="slide.image" [alt]="slide.titleKey | translate" class="hero-slide-img">
           </div>
         </div>
       </div>
@@ -43,26 +43,26 @@
         <div *ngFor="let slide of heroSlides; let i = index" class="logged-hero-slide-item"
           [class.active]="i === currentSlideIndex">
 
-          <div class="logged-hero-row">
-            <!-- Left Content Column -->
+          <div class="logged-hero-row" [class.ltr]="!languageService.isRtl()">
+            <!-- Content Column -->
             <div class="logged-hero-content-col">
-              <h1 class="logged-hero-title">{{ slide.title }}</h1>
-              <p class="logged-hero-description">{{ slide.description }}</p>
+              <h1 class="logged-hero-title">{{ slide.titleKey | translate }}</h1>
+              <p class="logged-hero-description">{{ slide.descriptionKey | translate }}</p>
               <div class="logged-hero-actions">
                 <button routerLink="/report-lost-item" class="logged-hero-button primary">
                   <i class="bi bi-exclamation-circle me-2"></i>
-                  أبلغ عن مفقود
+                  {{ 'home.actions.reportLost' | translate }}
                 </button>
                 <button routerLink="/report-found-item" class="logged-hero-button secondary">
                   <i class="bi bi-check-circle me-2"></i>
-                  أبلغ عن موجود
+                  {{ 'home.actions.reportFound' | translate }}
                 </button>
               </div>
             </div>
 
-            <!-- Right Image Column -->
+            <!-- Image Column -->
             <div class="logged-hero-image-col">
-              <img [src]="slide.image" [alt]="slide.title" class="logged-hero-slide-img">
+              <img [src]="slide.image" [alt]="slide.titleKey | translate" class="logged-hero-slide-img">
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
         <div class="main-search-wrapper">
           <i class="bi bi-search search-icon"></i>
           <input type="text" class="main-search-input" [(ngModel)]="searchQuery" (input)="onSearchChange()"
-            placeholder="ابحث بالاسم، الوصف أو العنوان/المدينة/المحافظة">
+            [placeholder]="'home.search.placeholder' | translate">
         </div>
 
         <!-- Right Controls Wrapper -->
@@ -92,7 +92,7 @@
           <div class="right-controls-grid">
             <!-- Date From -->
             <div class="date-filter-group">
-              <label class="date-filter-label">من</label>
+              <label class="date-filter-label">{{ 'home.search.dateFrom' | translate }}</label>
               <div class="date-filter-input-wrapper">
                 <i class="bi bi-calendar3"></i>
                 <input type="date" class="date-filter-input" [(ngModel)]="dateFrom" (change)="onDateChange()"
@@ -107,7 +107,7 @@
 
             <!-- Date To -->
             <div class="date-filter-group">
-              <label class="date-filter-label">إلى</label>
+              <label class="date-filter-label">{{ 'home.search.dateTo' | translate }}</label>
               <div class="date-filter-input-wrapper">
                 <i class="bi bi-calendar3"></i>
                 <input type="date" class="date-filter-input" [(ngModel)]="dateTo" (change)="onDateChange()"
@@ -118,13 +118,13 @@
             <!-- Action Buttons -->
             <div class="search-actions">
               @if (dateFrom || dateTo) {
-              <button class="clear-filter-btn" (click)="clearDateFilter()" title="مسح الفلتر">
+              <button class="clear-filter-btn" (click)="clearDateFilter()" [title]="'home.search.clearFilter' | translate">
                 <i class="bi bi-x-lg"></i>
               </button>
               }
               <button class="primary-search-btn" (click)="performSearch()">
                 <i class="bi bi-search"></i>
-                <span>بحث</span>
+                <span>{{ 'home.search.searchButton' | translate }}</span>
               </button>
             </div>
           </div>
@@ -141,9 +141,9 @@
             @if (isLoadingItems) {
             <div class="text-center py-5">
               <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">جاري التحميل...</span>
+                <span class="visually-hidden">{{ 'home.loading.text' | translate }}</span>
               </div>
-              <p class="mt-3 text-muted">جاري تحميل العناصر...</p>
+              <p class="mt-3 text-muted">{{ 'home.loading.loadingItems' | translate }}</p>
             </div>
             }
 
@@ -159,7 +159,7 @@
                   <div class="image-overlay">
                     <span class="status-badge lost">
                       <i class="bi bi-exclamation-circle me-1"></i>
-                      مفقود
+                      {{ 'home.status.lost' | translate }}
                     </span>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
                   <div class="item-metadata with-action">
                     <div class="meta-item">
                       <i class="bi bi-geo-alt-fill"></i>
-                      <span>{{ getItemLocation(item) }}</span>
+                      <span>{{ getItemLocation(item) | locationTranslate }}</span>
                     </div>
                     <div class="meta-divider"></div>
                     <div class="meta-item">
@@ -197,7 +197,7 @@
                     <div class="meta-divider"></div>
                     <button class="view-inline-btn" (click)="viewItemDetails(item.id); $event.stopPropagation()">
                       <i class="bi bi-eye me-2"></i>
-                      عرض التفاصيل
+                      {{ 'home.item.viewDetails' | translate }}
                       <i class="bi bi-arrow-left ms-2"></i>
                     </button>
                   </div>
@@ -210,7 +210,7 @@
             @if (!isLoadingItems && lostItems.length === 0) {
             <div class="text-center py-5">
               <i class="bi bi-inbox display-1 text-muted"></i>
-              <p class="mt-3 text-muted">لا توجد عناصر مفقودة حالياً</p>
+              <p class="mt-3 text-muted">{{ 'home.empty.noLostItems' | translate }}</p>
             </div>
             }
 
@@ -222,13 +222,13 @@
                 @if (!isLoadingItems) {
                 <span>
                   <i class="bi bi-chevron-down me-2"></i>
-                  تحميل المزيد من العناصر
+                  {{ 'home.pagination.loadMore' | translate }}
                 </span>
                 }
                 @else {
                 <span>
                   <span class="spinner-border spinner-border-sm me-2"></span>
-                  جاري التحميل...
+                  {{ 'home.pagination.loading' | translate }}
                 </span>
                 }
                 </button>
@@ -243,20 +243,20 @@
             <div class="ad-card">
               <div class="ad-label">
                 <i class="bi bi-badge-ad"></i>
-                <span>إعلان</span>
+                <span>{{ 'home.ads.label' | translate }}</span>
               </div>
               <div class="ad-image-wrapper">
-                <img [src]="resolveImage(ad.imageUrl)" [alt]="ad.title" class="ad-image" loading="lazy"
+                <img [src]="resolveImage(ad.imageUrl)" [alt]="ad.titleKey | translate" class="ad-image" loading="lazy"
                   (error)="$any($event.target).src='images/lost-and-found-.png'">
                 <div class="ad-overlay">
                   <i class="bi bi-eye"></i>
                 </div>
               </div>
               <div class="ad-content">
-                <h4 class="ad-title">{{ ad.title }}</h4>
-                <p class="ad-description">{{ ad.description }}</p>
+                <h4 class="ad-title">{{ ad.titleKey | translate }}</h4>
+                <p class="ad-description">{{ ad.descriptionKey | translate }}</p>
                 <a routerLink="/contact-us">
-                  <button class="btn btn-primary"> معرفة المزيد</button>
+                  <button class="btn btn-primary">{{ 'home.ads.learnMore' | translate }}</button>
                 </a>
               </div>
             </div>

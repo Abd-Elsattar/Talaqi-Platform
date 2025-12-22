@@ -3,8 +3,8 @@
    ======================================== */
 
 .footer {
-  background: var(--primary);
-  color: var(--text-light);
+  background: var(--footer-bg);
+  color: #ffffff;
   margin-top: auto;
   position: relative;
   overflow: hidden;
@@ -52,7 +52,7 @@
 .brand-title {
   font-size: 1.75rem;
   font-weight: 900;
-  color: var(--text-light);
+  color: #ffffff;
 }
 
 .footer-description {
@@ -71,7 +71,7 @@
 .footer-heading {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-light);
+  color: #ffffff;
   margin-bottom: 0.75rem;
 }
 
@@ -158,7 +158,7 @@
   height: 36px;
   border-radius: 50%;
   background: rgba(108, 141, 181, 0.2);
-  color: var(--text-light);
+  color: #ffffff;
   text-decoration: none;
   transition: all var(--transition-base);
   font-size: 1rem;

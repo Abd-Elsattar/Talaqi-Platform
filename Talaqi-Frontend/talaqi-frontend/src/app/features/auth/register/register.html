@@ -1,14 +1,14 @@
 <!-- Register template: user signup form and UI. -->
 <div class="register-wrapper">
 
-  <div class="register-grid">
+  <div class="register-grid" [class.ltr]="!languageService.isRtl()">
 
     <!-- Left Side (Form) -->
     <div class="register-form-section">
 
       <div class="register-header text-center mb-4">
-        <h2 class="fw-bold text-primary">حساب جديد</h2>
-        <p class="text-muted">سجل بياناتك عشان تقدر تبلغ عن مفقوداتك</p>
+        <h2>{{ 'register.title' | translate }}</h2>
+        <p>{{ 'register.subtitle' | translate }}</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
@@ -16,8 +16,8 @@
         <div class="row g-3">
 
           <div class="col-12 col-sm-6">
-            <label class="form-label">الاسم الأول <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" formControlName="firstName" placeholder="الاسم الأول"
+            <label class="form-label">{{ 'register.firstName' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
+            <input type="text" class="form-control" formControlName="firstName" [placeholder]="'register.placeholders.firstName' | translate"
               [class.is-invalid]="isInvalid('firstName')" />
             @if (isInvalid('firstName')) {
             <div class="invalid-feedback">{{ getError('firstName') }}</div>
@@ -25,8 +25,8 @@
           </div>
 
           <div class="col-12 col-sm-6">
-            <label class="form-label">اسم العائلة <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" formControlName="lastName" placeholder="اسم العائلة"
+            <label class="form-label">{{ 'register.lastName' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
+            <input type="text" class="form-control" formControlName="lastName" [placeholder]="'register.placeholders.lastName' | translate"
               [class.is-invalid]="isInvalid('lastName')" />
             @if (isInvalid('lastName')) {
             <div class="invalid-feedback">{{ getError('lastName') }}</div>
@@ -34,18 +34,18 @@
           </div>
 
           <div class="col-12">
-            <label class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'register.email' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
             <input type="email" class="form-control" formControlName="email" name="email" id="registerEmail"
-              autocomplete="email" placeholder="name@example.com" [class.is-invalid]="isInvalid('email')" />
+              autocomplete="email" [placeholder]="'register.placeholders.email' | translate" [class.is-invalid]="isInvalid('email')" />
             @if (isInvalid('email')) {
             <div class="invalid-feedback">{{ getError('email') }}</div>
             }
           </div>
 
           <div class="col-12">
-            <label class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'register.phoneNumber' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
             <input type="tel" class="form-control" formControlName="phoneNumber" name="phone" id="registerPhone"
-              inputmode="tel" autocomplete="tel" autocorrect="off" autocapitalize="off" placeholder="01012345678"
+              inputmode="tel" autocomplete="tel" autocorrect="off" autocapitalize="off" [placeholder]="'register.placeholders.phoneNumber' | translate"
               [class.is-invalid]="isInvalid('phoneNumber')" />
             @if (isInvalid('phoneNumber')) {
             <div class="invalid-feedback">{{ getError('phoneNumber') }}</div>
@@ -53,8 +53,8 @@
           </div>
 
           <div class="col-12 col-sm-6">
-            <label class="form-label">كلمة المرور <span class="text-danger">*</span></label>
-            <input type="password" class="form-control" formControlName="password" placeholder="********"
+            <label class="form-label">{{ 'register.password' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
+            <input type="password" class="form-control" formControlName="password" [placeholder]="'register.placeholders.password' | translate"
               [class.is-invalid]="isInvalid('password')" />
             @if (isInvalid('password')) {
             <div class="invalid-feedback">{{ getError('password') }}</div>
@@ -62,8 +62,8 @@
           </div>
 
           <div class="col-12 col-sm-6">
-            <label class="form-label">تأكيد كلمة المرور <span class="text-danger">*</span></label>
-            <input type="password" class="form-control" formControlName="confirmPassword" placeholder="********"
+            <label class="form-label">{{ 'register.confirmPassword' | translate }} <span class="text-danger">{{ 'register.required' | translate }}</span></label>
+            <input type="password" class="form-control" formControlName="confirmPassword" [placeholder]="'register.placeholders.confirmPassword' | translate"
               [class.is-invalid]="isInvalid('confirmPassword')" />
             @if (isInvalid('confirmPassword')) {
             <div class="invalid-feedback">{{ getError('confirmPassword') }}</div>
@@ -72,14 +72,14 @@
 
           <div class="col-12 mt-3">
             <button class="btn btn-primary w-100 py-2 fw-bold" [disabled]="form.invalid || loading">
-              @if (!loading) { إنشاء الحساب }
-              @else { <span class="spinner-border spinner-border-sm"></span> جاري التسجيل... }
+              @if (!loading) { {{ 'register.createAccount' | translate }} }
+              @else { <span class="spinner-border spinner-border-sm"></span> {{ 'register.creating' | translate }} }
             </button>
           </div>
 
           <div class="col-12 text-center mt-3">
-            <span class="text-muted">لديك حساب بالفعل؟ </span>
-            <a routerLink="/login" class="fw-bold text-primary ms-1">تسجيل الدخول </a>
+            <span class="text-muted">{{ 'register.haveAccount' | translate }} </span>
+            <a routerLink="/login" class="fw-bold text-primary ms-1">{{ 'register.loginLink' | translate }} </a>
           </div>
 
         </div>
@@ -90,7 +90,7 @@
 
     <!-- Right Side (Image) -->
     <div class="register-image-section">
-      <img src="register/1.png" alt="Register" />
+      <img src="register/1.png" [alt]="'register.imageAlt' | translate" />
     </div>
 
   </div>

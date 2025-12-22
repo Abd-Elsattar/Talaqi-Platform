@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ChatService } from '../../../core/services/chat.service';
 import { SignalRService } from '../../../core/services/signalr.service';
 import { TokenService } from '../../../core/services/token.service';
@@ -9,7 +10,7 @@ import { Conversation } from '../../../core/models/messaging.model';
 @Component({
   selector: 'app-chat-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './chat-list.html',
   styles: [`
     :host {

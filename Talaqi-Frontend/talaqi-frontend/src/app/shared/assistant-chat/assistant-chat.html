@@ -1,23 +1,23 @@
-<div class="assistant-widget" [class.open]="isOpen()" dir="rtl">
+<div class="assistant-widget" [class.open]="isOpen()">
   <!-- Floating Button -->
-  <button class="assistant-fab" (click)="toggleOpen()" [disabled]="isSending()" aria-label="المساعد الذكي">
+  <button class="assistant-fab" (click)="toggleOpen()" [disabled]="isSending()" [attr.aria-label]="'assistant.button.label' | translate">
     <span class="ai-icon">🤖</span>
     <span class="pulse" [class.hidden]="isOpen()"></span>
   </button>
 
-  <!-- Friendly Arabic hint bubble when closed -->
-  <div class="assistant-hint" *ngIf="!isOpen() && showHint()" dir="rtl">
+  <!-- Friendly hint bubble when closed -->
+  <div class="assistant-hint" *ngIf="!isOpen() && showHint()">
     <div class="hint-bubble">
-      <span>مرحبًا! أسألني أي شيءقد يساعدك ✨</span>
-      <button class="hint-close" (click)="showHint.set(false)" aria-label="إخفاء">✕</button>
+      <span>{{ 'assistant.hint.text' | translate }}</span>
+      <button class="hint-close" (click)="showHint.set(false)" [attr.aria-label]="'assistant.hint.close' | translate">✕</button>
     </div>
   </div>
 
   <!-- Panel -->
   <div class="assistant-panel" *ngIf="isOpen()">
     <div class="panel-header">
-      <div class="title">المساعد الذكي</div>
-      <button class="close" (click)="close()" aria-label="إغلاق">✕</button>
+      <div class="title">{{ 'assistant.panel.title' | translate }}</div>
+      <button class="close" (click)="close()" [attr.aria-label]="'assistant.panel.close' | translate">✕</button>
     </div>
 
     <div #scrollArea class="messages" role="log" aria-live="polite">
@@ -29,12 +29,12 @@
 
         <!-- <div *ngIf="m.snippets?.length" class="sources">
           <details>
-            <summary>المصادر</summary>
+            <summary>{{ 'assistant.sources.title' | translate }}</summary>
             <div class="cards">
-              <div *ngFor="let s of m.snippets" class="card" title="{{ s.itemType }}">
+              <div *ngFor="let s of m.snippets" class="card" [title]="s.itemType">
                 <div class="card-type">{{ s.itemType }}</div>
                 <div class="card-snippet">{{ s.snippet }}</div>
-                <div class="card-score">الدرجة: {{ s.score | number:'1.0-2' }}</div>
+                <div class="card-score">{{ 'assistant.sources.score' | translate }}: {{ s.score | number:'1.0-2' }}</div>
               </div>
             </div>
           </details>
@@ -43,9 +43,9 @@
     </div>
 
     <div class="composer">
-      <input type="text" [disabled]="isSending()" [(ngModel)]="inputValue" placeholder="اكتب سؤالك هنا..." />
-      <button class="send" (click)="send()" [disabled]="isSending() || !(inputValue || '').trim()" aria-label="إرسال">
-        <span *ngIf="!isSending()">إرسال</span>
+      <input type="text" [disabled]="isSending()" [(ngModel)]="inputValue" [placeholder]="'assistant.composer.placeholder' | translate" />
+      <button class="send" (click)="send()" [disabled]="isSending() || !(inputValue || '').trim()" [attr.aria-label]="'assistant.composer.send' | translate">
+        <span *ngIf="!isSending()">{{ 'assistant.composer.send' | translate }}</span>
         <span *ngIf="isSending()" class="dots">
           <span></span><span></span><span></span>
         </span>

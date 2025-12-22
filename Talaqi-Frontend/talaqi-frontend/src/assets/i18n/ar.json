@@ -1,0 +1,1245 @@
+{
+  "home": {
+    "hero": {
+      "slide1": {
+        "title": "عشان الضياع مايبقاش نهايه",
+        "description": "من اول لحظة فقدان لعند لحظ اللقاء... إحنا هنا عشان نرجع الامل",
+        "primaryButton": "جرب الآن",
+        "secondaryButton": "كيف يعمل؟"
+      },
+      "slide2": {
+        "title": "ساعدنا في إعادة الأشياء لأصحابها",
+        "description": "منصة تلاقي تجمع بين الأشخاص الذين فقدوا أغراضهم والأشخاص الذين وجدوها",
+        "primaryButton": "ابدأ الآن",
+        "secondaryButton": "تعرف أكثر"
+      },
+      "slide3": {
+        "title": "تقنية الذكاء الاصطناعي للبحث الذكي",
+        "description": "نستخدم الذكاء الاصطناعي لمطابقة الأشياء المفقودة مع الموجودة بدقة عالية",
+        "primaryButton": "جرب الآن",
+        "secondaryButton": "كيف يعمل؟"
+      },
+      "slide4": {
+        "title": "مجتمع موثوق ومتعاون",
+        "description": "انضم لآلاف المستخدمين الذين يساعدون بعضهم في استعادة ممتلكاتهم",
+        "primaryButton": "انضم الآن",
+        "secondaryButton": "قصص نجاح"
+      }
+    },
+    "actions": {
+      "reportLost": "أبلغ عن مفقود",
+      "reportFound": "أبلغ عن موجود"
+    },
+    "search": {
+      "placeholder": "ابحث بالاسم، الوصف أو العنوان/المدينة/المحافظة",
+      "dateFrom": "من",
+      "dateTo": "إلى",
+      "searchButton": "بحث",
+      "clearFilter": "مسح الفلتر"
+    },
+    "loading": {
+      "text": "جاري التحميل...",
+      "loadingItems": "جاري تحميل العناصر..."
+    },
+    "status": {
+      "lost": "مفقود",
+      "found": "موجود"
+    },
+    "item": {
+      "viewDetails": "عرض التفاصيل",
+      "location": "غير محدد"
+    },
+    "empty": {
+      "noLostItems": "لا توجد عناصر مفقودة حالياً"
+    },
+    "pagination": {
+      "loadMore": "تحميل المزيد من العناصر",
+      "loading": "جاري التحميل..."
+    },
+    "ads": {
+      "label": "إعلان",
+      "ad1": {
+        "title": "مساحة إعلانية متاحة",
+        "description": "ضع إعلانك هنا للوصول إلى آلاف المستخدمين"
+      },
+      "ad2": {
+        "title": "أعلن معنا",
+        "description": "احجز مساحتك الإعلانية الآن"
+      },
+      "ad3": {
+        "title": "مساحة إعلانية",
+        "description": "تواصل معنا لحجز مساحتك الإعلانية"
+      },
+      "learnMore": "معرفة المزيد"
+    },
+    "alerts": {
+      "dateRangeError": "تاريخ البداية يجب أن يكون قبل تاريخ النهاية"
+    }
+  },
+  "contactUs": {
+    "title": "اتصل بنا",
+    "subtitle": "تواصل معنا",
+    "description": "نحن هنا للإجابة على أسئلتك ومساعدتك",
+    "contactMethods": {
+      "title": "معلومات التواصل",
+      "email": {
+        "title": "البريد الإلكتروني",
+        "description": "أرسل لنا بريداً إلكترونياً"
+      },
+      "phone": {
+        "title": "الهاتف",
+        "description": "اتصل بنا مباشرة"
+      },
+      "location": {
+        "title": "الموقع",
+        "description": "زرنا في مقرنا",
+        "value": "المنصورة، مصر"
+      },
+      "workingHours": {
+        "title": "ساعات العمل",
+        "description": "وقت الدعم المتاح",
+        "value": "السبت - الخميس: 9 ص - 6 م"
+      }
+    },
+    "social": {
+      "title": "تابعنا على وسائل التواصل"
+    },
+    "faq": {
+      "title": "هل تحتاج إلى إجابات سريعة؟",
+      "text": "تحقق من الأسئلة الشائعة أولاً قد تجد الإجابة التي تبحث عنها",
+      "link": "عرض الأسئلة الشائعة"
+    }
+  },
+  "categories": {
+    "personalBelongings": "ممتلكات شخصية",
+    "people": "أشخاص",
+    "pets": "حيوانات أليفة"
+  },
+  "lostItemDetail": {
+    "title": "تفاصيل العنصر المفقود",
+    "subtitle": "معلومات شاملة عن العنصر المفقود",
+    "loading": "جاري التحميل...",
+    "loadingDetails": "جاري تحميل التفاصيل...",
+    "errorInvalidId": "معرّف العنصر غير صحيح",
+    "errorLoadFailed": "فشل في تحميل تفاصيل العنصر",
+    "errorOccurred": "حدث خطأ أثناء تحميل تفاصيل العنصر",
+    "backButton": "العودة",
+    "status": {
+      "lost": "مفقود"
+    },
+    "publishedBy": "منشور بواسطة",
+    "dateLost": "تاريخ الفقدان",
+    "location": "الموقع",
+    "publishedAt": "تم النشر",
+    "notSpecified": "غير محدد",
+    "descriptionTitle": "الوصف",
+    "locationDetailsTitle": "تفاصيل الموقع",
+    "city": "المدينة:",
+    "governorate": "المحافظة:",
+    "address": "العنوان:",
+    "reporterInfoTitle": "معلومات المبلغ",
+    "contactButton": "التواصل",
+    "shareButton": "مشاركة",
+    "matchAlert": "توجد {{count}} مطابقة محتملة",
+    "matchAlertSingle": "توجد {{count}} مطابقة محتملة",
+    "shareText": "تم العثور على عنصر مفقود: {{title}}\n{{description}}\nالموقع: {{location}}",
+    "copiedToClipboard": "تم نسخ التفاصيل إلى الحافظة",
+    "closeModal": "إغلاق",
+    "viewImage": "عرض الصورة"
+  },
+  "myLostItems": {
+    "title": "عناصري المفقودة",
+    "subtitle": "إدارة وتتبع جميع العناصر المفقودة التي أبلغت عنها",
+    "reportButton": "إبلاغ عن عنصر مفقود",
+    "loading": "جاري التحميل...",
+    "loadingItems": "جاري تحميل عناصرك المفقودة...",
+    "errorMessage": "حدث خطأ أثناء تحميل عناصرك المفقودة",
+    "emptyTitle": "لا توجد عناصر مفقودة",
+    "emptyMessage": "لم تقم بالإبلاغ عن أي عناصر مفقودة بعد",
+    "startReporting": "ابدأ بالإبلاغ عن عنصر مفقود الآن",
+    "stats": {
+      "totalItems": "إجمالي العناصر",
+      "activeItems": "عناصر نشطة",
+      "foundItems": "عناصر موجودة",
+      "totalMatches": "إجمالي التطابقات"
+    },
+    "statusLabel": "تغيير حالة العنصر :",
+    "statusButtons": {
+      "active": "نشط",
+      "found": "تم العثور عليه",
+      "closed": "اغلاق"
+    },
+    "status": {
+      "active": "نشط",
+      "found": "تم العثور عليه",
+      "closed": "مغلق",
+      "expired": "منتهي الصلاحية"
+    },
+    "category": {
+      "personalBelongings": "متعلقات شخصية",
+      "people": "أشخاص",
+      "pets": "حيوانات أليفة"
+    },
+    "notSpecified": "غير محدد",
+    "matchCount": "{{count}} تطابق",
+    "matchCountPlural": "{{count}} تطابق",
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "viewTitle": "عرض التفاصيل",
+      "editTitle": "تعديل العنصر",
+      "deleteTitle": "حذف العنصر"
+    },
+    "deleteConfirm": {
+      "title": "هل أنت متأكد؟",
+      "text": "سيتم حذف \"{{title}}\" نهائياً",
+      "confirmButton": "نعم، احذف",
+      "cancelButton": "إلغاء"
+    },
+    "deleteSuccess": {
+      "title": "تم الحذف!",
+      "text": "تم حذف العنصر بنجاح"
+    },
+    "deleteError": {
+      "title": "خطأ!",
+      "text": "فشل حذف العنصر",
+      "errorOccurred": "حدث خطأ أثناء حذف العنصر"
+    },
+    "statusChangeNotAllowed": {
+      "title": "غير مسموح",
+      "text": "لا يمكن إعادة العنصر إلى حالة \"نشط\" بعد أن تم وضعه كـ \"تم العثور عليه\" أو \"مغلق\".",
+      "confirmButton": "حسناً"
+    },
+    "statusChangeConfirm": {
+      "title": "تأكيد تغيير الحالة",
+      "text": "هل أنت متأكد أنك تريد تغيير حالة العنصر إلى \"{{status}}\"؟",
+      "confirmButton": "تأكيد",
+      "cancelButton": "إلغاء"
+    },
+    "statusChangeSuccess": {
+      "title": "تم التغيير!",
+      "text": "تم تحديث حالة العنصر بنجاح."
+    },
+    "statusChangeError": {
+      "title": "خطأ!",
+      "text": "حدث خطأ أثناء تحديث الحالة."
+    }
+  },
+  "myFoundItems": {
+    "title": "الموجودات الخاصة بي",
+    "subtitle": "إدارة العناصر التي وجدتها وأبلغت عنها",
+    "reportButton": "إبلاغ عن عنصر موجود",
+    "loading": "جاري التحميل...",
+    "loadingText": "جاري تحميل العناصر الموجودة...",
+    "errorMessage": "حدث خطأ أثناء تحميل العناصر الموجودة",
+    "emptyState": {
+      "title": "لا توجد عناصر موجودة",
+      "text": "لم تقم بالإبلاغ عن أي عناصر موجودة بعد",
+      "button": "إبلاغ عن عنصر موجود الآن"
+    },
+    "stats": {
+      "totalItems": "إجمالي العناصر",
+      "activeItems": "عناصر نشطة",
+      "foundItems": "تم ايجاده",
+      "totalMatches": "إجمالي التطابقات"
+    },
+    "foundBadge": "موجود",
+    "notSpecified": "غير محدد",
+    "itemsCount": "عنصر موجود",
+    "untitledItem": "هذا العنصر",
+    "status": {
+      "available": "نشط",
+      "returned": "تم العثور عليه",
+      "closed": "مغلق",
+      "expired": "منتهي الصلاحية"
+    },
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "viewDetails": "عرض التفاصيل",
+      "editItem": "تعديل العنصر",
+      "deleteItem": "حذف العنصر"
+    },
+    "deleteDialog": {
+      "title": "هل أنت متأكد؟",
+      "text": "سيتم حذف \"{{title}}\" نهائياً",
+      "confirmButton": "نعم، احذف",
+      "cancelButton": "إلغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف العنصر بنجاح",
+      "errorTitle": "خطأ!",
+      "errorText": "حدث خطأ أثناء حذف العنصر"
+    },
+    "statusChangeDialog": {
+      "title": "تأكيد تغيير الحالة",
+      "text": "هل أنت متأكد أنك تريد تغيير حالة العنصر إلى \"{{status}}\"؟",
+      "confirmButton": "تأكيد",
+      "cancelButton": "إلغاء",
+      "successTitle": "تم التغيير!",
+      "successText": "تم تحديث حالة العنصر بنجاح",
+      "errorTitle": "خطأ!",
+      "errorText": "حدث خطأ أثناء تحديث الحالة"
+    }
+  },
+  "foundItemDetail": {
+    "title": "تفاصيل العنصر الموجود",
+    "subtitle": "معلومات شاملة عن العنصر الموجود",
+    "loading": "جاري التحميل...",
+    "loadingDetails": "جاري تحميل التفاصيل...",
+    "errorNotFound": "العنصر غير موجود",
+    "errorLoadFailed": "حدث خطأ أثناء تحميل تفاصيل العنصر",
+    "backButton": "العودة",
+    "status": {
+      "found": "موجود",
+      "active": "نشط",
+      "returned": "تم التسليم",
+      "closed": "مغلق"
+    },
+    "publishedBy": "منشور بواسطة",
+    "dateFound": "تاريخ العثور",
+    "location": "الموقع",
+    "publishedAt": "تم النشر",
+    "notSpecified": "غير محدد",
+    "descriptionTitle": "الوصف",
+    "locationDetailsTitle": "تفاصيل الموقع",
+    "city": "المدينة",
+    "address": "العنوان",
+    "contactInfoTitle": "معلومات الاتصال",
+    "editButton": "تعديل",
+    "deleteButton": "حذف",
+    "deleteConfirm": {
+      "title": "هل أنت متأكد؟",
+      "text": "لن تتمكن من استرجاع هذا العنصر!",
+      "confirmButton": "نعم، احذف",
+      "cancelButton": "إلغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف العنصر بنجاح",
+      "errorTitle": "خطأ!",
+      "errorText": "فشل حذف العنصر"
+    },
+    "closeModal": "إغلاق",
+    "viewImage": "عرض الصورة"
+  },
+  "aiMatches": {
+    "title": "متطابقات الذكاء الاصطناعي",
+    "subtitle": "المطابقات التي وجدها نظام الذكاء الاصطناعي بين العناصر المفقودة والموجودة",
+    "loading": "جاري التحميل...",
+    "loadingText": "جاري تحميل المطابقات...",
+    "errorMessage": "حدث خطأ أثناء تحميل المطابقات",
+    "notSpecified": "غير محدد",
+    "smartMatch": "مطابقة ذكية",
+    "lostBadge": "مفقود",
+    "foundBadge": "موجود",
+    "aiMatchText": "مطابقة الذكاء الاصطناعي",
+    "searchPlaceholder": "بحث في المطابقات",
+    "filters": {
+      "all": "الكل",
+      "pending": "قيد الانتظار",
+      "confirmed": "مؤكد",
+      "resolved": "تم الحل",
+      "myLost": "مفقودي",
+      "myFound": "موجوداتي"
+    },
+    "emptyState": {
+      "title": "لا توجد مطابقات",
+      "noMatches": "لم يتم العثور على أي مطابقات بعد",
+      "noMatchesWithStatus": "لا توجد مطابقات بحالة",
+      "reportButton": "إبلاغ عن عنصر مفقود"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "confirmed": "مؤكد",
+      "rejected": "مرفوض",
+      "resolved": "تم الحل"
+    },
+    "confidence": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "actions": {
+      "chat": "محادثة",
+      "confirm": "تأكيد",
+      "reject": "رفض",
+      "resolve": "تم"
+    },
+    "chat": {
+      "errorTitle": "خطأ",
+      "loginRequired": "يجب تسجيل الدخول للمحادثة",
+      "participantError": "لا يمكن تحديد المشارك في المحادثة",
+      "failed": "فشل في بدء المحادثة"
+    },
+    "statusUpdate": {
+      "notAllowed": "غير مسموح",
+      "ownerOnly": "فقط مالك العنصر المفقود يمكنه تغيير حالة المطابقة",
+      "confirmTitle": "تأكيد الإجراء",
+      "confirmText": "هل تريد تحديث حالة المطابقة إلى \"{{status}}\"؟",
+      "confirmButton": "نعم، تأكيد",
+      "cancelButton": "إلغاء",
+      "successTitle": "تم التحديث!",
+      "successText": "تم تحديث حالة المطابقة بنجاح",
+      "errorTitle": "خطأ!",
+      "errorText": "فشل تحديث حالة المطابقة"
+    },
+    "resultsCount": "عرض <strong>{{shown}}</strong> من أصل <strong>{{total}}</strong> مطابقة"
+  },
+  "messages": {
+    "placeholder": {
+      "title": "اختر محادثة للبدء",
+      "subtitle": "تواصل مع الآخرين حول العناصر المفقودة والموجودة"
+    },
+    "chatList": {
+      "title": "المحادثات",
+      "loading": "تحميل...",
+      "noChats": "لا توجد محادثات بعد.",
+      "you": "أنت",
+      "noMessages": "لا توجد رسائل بعد",
+      "aiMatchChat": "محادثة تطابق ذكي"
+    },
+    "chat": {
+      "matchDetails": "تفاصيل التطابق",
+      "lostBadge": "مفقود",
+      "foundBadge": "معثور عليه",
+      "matchScore": "نسبة التطابق",
+      "activeNow": "نشط الآن",
+      "reportUser": "إبلاغ عن المستخدم",
+      "reportUserButton": "ابلاغ عن المستخدم",
+      "noMessages": "لا توجد رسائل",
+      "startConversation": "ابدأ المحادثة بإرسال رسالة الآن.",
+      "typing": "جاري الكتابة...",
+      "inputPlaceholder": "اكتب رسالتك هنا...",
+      "reportMessage": "إبلاغ",
+      "delete": {
+        "title": "تأكيد الحذف",
+        "text": "هل أنت متأكد من حذف هذه الرسالة؟",
+        "confirm": "نعم، احذف",
+        "cancel": "إلغاء",
+        "buttonTitle": "حذف"
+      },
+      "error": {
+        "title": "خطأ",
+        "sendFailed": "فشل إرسال الرسالة",
+        "deleteFailed": "فشل حذف الرسالة"
+      }
+    },
+    "report": {
+      "title": "إبلاغ",
+      "reasonLabel": "سبب الإبلاغ",
+      "descriptionLabel": "تفاصيل إضافية (اختياري)",
+      "descriptionPlaceholder": "اشرح المشكلة...",
+      "cancelButton": "إلغاء",
+      "submitButton": "إرسال البلاغ",
+      "reasons": {
+        "spam": "محتوى مزعج (Spam)",
+        "harassment": "مضايقة أو تنمر",
+        "inappropriate": "محتوى غير لائق",
+        "scam": "احتيال",
+        "other": "أخرى"
+      },
+      "success": {
+        "title": "تم الإرسال",
+        "text": "تم إرسال البلاغ بنجاح. شكراً لمساعدتك في الحفاظ على أمان المنصة."
+      },
+      "error": {
+        "title": "خطأ",
+        "text": "حدث خطأ أثناء إرسال البلاغ",
+        "unexpected": "حدث خطأ غير متوقع."
+      }
+    }
+  },
+  "footer": {
+    "brandDescription": "منصة موحدة لمساعدة الناس على العثور على الأشياء المفقودة وإعادتها لأصحابها. نستخدم تقنيات الذكاء الاصطناعي لمطابقة العناصر المفقودة والموجودة.",
+    "quickLinks": "روابط سريعة",
+    "helpSupport": "المساعدة والدعم",
+    "contactUs": "تواصل معنا",
+    "egypt": "مصر",
+    "copyright": "جميع الحقوق محفوظة.",
+    "scrollToTop": "العودة للأعلى",
+    "links": {
+      "home": "الرئيسية",
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب",
+      "howItWorks": "كيف يعمل؟",
+      "faq": "الأسئلة الشائعة",
+      "contact": "اتصل بنا",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الاستخدام",
+      "cookiePolicy": "سياسة الكوكيز"
+    }
+  },
+  "navbar": {
+    "home": "الرئيسية",
+    "lostItems": "المفقودات",
+    "foundItems": "الموجودات",
+    "aiMatches": "متطابقات الذكاء الاصطناعي",
+    "messages": "الرسائل",
+    "myReports": "بلاغاتي",
+    "reportItems": "الإبلاغ عن العناصر",
+    "reportLostItem": "الإبلاغ عن العناصر المفقودة",
+    "reportFoundItem": "الإبلاغ عن العناصر الموجودة",
+    "editProfile": "تعديل الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "admin": {
+      "statistics": "الإحصائيات العامة",
+      "users": "إدارة المستخدمين",
+      "items": "إدارة العناصر",
+      "reports": "البلاغات"
+    }
+  },
+  "register": {
+    "title": "حساب جديد",
+    "subtitle": "سجل بياناتك عشان تقدر تبلغ عن مفقوداتك",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "required": "*",
+    "placeholders": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "name@example.com",
+      "phoneNumber": "01012345678",
+      "password": "********",
+      "confirmPassword": "********"
+    },
+    "createAccount": "إنشاء الحساب",
+    "creating": "جاري التسجيل...",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "loginLink": "تسجيل الدخول",
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "email": "البريد الإلكتروني غير صالح",
+      "minlength": "الحد الأدنى للطول غير كافٍ",
+      "pattern": "رقم الهاتف غير صالح",
+      "mismatch": "كلمتا المرور غير متطابقتين",
+      "invalid": "بيانات غير صحيحة"
+    },
+    "success": {
+      "title": "تم إنشاء الحساب بنجاح",
+      "message": "أرسلنا لك كود التفعيل على بريدك الإلكتروني. من فضلك قم بالتفعيل أولاً.",
+      "confirmButton": "اذهب لصفحة التفعيل"
+    },
+    "failure": {
+      "title": "تعذّر إنشاء الحساب",
+      "defaultMessage": "حدث خطأ أثناء التسجيل. حاول مرة أخرى.",
+      "confirmButton": "حسناً"
+    },
+    "imageAlt": "Register"
+  },
+  "login": {
+    "title": "مرحباً بعودتك",
+    "subtitle": "سجل دخولك للمتابعة",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "required": "*",
+    "placeholders": {
+      "email": "name@example.com",
+      "password": "********"
+    },
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "loginButton": "تسجيل الدخول",
+    "loggingIn": "جاري الدخول...",
+    "noAccount": "ليس لديك حساب؟",
+    "registerLink": "إنشاء حساب جديد",
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "email": "بريد إلكتروني غير صحيح",
+      "authError": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    },
+    "success": {
+      "title": "أهلاً بك!",
+      "message": "تم تسجيل الدخول بنجاح"
+    },
+    "imageAlt": "Login Illustration"
+  },
+  "forgotPassword": {
+    "title": "نسيت كلمة المرور؟",
+    "subtitle": "أدخل بريدك الإلكتروني لإرسال كود إعادة التعيين",
+    "email": "البريد الإلكتروني",
+    "required": "*",
+    "placeholders": {
+      "email": "name@example.com"
+    },
+    "sendCode": "إرسال الكود",
+    "sending": "جاري الإرسال...",
+    "rememberPassword": "تذكرت كلمة المرور؟",
+    "loginLink": "تسجيل الدخول",
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "email": "بريد إلكتروني غير صحيح"
+    },
+    "success": {
+      "title": "✔ تم الإرسال",
+      "message": "تم إرسال الكود إلى بريدك الإلكتروني.",
+      "confirmButton": "متابعة"
+    },
+    "imageAlt": "مساعدة كلمة المرور"
+  },
+  "resetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "subtitle": "تم إرسال الكود إلى:",
+    "code": "كود التحقق",
+    "required": "*",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "submit": "تعيين كلمة المرور",
+    "submitting": "جاري التحديث...",
+    "rememberPassword": "هل تذكرت كلمة المرور؟",
+    "loginLink": "تسجيل الدخول",
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "minLength": "يجب أن يكون {{length}} أحرف على الأقل",
+      "passwordMismatch": "كلمات المرور غير متطابقة"
+    },
+    "success": {
+      "title": "تم التعيين بنجاح",
+      "text": "تم تغيير كلمة المرور.",
+      "button": "تسجيل الدخول"
+    },
+    "error": {
+      "title": "خطأ"
+    },
+    "imageAlt": "إعادة تعيين كلمة المرور"
+  },
+  "verify": {
+    "title": "تفعيل الحساب",
+    "subtitle": "لقد أرسلنا كود تفعيل مكون من 6 أرقام إلى بريدك الإلكتروني:",
+    "emailHint": {
+      "title": "لم يصلك البريد؟ جرّب التالي:",
+      "spam": "تفقد مجلد الرسائل غير المرغوب فيها (Spam/Junk).",
+      "promotions": "ابحث في تبويبات Promotions/Updates في Gmail.",
+      "wait": "انتظر دقيقة ثم اضغط \"إعادة إرسال الكود\"."
+    },
+    "code": "كود التفعيل",
+    "required": "*",
+    "placeholders": {
+      "code": "------"
+    },
+    "verifyButton": "تأكيد وتفعيل الحساب",
+    "verifying": "جاري التحقق...",
+    "resendCode": "إعادة إرسال الكود",
+    "resending": "جاري الإرسال...",
+    "resendCountdown": "إعادة الإرسال بعد {{seconds}} ثانية",
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "minlength": "الكود يجب أن يكون 6 أرقام",
+      "invalidCode": "تأكد من كتابة الكود بشكل صحيح من بريدك الإلكتروني",
+      "serverError": "لا يمكن الاتصال بالخادم"
+    },
+    "resendSuccess": {
+      "title": "تم الإرسال!",
+      "message": "تم إرسال كود التفعيل إلى بريدك الإلكتروني"
+    },
+    "resendFailure": {
+      "title": "فشل الإرسال",
+      "defaultMessage": "حدث خطأ أثناء إرسال الكود",
+      "confirmButton": "حسناً"
+    },
+    "success": {
+      "title": "تم التفعيل بنجاح!",
+      "message": "أهلاً بك في تلاقي.. يمكنك تسجيل الدخول الآن",
+      "confirmButton": "دخول"
+    },
+    "failure": {
+      "title": "فشل التفعيل",
+      "invalidCode": "كود خاطئ",
+      "defaultMessage": "حدث خطأ أثناء التفعيل",
+      "confirmButton": "حاول مرة أخرى"
+    },
+    "imageAlt": "التحقق"  },
+  "userReports": {
+    "title": "بلاغاتي",
+    "subtitle": "عرض ومتابعة حالة البلاغات التي قمت بتقديمها",
+    "table": {
+      "reportNumber": "رقم البلاغ",
+      "reportDate": "تاريخ البلاغ",
+      "reason": "السبب",
+      "description": "الوصف",
+      "status": "الحالة",
+      "adminNotes": "ملاحظات الإدارة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "underReview": "قيد المراجعة",
+      "resolved": "تم الحل",
+      "rejected": "مرفوض",
+      "unknown": "غير معروف"
+    },
+    "reason": {
+      "spam": "محتوى مزعج",
+      "harassment": "مضايقة",
+      "inappropriate": "محتوى غير لائق",
+      "fakeItem": "عنصر مزيف",
+      "scam": "احتيال",
+      "other": "أخرى"
+    },
+    "noAdminNotes": "لا توجد ملاحظات بعد",
+    "noReports": "لا توجد بلاغات سابقة",
+    "loading": "جاري التحميل..."
+  },
+  "reportLostItem": {
+    "title": "الإبلاغ عن عنصر مفقود",
+    "subtitle": "املأ النموذج بدقة للحصول على أفضل النتائج. سيقوم نظامنا بالبحث عن تطابقات محتملة تلقائياً باستخدام تقنية الذكاء الاصطناعي.",
+    "success": "نجاح!",
+    "error": "خطأ!",
+    "category": {
+      "label": "الفئة",
+      "required": "*",
+      "placeholder": "-- اختر فئة العنصر المفقود --",
+      "hint": "اختر الفئة الأنسب لتحسين نتائج البحث",
+      "personalBelongings": "متعلقات شخصية",
+      "people": "أشخاص",
+      "pets": "حيوانات أليفة"
+    },
+    "title_field": {
+      "label": "العنوان",
+      "required": "*",
+      "placeholder": "مثال: محفظة جلدية سوداء أو هاتف آيفون 13",
+      "hint": "الحد الأقصى: 200 حرف",
+      "charCounter": "{{count}}/200"
+    },
+    "description": {
+      "label": "الوصف التفصيلي",
+      "required": "*",
+      "placeholder": "صف العنصر المفقود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل.",
+      "hint": "الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل"
+    },
+    "image": {
+      "label": "صورة العنصر",
+      "required": "*",
+      "dragDrop": "اسحب وأفلت الصورة هنا",
+      "or": "أو",
+      "browse": "تصفح الملفات",
+      "hint": "JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)",
+      "uploading": "جاري الرفع...",
+      "uploadSuccess": "تم رفع الصورة بنجاح",
+      "remove": "حذف",
+      "removeTitle": "حذف الصورة",
+      "preview": "معاينة الصورة"
+    },
+    "location": {
+      "label": "معلومات الموقع",
+      "hint": "تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل",
+      "detectCurrent": "تحديد موقعي الحالي",
+      "detecting": "جاري تحديد الموقع...",
+      "detected": "تم تحديد الموقع",
+      "clear": "إزالة الموقع",
+      "coordinatesError": "يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً",
+      "latitude": "خط العرض:",
+      "longitude": "خط الطول:",
+      "address": {
+        "label": "العنوان",
+        "required": "*",
+        "placeholder": "مثال: شارع التحرير، أمام محطة المترو، القاهرة"
+      },
+      "city": {
+        "label": "المدينة",
+        "placeholder": "مثال: القاهرة"
+      },
+      "governorate": {
+        "label": "المحافظة",
+        "placeholder": "مثال: القاهرة"
+      }
+    },
+    "dateLost": {
+      "label": "تاريخ الفقدان",
+      "required": "*",
+      "hint": "التاريخ يجب أن يكون اليوم أو في الماضي"
+    },
+    "contactInfo": {
+      "label": "معلومات الاتصال",
+      "required": "*",
+      "placeholder": "رقم الهاتف أو البريد الإلكتروني للتواصل",
+      "hint": "سيُستخدم للتواصل معك عند إيجاد تطابقات محتملة"
+    },
+    "legalResponsibility": {
+      "label": "أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ",
+      "required": "*",
+      "error": "يجب الموافقة على تحمل المسؤولية القانونية للمتابعة"
+    },
+    "actions": {
+      "cancel": "إلغاء",
+      "submit": "إرسال البلاغ",
+      "submitting": "جاري الإرسال...",
+      "note": "يجب تحديد الموقع وملء العنوان/المدينة/المحافظة أو تعديلهم يدوياً قبل الإرسال"
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "maxlength": "عدد الأحرف تجاوز الحد المسموح",
+      "contactInvalid": "رقم هاتف أو بريد غير صالح",
+      "imageRequired": "الصورة مطلوبة",
+      "imageFormat": "صيغة الصورة غير مدعومة",
+      "imageSize": "حجم الصورة أكبر من 5 ميجابايت",
+      "uploadFailed": "فشل رفع الصورة",
+      "loadItemFailed": "فشل تحميل بيانات العنصر",
+      "completeRequired": "يرجى استكمال البيانات المطلوبة",
+      "submitFailed": "فشل الإرسال",
+      "updateFailed": "فشل التحديث",
+      "locationDetectionFailed": "تعذر تحديد الموقع"
+    },
+    "messages": {
+      "reportSubmitted": "تم إرسال البلاغ",
+      "reportUpdated": "تم تحديث البلاغ"
+    }
+  },
+  "reportFoundItem": {
+    "title": "الإبلاغ عن عنصر موجود",
+    "subtitle": "املأ النموذج بدقة للمساعدة في إعادة العنصر لصاحبه. سيقوم نظامنا بالبحث عن تطابقات محتملة تلقائياً باستخدام تقنية الذكاء الاصطناعي.",
+    "success": "نجاح!",
+    "error": "خطأ!",
+    "category": {
+      "label": "الفئة",
+      "required": "*",
+      "placeholder": "-- اختر فئة العنصر الموجود --",
+      "hint": "اختر الفئة الأنسب لتحسين نتائج البحث",
+      "personalBelongings": "متعلقات شخصية",
+      "people": "أشخاص",
+      "pets": "حيوانات أليفة"
+    },
+    "title_field": {
+      "label": "العنوان",
+      "required": "*",
+      "placeholder": "مثال: محفظة جلدية سوداء أو هاتف آيفون 13",
+      "hint": "الحد الأقصى: 200 حرف",
+      "charCounter": "{{count}}/200"
+    },
+    "description": {
+      "label": "الوصف التفصيلي",
+      "required": "*",
+      "placeholder": "صف العنصر الموجود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل.",
+      "hint": "الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل"
+    },
+    "image": {
+      "label": "صورة العنصر",
+      "required": "*",
+      "dragDrop": "اسحب وأفلت الصورة هنا",
+      "or": "أو",
+      "browse": "تصفح الملفات",
+      "hint": "JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)",
+      "uploading": "جاري الرفع...",
+      "uploadSuccess": "تم رفع الصورة بنجاح",
+      "remove": "حذف",
+      "removeTitle": "حذف الصورة",
+      "preview": "معاينة الصورة"
+    },
+    "location": {
+      "label": "معلومات الموقع",
+      "hint": "تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل",
+      "detectCurrent": "تحديد موقعي الحالي",
+      "detecting": "جاري تحديد الموقع...",
+      "detected": "تم تحديد الموقع",
+      "clear": "إزالة الموقع",
+      "coordinatesError": "يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً",
+      "latitude": "خط العرض:",
+      "longitude": "خط الطول:",
+      "address": {
+        "label": "العنوان",
+        "required": "*",
+        "placeholder": "مثال: شارع التحرير، أمام محطة المترو، القاهرة"
+      },
+      "city": {
+        "label": "المدينة",
+        "placeholder": "مثال: القاهرة"
+      },
+      "governorate": {
+        "label": "المحافظة",
+        "placeholder": "مثال: القاهرة"
+      }
+    },
+    "dateFound": {
+      "label": "تاريخ العثور",
+      "required": "*",
+      "hint": "التاريخ يجب أن يكون اليوم أو في الماضي"
+    },
+    "contactInfo": {
+      "label": "معلومات الاتصال",
+      "required": "*",
+      "placeholder": "رقم الهاتف أو البريد الإلكتروني للتواصل",
+      "hint": "سيُستخدم للتواصل معك في حال العثور على المالك"
+    },
+    "legalResponsibility": {
+      "label": "أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ",
+      "required": "*",
+      "error": "يجب الموافقة على تحمل المسؤولية القانونية للمتابعة"
+    },
+    "actions": {
+      "cancel": "إلغاء",
+      "submit": "إرسال البلاغ",
+      "submitting": "جاري الإرسال...",
+      "note": "يجب تحديد الموقع وملء العنوان/المدينة/المحافظة أو تعديلهم يدوياً قبل الإرسال"
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "maxlength": "الحد الأقصى {{max}} حرف",
+      "contactInvalid": "رقم هاتف أو بريد إلكتروني غير صالح",
+      "imageRequired": "هذا الحقل مطلوب",
+      "imageFormat": "يرجى اختيار صورة بصيغة JPG، PNG أو GIF",
+      "imageSize": "حجم الصورة يجب أن يكون أقل من 5 ميجابايت",
+      "uploadFailed": "فشل تحميل الصورة",
+      "loadItemFailed": "فشل تحميل بيانات العنصر",
+      "loadItemError": "حدث خطأ أثناء تحميل بيانات العنصر",
+      "completeRequired": "يرجى ملء جميع الحقول المطلوبة",
+      "submitFailed": "حدث خطأ أثناء الإرسال",
+      "locationNotSupported": "متصفحك لا يدعم تحديد الموقع",
+      "locationDetectionFailed": "فشل تحديد الموقع"
+    },
+    "messages": {
+      "reportSubmitted": "تم إرسال البلاغ",
+      "reportUpdated": "تم تحديث البلاغ"
+    }
+  },
+  "adminPanel": {
+    "common": {
+      "unknown": "غير معروف"
+    },
+    "header": {
+      "title": "لوحة التحكم",
+      "subtitle": "نظرة عامة وإدارة النظام"
+    },
+    "statistics": {
+      "title": "إحصائيات سريعة",
+      "users": {
+        "total": "إجمالي المستخدمين",
+        "active": "مستخدمين نشطين"
+      },
+      "items": {
+        "lost": "عناصر مفقودة",
+        "lostDetail": "تم الإبلاغ عن فقدانها",
+        "found": "عناصر موجودة",
+        "foundDetail": "تم الإبلاغ عن العثور عليها"
+      },
+      "matches": {
+        "total": "تطابقات الذكاء الاصطناعي",
+        "pending": "في انتظار المراجعة"
+      }
+    },
+    "items": {
+      "title": "إدارة العناصر",
+      "tabs": {
+        "lost": "عناصر مفقودة",
+        "found": "عناصر موجودة"
+      },
+      "filters": {
+        "search": "بحث",
+        "searchPlaceholder": "ابحث بالعنوان أو الوصف...",
+        "category": "التصنيف",
+        "allCategories": "كل التصنيفات",
+        "categoryPersonal": "ممتلكات شخصية",
+        "categoryPeople": "أشخاص",
+        "categoryPets": "حيوانات أليفة",
+        "status": "الحالة",
+        "allStatuses": "كل الحالات",
+        "statusActive": "نشط",
+        "statusFound": "تم العثور عليه",
+        "statusClosed": "مغلق",
+        "results": "النتائج:",
+        "items": "عنصر"
+      },
+      "loading": "جاري تحميل العناصر...",
+      "table": {
+        "item": "العنصر",
+        "category": "التصنيف",
+        "location": "الموقع",
+        "date": "التاريخ",
+        "status": "الحالة",
+        "actions": "إجراءات",
+        "notSpecified": "غير محدد",
+        "viewDetails": "عرض التفاصيل"
+      },
+      "empty": {
+        "title": "لا توجد عناصر",
+        "subtitle": "حاول تعديل البحث أو الفلتر"
+      },
+      "pagination": {
+        "showing": "عرض",
+        "of": "من",
+        "previous": "السابق",
+        "next": "التالي"
+      }
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "searchPlaceholder": "بحث بالاسم أو البريد الإلكتروني...",
+      "idLabel": "المعرف:",
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "roles": {
+        "admin": "مسؤول",
+        "user": "مستخدم"
+      },
+      "actions": {
+        "activate": "تفعيل",
+        "deactivate": "تعطيل"
+      },
+      "table": {
+        "user": "المستخدم",
+        "email": "البريد الإلكتروني",
+        "role": "الدور",
+        "joinDate": "تاريخ الانضمام",
+        "status": "الحالة",
+        "actions": "إجراءات",
+        "viewDetails": "عرض التفاصيل",
+        "cannotDeactivate": "لا يمكن تعطيل هذا المستخدم",
+        "deactivate": "تعطيل",
+        "activate": "تفعيل"
+      },
+      "empty": {
+        "title": "لا يوجد مستخدمين",
+        "subtitle": "لا توجد بيانات لعرضها حاليا"
+      },
+      "pagination": {
+        "showing": "عرض",
+        "of": "من",
+        "users": "مستخدم",
+        "previous": "السابق",
+        "next": "التالي"
+      }
+    },
+    "reports": {
+      "title": "إدارة البلاغات",
+      "loading": "جاري تحميل البلاغات...",
+      "filters": {
+        "refresh": "تحديث",
+        "all": "الكل",
+        "pending": "قيد الانتظار",
+        "underReview": "تحت المراجعة",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض"
+      },
+      "table": {
+        "reporter": "المُبَلِّغ",
+        "reported": "المُبَلَّغ عنه",
+        "reason": "السبب",
+        "date": "التاريخ",
+        "status": "الحالة",
+        "actions": "إجراءات",
+        "viewDetails": "عرض التفاصيل"
+      },
+      "empty": {
+        "title": "لا توجد بلاغات"
+      },
+      "statuses": {
+        "pending": "قيد الانتظار",
+        "underReview": "تحت المراجعة",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض"
+      },
+      "reasons": {
+        "spam": "محتوى مزعج",
+        "harassment": "مضايقة",
+        "inappropriateContent": "محتوى غير لائق",
+        "falseInformation": "معلومات خاطئة",
+        "other": "أخرى"
+      },
+      "targets": {
+        "user": "مستخدم",
+        "conversation": "محادثة",
+        "message": "رسالة",
+        "general": "عام"
+      }
+    },
+    "modals": {
+      "close": "إغلاق",
+      "itemDetails": {
+        "title": "تفاصيل العنصر",
+        "infoTitle": "معلومات العنصر",
+        "category": "الفئة:",
+        "date": "التاريخ:",
+        "dateLost": "تاريخ الفقدان:",
+        "dateFound": "تاريخ العثور:",
+        "locationTitle": "معلومات الموقع",
+        "city": "المدينة:",
+        "address": "العنوان:",
+        "publisherTitle": "معلومات الناشر",
+        "name": "الاسم:",
+        "contactInfo": "معلومات التواصل:",
+        "notSpecified": "غير محدد",
+        "matchInfoTitle": "معلومات التطابق",
+        "matchCount": "عدد التطابقات:",
+        "descriptionTitle": "الوصف"
+      },
+      "userDetails": {
+        "title": "تفاصيل المستخدم",
+        "contactTitle": "معلومات الاتصال",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "notAvailable": "غير متوفر",
+        "statusTitle": "حالة الحساب",
+        "status": "الحالة:",
+        "role": "الدور:",
+        "joinDate": "تاريخ الانضمام:",
+        "statsTitle": "إحصائيات النشاط",
+        "reportsCount": "عدد البلاغات:",
+        "itemsCount": "عدد العناصر:",
+        "lastActive": "آخر نشاط:",
+        "accountTitle": "معلومات الحساب",
+        "userId": "معرف المستخدم",
+        "joinDate": "تاريخ الانضمام",
+        "adminActionsTitle": "إجراءات الإدارة",
+        "cantBlockSelf": "لا يمكنك تعطيل حسابك الخاص",
+        "deactivateAccount": "تعطيل الحساب",
+        "activateAccount": "تفعيل الحساب",
+        "processing": "جاري المعالجة...",
+        "sendEmail": "إرسال بريد إلكتروني"
+      },
+      "reportDetails": {
+        "title": "تفاصيل البلاغ",
+        "infoTitle": "معلومات البلاغ",
+        "reason": "السبب",
+        "date": "تاريخ البلاغ",
+        "description": "الوصف",
+        "noDescription": "لا يوجد وصف",
+        "reporterTitle": "المُبَلِّغ",
+        "deletedUser": "مستخدم محذوف",
+        "targetTitle": "الهدف",
+        "reportedUser": "المستخدم المبلغ عنه:",
+        "message": "الرسالة:",
+        "adminActionsTitle": "إجراءات الإدارة",
+        "updateStatus": "تحديث الحالة",
+        "statusPending": "قيد الانتظار",
+        "statusUnderReview": "قيد المراجعة",
+        "statusResolved": "تم الحل (قبول البلاغ)",
+        "statusRejected": "مرفوض (بلاغ كاذب)",
+        "adminNotes": "ملاحظات الإدارة",
+        "notesPlaceholder": "أضف ملاحظات حول الإجراء المتخذ...",
+        "saveChanges": "حفظ التغييرات"
+      }
+    },
+    "messages": {
+      "alert": "تنبيه",
+      "error": "خطأ",
+      "success": "تم",
+      "updateSuccess": "تم التحديث",
+      "updateError": "فشل التحديث",
+      "cantBlockSelf": "لا يمكنك تعطيل حسابك الخاص",
+      "confirmAction": "هل أنت متأكد؟",
+      "confirmUserAction": "سيتم {{action}} حساب {{name}}",
+      "yesAction": "نعم، {{action}}",
+      "cancel": "إلغاء",
+      "done": "تم",
+      "userActionSuccess": "تم {{action}} المستخدم بنجاح",
+      "userActionFailure": "فشل {{action}} المستخدم",
+      "reportStatusUpdated": "تم تحديث حالة البلاغ بنجاح",
+      "reportStatusUpdateError": "حدث خطأ أثناء تحديث حالة البلاغ",
+      "statsLoadError": "فشل تحميل الإحصائيات",
+      "itemsLoadError": "فشل تحميل العناصر",
+      "usersLoadError": "فشل تحميل المستخدمين"
+    }
+  },
+  "editProfile": {
+    "hero": {
+      "title": "تعديل الملف الشخصي",
+      "subtitle": "قم بتحديث معلوماتك الشخصية"
+    },
+    "loading": {
+      "text": "جاري التحميل...",
+      "loadingData": "جاري تحميل البيانات..."
+    },
+    "profilePicture": {
+      "alt": "صورة الملف الشخصي",
+      "uploadButton": "رفع الصورة",
+      "uploading": "جاري الرفع..."
+    },
+    "form": {
+      "email": {
+        "label": "البريد الإلكتروني"
+      },
+      "firstName": {
+        "label": "الاسم الأول",
+        "placeholder": "أدخل الاسم الأول"
+      },
+      "lastName": {
+        "label": "الاسم الأخير",
+        "placeholder": "أدخل الاسم الأخير"
+      },
+      "phoneNumber": {
+        "label": "رقم الهاتف",
+        "placeholder": "01xxxxxxxxx"
+      },
+      "required": "*",
+      "memberSince": "عضو منذ:"
+    },
+    "buttons": {
+      "save": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "cancel": "إلغاء",
+      "deleteAccount": "حذف الحساب"
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "maxLength": "الحد الأقصى {{max}} حرف",
+      "invalidPhone": "رقم هاتف غير صحيح",
+      "invalidImageType": "يرجى اختيار صورة بصيغة JPG أو PNG أو GIF",
+      "imageTooLarge": "حجم الصورة يجب أن يكون أقل من 5 ميجابايت"
+    },
+    "messages": {
+      "uploadSuccess": {
+        "title": "تم بنجاح!",
+        "text": "تم تحديث صورة الملف الشخصي"
+      },
+      "uploadError": {
+        "title": "خطأ",
+        "text": "فشل رفع الصورة. يرجى المحاولة مرة أخرى."
+      },
+      "updateSuccess": {
+        "title": "تم بنجاح!",
+        "text": "تم تحديث الملف الشخصي بنجاح"
+      },
+      "deleteWarning": {
+        "title": "تحذير",
+        "text": "هل أنت متأكد من رغبتك في حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء!",
+        "confirmButton": "نعم، احذف الحساب",
+        "cancelButton": "إلغاء"
+      },
+      "deleting": {
+        "title": "جاري حذف الحساب..."
+      },
+      "deleteSuccess": {
+        "title": "تم الحذف بنجاح",
+        "text": "تم حذف حسابك بنجاح"
+      },
+      "deleteFailed": {
+        "title": "فشل الحذف",
+        "text": "حدث خطأ أثناء حذف الحساب"
+      },
+      "connectionError": {
+        "title": "خطأ في الاتصال",
+        "text": "تعذر الاتصال بالخادم، يرجى المحاولة لاحقاً"
+      },
+      "okay": "حسناً"
+    }
+  },
+  "assistant": {
+    "button": {
+      "label": "المساعد الذكي"
+    },
+    "hint": {
+      "text": "مرحبًا! أسألني أي شيء قد يساعدك ✨",
+      "close": "إخفاء"
+    },
+    "panel": {
+      "title": "المساعد الذكي",
+      "close": "إغلاق"
+    },
+    "composer": {
+      "placeholder": "اكتب سؤالك هنا...",
+      "send": "إرسال"
+    },
+    "messages": {
+      "typing": "...",
+      "error": "عذرًا، لم أستطع معالجة الطلب الآن. حاول لاحقًا."
+    },
+    "sources": {
+      "title": "المصادر",
+      "score": "الدرجة"
+    }
+  }
+}

@@ -1,0 +1,283 @@
+<div class="stat-card stat-card-danger d-block p-0 overflow-hidden border-0 shadow">
+  <!-- Header -->
+  <div class="card-header bg-transparent border-bottom py-3">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6">
+        <h5 class="mb-0 fw-bold text-danger">
+          <i class="bi bi-flag-fill me-2"></i>{{ 'adminPanel.reports.title' | translate }}
+        </h5>
+      </div>
+      <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+        <button class="btn btn-outline-danger btn-sm shadow-sm" (click)="loadReports()">
+          <i class="bi bi-arrow-clockwise me-1"></i> {{ 'adminPanel.reports.filters.refresh' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <!-- Filter Bar -->
+    <div class="filter-bar border-bottom">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-4">
+          <div class="d-flex align-items-center">
+            <label class="me-2 text-muted fw-bold small text-nowrap">{{ 'adminPanel.reports.filters.all' | translate }}:</label>
+            <select class="form-select" [(ngModel)]="reportFilter.status" (change)="filterReports()">
+              <option [ngValue]="undefined">{{ 'adminPanel.reports.filters.all' | translate }}</option>
+              <option [ngValue]="0">{{ 'adminPanel.reports.filters.pending' | translate }}</option>
+              <option [ngValue]="1">{{ 'adminPanel.reports.filters.underReview' | translate }}</option>
+              <option [ngValue]="2">{{ 'adminPanel.reports.filters.resolved' | translate }}</option>
+              <option [ngValue]="3">{{ 'adminPanel.reports.filters.rejected' | translate }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loadingReports" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'adminPanel.reports.loading' | translate }}</span>
+      </div>
+      <p class="mt-2 text-muted small">{{ 'adminPanel.reports.loading' | translate }}</p>
+    </div>
+
+    <!-- Reports Table -->
+    <div *ngIf="!loadingReports" class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light">
+          <tr>
+            <th class="px-4 py-3 border-bottom-0">{{ 'adminPanel.reports.table.reporter' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.reports.table.reported' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.reports.table.reason' | translate }}</th>
+            <th class="py-3 border-bottom-0">{{ 'adminPanel.reports.table.date' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.reports.table.status' | translate }}</th>
+            <th class="py-3 border-bottom-0 text-center">{{ 'adminPanel.reports.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports" class="cursor-pointer" (click)="openReportModal(report)">
+            <td class="px-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar-md bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                  <span class="fw-bold">{{ report.reporterName.charAt(0) || '?' }}</span>
+                </div>
+                <div>
+                  <div class="fw-bold text-dark">{{ report.reporterName || ('adminPanel.common.noData' | translate) }}</div>
+                  <small class="text-muted font-monospace">{{ report.reporterId | slice:0:8 }}...</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="badge bg-secondary me-2">{{ getReportTargetTypeText(report.targetType) }}</span>
+                <span class="text-muted small text-truncate d-inline-block" style="max-width: 150px;">
+                  {{ report.description || ('adminPanel.common.noData' | translate) }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="fw-medium text-dark">{{ getReportReasonText(report.reason) }}</span>
+            </td>
+            <td>
+              <div class="d-flex flex-column">
+                <span class="fw-medium text-dark">{{ report.createdAt | date:'dd/MM/yyyy' }}</span>
+                <small class="text-muted">{{ report.createdAt | date:'HH:mm' }}</small>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="badge rounded-pill" [ngClass]="getReportStatusBadge(report.status)">
+                {{ getReportStatusText(report.status) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-light text-primary border shadow-sm rounded-circle"
+                [title]="'adminPanel.reports.table.viewDetails' | translate">
+                <i class="bi bi-chevron-right rtl-flip"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="reports.length === 0">
+            <td colspan="6" class="text-center py-5">
+              <div class="text-muted opacity-50">
+                <i class="bi bi-inbox display-4"></i>
+                <p class="mt-2 fw-medium">{{ 'adminPanel.reports.empty.title' | translate }}</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="card-footer bg-transparent border-top py-3">
+      <div class="row align-items-center">
+        <div class="col-6 text-muted small">
+          {{ 'adminPanel.users.pagination.showing' | translate }} {{ (reportsPage - 1) * reportsPageSize + 1 }} -
+          {{ (reportsPage * reportsPageSize) }}
+        </div>
+        <div class="col-6">
+          <nav class="d-flex justify-content-end">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" [class.disabled]="reportsPage === 1">
+                <button class="page-link border-0 bg-transparent text-muted" (click)="prevReportsPage()">
+                  <i class="bi bi-chevron-left rtl-flip"></i>
+                </button>
+              </li>
+              <li class="page-item disabled">
+                <span class="page-link border-0 bg-transparent text-dark fw-bold">{{ reportsPage }}</span>
+              </li>
+              <li class="page-item">
+                <button class="page-link border-0 bg-transparent text-muted" (click)="nextReportsPage()">
+                  <i class="bi bi-chevron-right rtl-flip"></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Details Modal -->
+<div *ngIf="showReportModal" class="modal fade show d-block modal-backdrop-custom" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-header-danger text-white border-0">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-shield-exclamation me-2"></i> {{ 'adminPanel.modals.reportDetails.title' | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeReportModal()"
+          [attr.aria-label]="'adminPanel.modals.close' | translate"></button>
+      </div>
+
+      <div class="modal-body p-4" *ngIf="selectedReport">
+        <div class="row g-4">
+          <!-- Top Info Card -->
+          <div class="col-12">
+            <div class="card border bg-surface-ground shadow-sm">
+              <div class="card-body p-3">
+                <div class="row align-items-center">
+                  <div class="col-md-4 border-end">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1">{{ 'adminPanel.modals.reportDetails.reason' | translate }}</small>
+                    <span class="fs-5 fw-bold text-danger">{{ getReportReasonText(selectedReport.reason) }}</span>
+                  </div>
+                  <div class="col-md-4 border-end">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1">{{ 'adminPanel.modals.reportDetails.date' | translate }}</small>
+                    <span class="fw-medium"><i class="bi bi-calendar3 me-1"></i> {{ selectedReport.createdAt | date:'dd MMM yyyy, HH:mm' }}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1">{{ 'adminPanel.reports.table.status' | translate }}</small>
+                    <span class="badge rounded-pill" [ngClass]="getReportStatusBadge(selectedReport.status)">
+                      {{ getReportStatusText(selectedReport.status) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12">
+             <h6 class="text-primary fw-bold mb-2">
+              <i class="bi bi-card-text me-2"></i>{{ 'adminPanel.modals.reportDetails.description' | translate }}
+            </h6>
+            <div class="p-3 bg-content-box rounded border">
+              {{ selectedReport.description || ('adminPanel.modals.reportDetails.noDescription' | translate) }}
+            </div>
+          </div>
+
+          <!-- Split View: Reporter vs Target -->
+          <div class="col-md-6">
+            <div class="card h-100 border shadow-sm">
+              <div class="card-header bg-transparent border-bottom-0 pb-0">
+                <h6 class="text-primary fw-bold mb-0">
+                  <i class="bi bi-person-fill me-2"></i>{{ 'adminPanel.modals.reportDetails.reporterTitle' | translate }}
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <div class="avatar-md bg-primary text-white rounded-circle me-3">
+                    <span class="fs-5 fw-bold">{{ selectedReport.reporterName.charAt(0) || '?' }}</span>
+                  </div>
+                  <div>
+                    <div class="fw-bold">{{ selectedReport.reporterName || ('adminPanel.modals.reportDetails.deletedUser' | translate) }}</div>
+                    <div class="small text-muted font-monospace">ID: {{ selectedReport.reporterId }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100 border shadow-sm">
+              <div class="card-header bg-transparent border-bottom-0 pb-0 d-flex justify-content-between align-items-center">
+                <h6 class="text-danger fw-bold mb-0">
+                  <i class="bi bi-bullseye me-2"></i>{{ 'adminPanel.modals.reportDetails.targetTitle' | translate }}
+                </h6>
+                <span class="badge bg-light text-dark border">{{ getReportTargetTypeText(selectedReport.targetType) }}</span>
+              </div>
+              <div class="card-body">
+                <div *ngIf="selectedReport.targetUserId">
+                  <div class="small text-muted mb-2">{{ 'adminPanel.modals.reportDetails.reportedUser' | translate }}</div>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-md bg-secondary text-white rounded-circle me-3">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ selectedReport.targetUserName || ('adminPanel.common.unknown' | translate) }}</div>
+                      <div class="small text-muted font-monospace">{{ selectedReport.targetUserId }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="selectedReport.messageId" class="mt-3">
+                  <div class="small text-muted mb-1">{{ 'adminPanel.modals.reportDetails.message' | translate }}</div>
+                  <div class="p-2 bg-content-box rounded small font-monospace text-break border">
+                    {{ selectedReport.messageId }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Actions -->
+          <div class="col-12">
+            <div class="card border border-primary shadow-sm">
+              <div class="card-header bg-primary bg-opacity-10 border-bottom-0">
+                <h6 class="text-primary fw-bold mb-0">
+                  <i class="bi bi-gear-fill me-2"></i>{{ 'adminPanel.modals.reportDetails.adminActionsTitle' | translate }}
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label fw-bold small">{{ 'adminPanel.modals.reportDetails.updateStatus' | translate }}</label>
+                    <select class="form-select" [(ngModel)]="newStatus">
+                      <option [ngValue]="0">{{ 'adminPanel.modals.reportDetails.statusPending' | translate }}</option>
+                      <option [ngValue]="1">{{ 'adminPanel.modals.reportDetails.statusUnderReview' | translate }}</option>
+                      <option [ngValue]="2">{{ 'adminPanel.modals.reportDetails.statusResolved' | translate }}</option>
+                      <option [ngValue]="3">{{ 'adminPanel.modals.reportDetails.statusRejected' | translate }}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label fw-bold small">{{ 'adminPanel.modals.reportDetails.adminNotes' | translate }}</label>
+                    <textarea class="form-control" rows="2" [(ngModel)]="adminNote"
+                      [placeholder]="'adminPanel.modals.reportDetails.notesPlaceholder' | translate"></textarea>
+                  </div>
+                </div>
+                <div class="mt-3 text-end">
+                  <button class="btn btn-primary px-4" (click)="updateReport()" [disabled]="updatingReportStatus">
+                    <span *ngIf="updatingReportStatus" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ 'adminPanel.modals.reportDetails.saveChanges' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

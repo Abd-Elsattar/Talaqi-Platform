@@ -2,7 +2,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CategoryTranslatePipe } from '../../../../shared/pipes/category-translate.pipe';
+import { LocationTranslatePipe } from '../../../../shared/pipes/location-translate.pipe';
 import { LostItemService } from '../../../../core/services/lost-item.service';
 import { TokenService } from '../../../../core/services/token.service';
 import { LostItemDto } from '../../../../core/models/item';
@@ -11,7 +13,7 @@ import { ImageUrlService } from '../../../../core/services/image-url.service';
 @Component({
   selector: 'app-lost-item-detail',
   standalone: true,
-  imports: [CommonModule, CategoryTranslatePipe],
+  imports: [CommonModule, CategoryTranslatePipe, LocationTranslatePipe, TranslateModule],
   templateUrl: './lost-item-detail.html',
   styleUrl: './lost-item-detail.css',
 })
@@ -22,6 +24,7 @@ export class LostItemDetail implements OnInit {
   private router = inject(Router);
   private lostItemService = inject(LostItemService);
   private tokenService = inject(TokenService);
+  private translate = inject(TranslateService);
   imageUrlService = inject(ImageUrlService);
   //#endregion
 
@@ -35,7 +38,7 @@ export class LostItemDetail implements OnInit {
     if (itemId) {
       this.loadItem(itemId);
     } else {
-      this.errorMessage = 'معرّف العنصر غير صحيح';
+      this.errorMessage = this.translate.instant('lostItemDetail.errorInvalidId');
       this.isLoading = false;
     }
   }
@@ -50,12 +53,12 @@ export class LostItemDetail implements OnInit {
         if (res.isSuccess && res.data) {
           this.item = res.data;
         } else {
-          this.errorMessage = 'فشل في تحميل تفاصيل العنصر';
+          this.errorMessage = this.translate.instant('lostItemDetail.errorLoadFailed');
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل العنصر';
+        this.errorMessage = this.translate.instant('lostItemDetail.errorOccurred');
         console.error('Error loading item:', err);
       },
     });
@@ -86,7 +89,12 @@ export class LostItemDetail implements OnInit {
 
   shareItem() {
     if (this.item) {
-      const text = `تم العثور على عنصر مفقود: ${this.item.title}\n${this.item.description}\nالموقع: ${this.item.location?.city}`;
+      const locationText = this.item.location?.city || '';
+      const text = this.translate.instant('lostItemDetail.shareText', {
+        title: this.item.title,
+        description: this.item.description,
+        location: locationText
+      });
       if (navigator.share) {
         navigator.share({
           title: this.item.title,
@@ -95,7 +103,7 @@ export class LostItemDetail implements OnInit {
       } else {
         // Fallback: copy to clipboard
         navigator.clipboard.writeText(text).then(() => {
-          alert('تم نسخ التفاصيل إلى الحافظة');
+          alert(this.translate.instant('lostItemDetail.copiedToClipboard'));
         });
       }
     }

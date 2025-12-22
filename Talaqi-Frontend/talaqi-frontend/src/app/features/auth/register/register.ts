@@ -5,13 +5,15 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest } from '../../../core/models/auth';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
@@ -23,7 +25,9 @@ export class Register {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    public languageService: LanguageService
   ) {
     this.form = this.fb.group(
       {
@@ -62,13 +66,13 @@ export class Register {
     const c = this.form.get(control);
     if (!c || !c.errors) return '';
 
-    if (c.errors['required']) return 'هذا الحقل مطلوب';
-    if (c.errors['email']) return 'البريد الإلكتروني غير صالح';
-    if (c.errors['minlength']) return 'الحد الأدنى للطول غير كافٍ';
-    if (c.errors['pattern']) return 'رقم الهاتف غير صالح';
-    if (c.errors['mismatch']) return 'كلمتا المرور غير متطابقتين';
+    if (c.errors['required']) return this.translate.instant('register.errors.required');
+    if (c.errors['email']) return this.translate.instant('register.errors.email');
+    if (c.errors['minlength']) return this.translate.instant('register.errors.minlength');
+    if (c.errors['pattern']) return this.translate.instant('register.errors.pattern');
+    if (c.errors['mismatch']) return this.translate.instant('register.errors.mismatch');
 
-    return 'بيانات غير صحيحة';
+    return this.translate.instant('register.errors.invalid');
   }
 
   // submit
@@ -92,10 +96,10 @@ export class Register {
         next: (res) => {
           if (res.isSuccess) {
             Swal.fire({
-              title: 'تم إنشاء الحساب بنجاح',
-              text: 'أرسلنا لك كود التفعيل على بريدك الإلكتروني. من فضلك قم بالتفعيل أولاً.',
+              title: this.translate.instant('register.success.title'),
+              text: this.translate.instant('register.success.message'),
               icon: 'success',
-              confirmButtonText: 'اذهب لصفحة التفعيل',
+              confirmButtonText: this.translate.instant('register.success.confirmButton'),
             }).then(() => {
               this.router.navigate(['/verify'], {
                 queryParams: { email: payload.email },
@@ -103,20 +107,20 @@ export class Register {
             });
           } else {
             Swal.fire({
-              title: 'تعذّر إنشاء الحساب',
-              text: res.message || 'حدث خطأ أثناء التسجيل. حاول مرة أخرى.',
+              title: this.translate.instant('register.failure.title'),
+              text: res.message || this.translate.instant('register.failure.defaultMessage'),
               icon: 'error',
-              confirmButtonText: 'حسناً',
+              confirmButtonText: this.translate.instant('register.failure.confirmButton'),
             });
           }
         },
         error: (err) => {
-          const message = err?.error?.message || 'حدث خطأ أثناء التسجيل. حاول مرة أخرى.';
+          const message = err?.error?.message || this.translate.instant('register.failure.defaultMessage');
           Swal.fire({
-            title: 'تعذّر إنشاء الحساب',
+            title: this.translate.instant('register.failure.title'),
             text: message,
             icon: 'error',
-            confirmButtonText: 'حسناً',
+            confirmButtonText: this.translate.instant('register.failure.confirmButton'),
           });
         },
       });

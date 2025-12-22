@@ -2,6 +2,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { FoundItemService } from '../../../../core/services/found-item.service';
 import { TokenService } from '../../../../core/services/token.service';
@@ -11,7 +12,7 @@ import { ImageUrlService } from '../../../../core/services/image-url.service';
 @Component({
   selector: 'app-found-item-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './found-item-detail.html',
   styleUrl: './found-item-detail.css',
 })
@@ -21,6 +22,7 @@ export class FoundItemDetail implements OnInit {
   private router = inject(Router);
   private foundItemService = inject(FoundItemService);
   private tokenService = inject(TokenService);
+  private translate = inject(TranslateService);
   // Public so template can call resolve directly if needed
   imageUrlService = inject(ImageUrlService);
   //#endregion
@@ -49,12 +51,12 @@ export class FoundItemDetail implements OnInit {
           this.foundItem = response.data;
           this.checkOwnership();
         } else {
-          this.errorMessage = 'العنصر غير موجود';
+          this.errorMessage = this.translate.instant('foundItemDetail.errorNotFound');
         }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل العنصر';
+        this.errorMessage = this.translate.instant('foundItemDetail.errorLoadFailed');
         console.error('Error loading found item:', error);
       },
     });
@@ -71,22 +73,22 @@ export class FoundItemDetail implements OnInit {
     if (!this.foundItem) return;
 
     Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: 'لن تتمكن من استرجاع هذا العنصر!',
+      title: this.translate.instant('foundItemDetail.deleteConfirm.title'),
+      text: this.translate.instant('foundItemDetail.deleteConfirm.text'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'نعم، احذف',
-      cancelButtonText: 'إلغاء',
+      confirmButtonText: this.translate.instant('foundItemDetail.deleteConfirm.confirmButton'),
+      cancelButtonText: this.translate.instant('foundItemDetail.deleteConfirm.cancelButton'),
     }).then((result) => {
       if (result.isConfirmed && this.foundItem) {
         this.foundItemService.delete(this.foundItem.id).subscribe({
           next: (response) => {
             if (response.isSuccess) {
               Swal.fire({
-                title: 'تم الحذف!',
-                text: 'تم حذف العنصر بنجاح',
+                title: this.translate.instant('foundItemDetail.deleteConfirm.successTitle'),
+                text: this.translate.instant('foundItemDetail.deleteConfirm.successText'),
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false,
@@ -97,8 +99,8 @@ export class FoundItemDetail implements OnInit {
           },
           error: (error) => {
             Swal.fire({
-              title: 'خطأ!',
-              text: 'فشل حذف العنصر',
+              title: this.translate.instant('foundItemDetail.deleteConfirm.errorTitle'),
+              text: this.translate.instant('foundItemDetail.deleteConfirm.errorText'),
               icon: 'error',
             });
           },
@@ -123,16 +125,11 @@ export class FoundItemDetail implements OnInit {
 
   getStatusText(): string {
     if (!this.foundItem) return '';
-    switch (this.foundItem.status.toLowerCase()) {
-      case 'active':
-        return 'نشط';
-      case 'found':
-        return 'تم التسليم';
-      case 'closed':
-        return 'مغلق';
-      default:
-        return this.foundItem.status;
-    }
+    const status = this.foundItem.status.toLowerCase();
+    const translationKey = `foundItemDetail.status.${status}`;
+    const translated = this.translate.instant(translationKey);
+    // If translation key not found, return original status
+    return translated !== translationKey ? translated : this.foundItem.status;
   }
 
   openImageModal(url: string) {

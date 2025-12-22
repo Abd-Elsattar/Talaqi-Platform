@@ -10,10 +10,9 @@
               <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="header-text-wrapper">
-              <h1 class="header-e">الإبلاغ عن عنصر موجود</h1>
+              <h1 class="header-e">{{ 'reportFoundItem.title' | translate }}</h1>
               <p class="header-subtitle">
-                املأ النموذج بدقة للمساعدة في إعادة العنصر لصاحبه. سيقوم نظامنا بالبحث عن تطابقات محتملة مع العناصر
-                المفقودة باستخدام تقنية الذكاء الاصطناعي.
+                {{ 'reportFoundItem.subtitle' | translate }}
               </p>
             </div>
           </div>
@@ -26,7 +25,7 @@
               <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="alert-text">
-              <strong>نجاح!</strong>
+              <strong>{{ 'reportFoundItem.success' | translate }}</strong>
               <p>{{ successMessage }}</p>
             </div>
             <button type="button" class="alert-close-btn" (click)="successMessage = null">
@@ -42,7 +41,7 @@
               <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
             <div class="alert-text">
-              <strong>خطأ!</strong>
+              <strong>{{ 'reportFoundItem.error' | translate }}</strong>
               <p>{{ errorMessage }}</p>
             </div>
             <button type="button" class="alert-close-btn" (click)="errorMessage = null">
@@ -60,12 +59,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-grid-3x3-gap label-icon"></i>
-                  <span>الفئة</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportFoundItem.category.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportFoundItem.category.required' | translate }}</span>
                 </label>
                 <select class="form-control-enhanced" formControlName="category"
                   (blur)="reportForm.get('category')?.markAsTouched()" [class.is-invalid]="isFieldInvalid('category')">
-                  <option value="">-- اختر فئة العنصر الموجود --</option>
+                  <option value="">{{ 'reportFoundItem.category.placeholder' | translate }}</option>
                   <option *ngFor="let cat of categories" [value]="cat.value">
                     {{ cat.label }}
                   </option>
@@ -74,7 +73,7 @@
                   <i class="bi bi-exclamation-circle me-1"></i>
                   {{ getFieldError('category') }}
                 </div>
-                <small class="form-hint">اختر الفئة الأنسب لتحسين نتائج البحث</small>
+                <small class="form-hint">{{ 'reportFoundItem.category.hint' | translate }}</small>
               </div>
               <!-- #endregion CATEGORY -->
 
@@ -82,19 +81,19 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-card-heading label-icon"></i>
-                  <span>العنوان</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportFoundItem.title_field.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportFoundItem.title_field.required' | translate }}</span>
                 </label>
                 <input type="text" class="form-control-enhanced" formControlName="title"
                   (blur)="reportForm.get('title')?.markAsTouched()"
-                  placeholder="مثال: محفظة جلدية سوداء أو هاتف آيفون 13" [class.is-invalid]="isFieldInvalid('title')"
+                  [placeholder]="'reportFoundItem.title_field.placeholder' | translate" [class.is-invalid]="isFieldInvalid('title')"
                   maxlength="200">
                 <div class="error-feedback" *ngIf="isFieldInvalid('title')">
                   <i class="bi bi-exclamation-circle me-1"></i>
                   {{ getFieldError('title') }}
                 </div>
                 <small class="form-hint">
-                  <span>الحد الأقصى: 200 حرف</span>
+                  <span>{{ 'reportFoundItem.title_field.hint' | translate }}</span>
                   <span class="char-counter">{{ reportForm.get('title')?.value?.length || 0 }}/200</span>
                 </small>
               </div>
@@ -104,12 +103,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-text-paragraph label-icon"></i>
-                  <span>الوصف التفصيلي</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportFoundItem.description.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportFoundItem.description.required' | translate }}</span>
                 </label>
                 <textarea class="form-control-enhanced textarea-enhanced" formControlName="description"
                   (blur)="reportForm.get('description')?.markAsTouched()"
-                  placeholder="صف العنصر الموجود بالتفصيل (اللون، العلامة التجارية، الحجم، المميزات الخاصة، إلخ). كلما كان الوصف أدق، كانت النتائج أفضل."
+                  [placeholder]="'reportFoundItem.description.placeholder' | translate"
                   rows="5" [class.is-invalid]="isFieldInvalid('description')"></textarea>
                 <div class="error-feedback" *ngIf="isFieldInvalid('description')">
                   <i class="bi bi-exclamation-circle me-1"></i>
@@ -117,7 +116,7 @@
                 </div>
                 <small class="form-hint">
                   <i class="bi bi-lightbulb me-1"></i>
-                  الوصف الدقيق يساعد الذكاء الاصطناعي في إيجاد تطابقات أفضل مع العناصر المفقودة
+                  {{ 'reportFoundItem.description.hint' | translate }}
                 </small>
               </div>
               <!-- #endregion DESCRIPTION -->
@@ -126,7 +125,7 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-image label-icon"></i>
-                  <span>صورة العنصر</span>
+                  <span>{{ 'reportFoundItem.image.label' | translate }}</span>
                 </label>
 
                 <!-- Upload Zone -->
@@ -138,12 +137,12 @@
                       <i class="bi bi-cloud-upload-fill"></i>
                     </div>
 
-                    <h5 class="upload-title">اسحب وأفلت الصورة هنا</h5>
-                    <p class="upload-subtitle">أو</p>
+                    <h5 class="upload-title">{{ 'reportFoundItem.image.dragDrop' | translate }}</h5>
+                    <p class="upload-subtitle">{{ 'reportFoundItem.image.or' | translate }}</p>
 
                     <label class="btn-upload-file">
                       <i class="bi bi-folder2-open me-2"></i>
-                      تصفح الملفات
+                      {{ 'reportFoundItem.image.browseFiles' | translate }}
                       <input type="file" class="d-none" accept="image/jpeg,image/jpg,image/png,image/gif"
                         (change)="onFileSelected($event)" (blur)="reportForm.get('imageUrl')?.markAsTouched()">
                     </label>
@@ -156,7 +155,7 @@
 
                     <p class="upload-hint">
                       <i class="bi bi-info-circle me-1"></i>
-                      JPG, PNG أو GIF (الحد الأقصى: 5 ميجابايت)
+                      {{ 'reportFoundItem.image.hint' | translate }}
                     </p>
                   </div>
                 </div>
@@ -164,23 +163,23 @@
                 <!-- Image Preview -->
                 <div *ngIf="imagePreviewUrl" class="image-preview-wrapper">
                   <div class="image-preview-container">
-                    <img [src]="imagePreviewUrl" alt="معاينة الصورة" class="preview-image">
+                    <img [src]="imagePreviewUrl" [alt]="'reportFoundItem.image.previewAlt' | translate" class="preview-image">
                     <button type="button" class="btn-remove-image" (click)="removeImage()" [disabled]="isUploadingImage"
-                      title="حذف الصورة">
+                      [title]="'reportFoundItem.image.remove' | translate">
                       <i class="bi bi-trash-fill"></i>
                     </button>
                     <div *ngIf="isUploadingImage" class="upload-progress-overlay">
                       <div class="upload-spinner-wrapper">
                         <div class="spinner-border text-light" role="status">
-                          <span class="visually-hidden">جاري الرفع...</span>
+                          <span class="visually-hidden">{{ 'reportFoundItem.image.uploading' | translate }}</span>
                         </div>
-                        <p class="upload-status-text">جاري رفع الصورة...</p>
+                        <p class="upload-status-text">{{ 'reportFoundItem.image.uploadingText' | translate }}</p>
                       </div>
                     </div>
                   </div>
                   <div class="image-info-badge" *ngIf="!isUploadingImage && !isDefaultImage">
                     <i class="bi bi-check-circle-fill me-1"></i>
-                    تم رفع الصورة بنجاح
+                    {{ 'reportFoundItem.image.uploadSuccess' | translate }}
                   </div>
                 </div>
               </div>
@@ -190,7 +189,7 @@
               <div class="form-group-wrapper location-section" formGroupName="location">
                 <label class="form-label-enhanced section-label">
                   <i class="bi bi-geo-alt-fill label-icon"></i>
-                  <span>موقع العثور على العنصر</span>
+                  <span>{{ 'reportFoundItem.location.label' | translate }}</span>
                 </label>
 
                 <!-- Map Picker -->
@@ -201,31 +200,31 @@
                 <div class="gps-detection-wrapper">
                   <div class="gps-info-box">
                     <i class="bi bi-info-circle me-2"></i>
-                    <span>تحديد الموقع الدقيق يساعد في إيجاد تطابقات أفضل</span>
+                    <span>{{ 'reportFoundItem.location.gpsInfo' | translate }}</span>
                   </div>
                   <button type="button" class="btn-detect-location" (click)="detectLocation()"
                     [disabled]="isDetectingLocation || locationDetected">
                     <span *ngIf="!isDetectingLocation && !locationDetected">
                       <i class="bi bi-crosshair me-2"></i>
-                      تحديد موقعي الحالي
+                      {{ 'reportFoundItem.location.detectLocation' | translate }}
                     </span>
                     <span *ngIf="isDetectingLocation">
                       <span class="spinner-border spinner-border-sm me-2"></span>
-                      جاري تحديد الموقع...
+                      {{ 'reportFoundItem.location.detecting' | translate }}
                     </span>
                     <span *ngIf="locationDetected">
                       <i class="bi bi-check-circle-fill me-2"></i>
-                      تم تحديد الموقع
+                      {{ 'reportFoundItem.location.locationDetected' | translate }}
                     </span>
                   </button>
                   <button type="button" class="btn-clear-location" *ngIf="locationDetected" (click)="clearLocation()">
                     <i class="bi bi-x-circle me-2"></i>
-                    إزالة الموقع
+                    {{ 'reportFoundItem.location.removeLocation' | translate }}
                   </button>
                   <!-- Coordinates validation message -->
                   <div class="error-feedback mt-2" *ngIf="areCoordinatesInvalid()">
                     <i class="bi bi-exclamation-circle me-1"></i>
-                    يرجى تحديد الموقع لإدخال الإحداثيات تلقائياً
+                    {{ 'reportFoundItem.location.errors.coordinates' | translate }}
                   </div>
                 </div>
 
@@ -233,49 +232,49 @@
                 <div class="gps-coordinates-display" *ngIf="locationDetected">
                   <div class="coordinate-item">
                     <i class="bi bi-geo-alt me-2"></i>
-                    <strong>خط العرض:</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
+                    <strong>{{ 'reportFoundItem.location.latitude' | translate }}:</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
                   </div>
                   <div class="coordinate-item">
                     <i class="bi bi-geo me-2"></i>
-                    <strong>خط الطول:</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
+                    <strong>{{ 'reportFoundItem.location.longitude' | translate }}:</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
                   </div>
                 </div>
 
                 <!-- Address -->
                 <div class="location-field-wrapper">
                   <label class="form-label-secondary">
-                    العنوان <span class="required-mark">*</span>
+                    {{ 'reportFoundItem.location.address' | translate }} <span class="required-mark">{{ 'reportFoundItem.location.required' | translate }}</span>
                   </label>
                   <input type="text" class="form-control-enhanced" formControlName="address"
                     (blur)="reportForm.get('location')?.get('address')?.markAsTouched()"
-                    placeholder="أدخل أو عدّل العنوان (يُملأ تلقائياً)"
+                    [placeholder]="'reportFoundItem.location.addressPlaceholder' | translate"
                     [class.is-invalid]="isLocationFieldInvalid('address')">
                   <div class="error-feedback" *ngIf="isLocationFieldInvalid('address')">
                     <i class="bi bi-exclamation-circle me-1"></i>
-                    هذا الحقل مطلوب
+                    {{ 'reportFoundItem.location.errors.required' | translate }}
                   </div>
                 </div>
 
                 <!-- City and Governorate -->
                 <div class="row location-row">
                   <div class="col-md-6 location-field-wrapper">
-                    <label class="form-label-secondary">المدينة</label>
+                    <label class="form-label-secondary">{{ 'reportFoundItem.location.city' | translate }}</label>
                     <input type="text" class="form-control-enhanced" formControlName="city"
                       (blur)="reportForm.get('location')?.get('city')?.markAsTouched()"
-                      placeholder="أدخل أو عدّل المدينة" [class.is-invalid]="isLocationFieldInvalid('city')">
+                      [placeholder]="'reportFoundItem.location.cityPlaceholder' | translate" [class.is-invalid]="isLocationFieldInvalid('city')">
                     <div class="error-feedback" *ngIf="isLocationFieldInvalid('city')">
                       <i class="bi bi-exclamation-circle me-1"></i>
-                      هذا الحقل مطلوب
+                      {{ 'reportFoundItem.location.errors.required' | translate }}
                     </div>
                   </div>
                   <div class="col-md-6 location-field-wrapper">
-                    <label class="form-label-secondary">المحافظة</label>
+                    <label class="form-label-secondary">{{ 'reportFoundItem.location.governorate' | translate }}</label>
                     <input type="text" class="form-control-enhanced" formControlName="governorate"
                       (blur)="reportForm.get('location')?.get('governorate')?.markAsTouched()"
-                      placeholder="أدخل أو عدّل المحافظة" [class.is-invalid]="isLocationFieldInvalid('governorate')">
+                      [placeholder]="'reportFoundItem.location.governoratePlaceholder' | translate" [class.is-invalid]="isLocationFieldInvalid('governorate')">
                     <div class="error-feedback" *ngIf="isLocationFieldInvalid('governorate')">
                       <i class="bi bi-exclamation-circle me-1"></i>
-                      هذا الحقل مطلوب
+                      {{ 'reportFoundItem.location.errors.required' | translate }}
                     </div>
                   </div>
                 </div>
@@ -286,8 +285,8 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-calendar-event label-icon"></i>
-                  <span>تاريخ العثور على العنصر</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportFoundItem.dateFound.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportFoundItem.dateFound.required' | translate }}</span>
                 </label>
                 <input type="date" class="form-control-enhanced date-input" formControlName="dateFound"
                   (blur)="reportForm.get('dateFound')?.markAsTouched()" [max]="maxDate"
@@ -298,7 +297,7 @@
                 </div>
                 <small class="form-hint">
                   <i class="bi bi-info-circle me-1"></i>
-                  التاريخ يجب أن يكون اليوم أو في الماضي
+                  {{ 'reportFoundItem.dateFound.hint' | translate }}
                 </small>
               </div>
               <!-- #endregion DATE FOUND -->
@@ -307,12 +306,12 @@
               <div class="form-group-wrapper">
                 <label class="form-label-enhanced">
                   <i class="bi bi-telephone-fill label-icon"></i>
-                  <span>معلومات الاتصال</span>
-                  <span class="required-mark">*</span>
+                  <span>{{ 'reportFoundItem.contactInfo.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportFoundItem.contactInfo.required' | translate }}</span>
                 </label>
                 <input type="text" class="form-control-enhanced" formControlName="contactInfo"
                   (blur)="reportForm.get('contactInfo')?.markAsTouched()"
-                  placeholder="رقم الهاتف أو البريد الإلكتروني للتواصل"
+                  [placeholder]="'reportFoundItem.contactInfo.placeholder' | translate"
                   [class.is-invalid]="isFieldInvalid('contactInfo')">
                 <div class="error-feedback" *ngIf="isFieldInvalid('contactInfo')">
                   <i class="bi bi-exclamation-circle me-1"></i>
@@ -320,7 +319,7 @@
                 </div>
                 <small class="form-hint">
                   <i class="bi bi-shield-check me-1"></i>
-                  سيُستخدم للتواصل معك عند إيجاد تطابقات محتملة
+                  {{ 'reportFoundItem.contactInfo.hint' | translate }}
                 </small>
               </div>
               <!-- #endregion CONTACT INFO -->
@@ -332,14 +331,14 @@
                     id="legalResponsibility" [class.is-invalid]="isFieldInvalid('legalResponsibility')">
                   <label class="legal-checkbox-label" for="legalResponsibility">
                     <span class="legal-text">
-                      أتحمل المسؤولية القانونية الكاملة عن صحة المعلومات المقدمة في هذا البلاغ
-                      <span class="required-mark">*</span>
+                      {{ 'reportFoundItem.legal.label' | translate }}
+                      <span class="required-mark">{{ 'reportFoundItem.legal.required' | translate }}</span>
                     </span>
                   </label>
                 </div>
                 <div class="error-feedback" *ngIf="isFieldInvalid('legalResponsibility')">
                   <i class="bi bi-exclamation-circle me-1"></i>
-                  يجب الموافقة على تحمل المسؤولية القانونية للمتابعة
+                  {{ 'reportFoundItem.legal.error' | translate }}
                 </div>
               </div>
               <!-- #endregion LEGAL -->
@@ -350,21 +349,20 @@
                   [disabled]="isSubmitting || isUploadingImage || !isLocationReady">
                   <span *ngIf="!isSubmitting">
                     <i class="bi bi-send-fill me-2"></i>
-                    إرسال البلاغ
+                    {{ 'reportFoundItem.actions.submit' | translate }}
                   </span>
                   <span *ngIf="isSubmitting">
                     <span class="spinner-border spinner-border-sm me-2"></span>
-                    جاري الإرسال...
+                    {{ 'reportFoundItem.actions.submitting' | translate }}
                   </span>
                 </button>
                 <button type="button" class="btn-action-secondary" routerLink="/home" [disabled]="isSubmitting">
                   <i class="bi bi-x-circle me-2"></i>
-                  إلغاء
+                  {{ 'reportFoundItem.actions.cancel' | translate }}
                 </button>
                 <div class="actions-note">
                   <i class="bi bi-info-circle me-2"></i>
-                  <span>جميع الحقول المميزة بـ <span class="required-mark">*</span> إلزامية — يجب تحديد الموقع
-                    أولاً</span>
+                  <span>{{ 'reportFoundItem.actions.note' | translate }} <span class="required-mark">{{ 'reportFoundItem.actions.required' | translate }}</span> {{ 'reportFoundItem.actions.noteLocation' | translate }}</span>
                 </div>
               </div>
               <!-- #endregion ACTIONS -->
