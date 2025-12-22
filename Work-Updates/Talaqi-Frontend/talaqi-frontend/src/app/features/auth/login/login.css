@@ -1,0 +1,272 @@
+/* Styles for Login view. */
+/* ============================================================
+   Login Page — Body-native, Responsive, Footer-safe
+   ============================================================ */
+
+:host {
+  display: block;
+  font-family: var(--font-arabic);
+}
+
+/* Section = جزء من الصفحة */
+.login-section {
+  padding: 60px 24px 40px;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+}
+
+/* Layout wrapper */
+.login-layout {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  direction: rtl;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 64px;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+/* Arabic (RTL): Form on left, image on right */
+.login-layout .login-image {
+  order: 2;
+}
+
+.login-layout .login-form {
+  order: 1;
+}
+
+/* LTR (English): Switch to form on right, image on left */
+.login-layout.ltr {
+  direction: ltr;
+}
+
+.login-layout.ltr .login-image {
+  order: 1;
+}
+
+.login-layout.ltr .login-form {
+  order: 2;
+}
+
+/* ======================
+   IMAGE
+   ====================== */
+
+.login-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-image img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ======================
+   FORM
+   ====================== */
+
+.login-form {
+  max-width: 460px;
+  width: 100%;
+  text-align: right;
+}
+
+.login-layout.ltr .login-form {
+  text-align: left;
+}
+
+.login-header {
+  margin-bottom: 36px;
+  text-align: center;
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+.login-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #324260;
+  letter-spacing: -0.6px;
+}
+
+.login-header p {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #7a7a7a;
+}
+
+.form-alert {
+  margin: 12px auto 0;
+  padding: 12px 14px;
+  width: 100%;
+  border-radius: 8px;
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Form rhythm */
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #324260;
+  margin-bottom: 6px;
+}
+
+.form-group .required {
+  color: #d9534f;
+}
+
+/* Inputs */
+.form-input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 15px;
+  border: 2px solid #dddddd;
+  border-radius: 8px;
+  color: #324260;
+  transition: 0.25s ease;
+}
+
+.form-input::placeholder {
+  color: #8d8d8d;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #6c8db5;
+  box-shadow: 0 0 0 3px rgba(108, 141, 181, 0.12);
+}
+
+.form-input.invalid {
+  border-color: #dc3545;
+}
+
+.error-message {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #dc3545;
+}
+
+/* Actions */
+.forgot-password {
+  text-align: right;
+  margin-bottom: 28px;
+}
+
+.login-layout.ltr .forgot-password {
+  text-align: left;
+}
+
+.forgot-password a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6c8db5;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  color: #324260;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  background: #6c8db5;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-login:hover {
+  background: #5b7a9e;
+  transform: translateY(-1px);
+}
+
+.btn-login:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+
+.register-link {
+  margin-top: 26px;
+  text-align: center;
+  font-size: 15px;
+  color: #666;
+}
+
+.register-link a {
+  margin-inline-start: 6px;
+  font-weight: 700;
+  color: #6c8db5;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  color: #324260;
+}
+
+/* ======================
+   RESPONSIVE
+   ====================== */
+
+@media (max-width: 1024px) {
+  .login-layout {
+    column-gap: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .login-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .login-image {
+    display: none;
+  }
+
+  .login-form {
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-section {
+    padding: 48px 16px 40px;
+  }
+
+  .login-header h2 {
+    font-size: 26px;
+  }
+
+  .form-input {
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+
+  .btn-login {
+    font-size: 15px;
+    padding: 12px;
+  }
+}

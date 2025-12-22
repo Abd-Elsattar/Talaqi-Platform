@@ -1,0 +1,12 @@
+<div class="maplibre-wrapper">
+  <div #mapContainer [style.height]="height" class="maplibre-container"></div>
+  <div class="maplibre-actions">
+    <button type="button" class="btn-center-select" (click)="emitCenterSelection()"
+      title="اختيار الموقع من منتصف الخريطة">
+      <i class="bi bi-geo-alt"></i>
+      اختر الموقع الحالي
+    </button>
+  </div>
+  <small class="maplibre-hint">استخدم أزرار التكبير/التصغير لتحديد الموقع بدقة ثم اضغط على الخريطة أو زر "اختر الموقع
+    الحالي".</small>
+</div>

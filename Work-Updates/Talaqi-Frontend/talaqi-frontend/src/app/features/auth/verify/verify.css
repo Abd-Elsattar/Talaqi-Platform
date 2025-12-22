@@ -1,0 +1,356 @@
+/* Styles for Account Verification view. */
+/* ========================================
+   Verify Page - Professional Design
+   ======================================== */
+
+:host {
+  display: block;
+  min-height: auto;
+  /* allow page to size naturally so footer follows content */
+  background: #FFFFFF;
+  font-family: var(--font-arabic);
+}
+
+/* Container */
+.verify-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* align to top so card sits closer to navbar */
+  min-height: auto;
+  /* allow natural height to avoid forcing extra space before footer */
+  padding: 10px 0;
+  /* small top padding to reduce gap from navbar */
+  width: 100%;
+}
+
+/* Card */
+.verify-card {
+  background: #FFFFFF;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* Left Side - Form */
+.verify-form {
+  padding: 24px 50px;
+  /* reduced vertical padding to bring header up */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: #FFFFFF;
+}
+
+/* Right Side - Image */
+.verify-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  padding: 40px;
+}
+
+.verify-image img {
+  width: 80%;
+  height: auto;
+  /* use natural height so image doesn't stretch container */
+  object-fit: contain;
+  max-height: 600px;
+}
+
+
+
+/* Header */
+.verify-header {
+  text-align: center;
+  margin: 6px 0 20px 0;
+  /* reduce top/bottom spacing around header */
+  width: 100%;
+}
+
+.verify-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #324260;
+  margin: 0 0 15px 0;
+}
+
+.verify-header p {
+  font-size: 16px;
+  color: #787878;
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+}
+
+.verify-header .email {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6C8DB5;
+  margin-top: 8px;
+}
+
+/* Email Hint Section */
+.email-hint {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #fff8dc;
+  border: 2px solid #fbbf24;
+  border-radius: 8px;
+  text-align: right;
+}
+
+.hint-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 10px;
+}
+
+.hint-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hint-list li {
+  font-size: 13px;
+  color: #78350f;
+  padding: 5px 0;
+  padding-right: 20px;
+  position: relative;
+}
+
+.hint-list li::before {
+  content: '•';
+  position: absolute;
+  right: 5px;
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #324260;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.form-group label .required {
+  color: #dc3545;
+  margin-right: 3px;
+}
+
+/* Code Input */
+.code-input {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  padding: 16px;
+  border: 2px solid #DDDDDD;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.code-input:focus {
+  border-color: #6C8DB5;
+  outline: none;
+}
+
+.code-input:hover {
+  border-color: #6C8DB5;
+}
+
+/* Form Input */
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid #DDDDDD;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #324260;
+  transition: all 0.3s ease;
+  font-family: var(--font-arabic);
+}
+
+.form-input::placeholder {
+  color: #787878;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #6C8DB5;
+}
+
+.form-input:hover {
+  border-color: #6C8DB5;
+}
+
+.form-input.invalid {
+  border-color: #dc3545;
+}
+
+/* Error Message */
+.error-message {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Verify Button */
+.btn-verify {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-arabic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-verify:hover {
+  filter: brightness(0.95);
+  transform: translateY(-2px);
+}
+
+.btn-verify:active {
+  transform: translateY(0);
+}
+
+.btn-verify:disabled {
+  background: var(--primary);
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner-border {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* Resend Button */
+.btn-resend {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--primary);
+  background: transparent;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-arabic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.btn-resend:hover:not(:disabled) {
+  background: var(--primary);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+.btn-resend:active {
+  transform: translateY(0);
+}
+
+.btn-resend:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-resend i {
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .verify-card {
+    grid-template-columns: 1fr;
+  }
+
+  .verify-image {
+    display: none;
+  }
+
+  .verify-form {
+    padding: 50px 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .verify-card {
+    max-width: 100%;
+  }
+
+  .verify-form {
+    padding: 40px 25px;
+  }
+
+  .verify-header {
+    max-width: 100%;
+  }
+
+  .verify-header h2 {
+    font-size: 26px;
+  }
+
+  .verify-header p {
+    font-size: 15px;
+  }
+
+  .verify-header .email {
+    font-size: 15px;
+  }
+
+  .verify-icon i {
+    font-size: 56px;
+    padding: 24px;
+  }
+
+  .form-group {
+    max-width: 100%;
+  }
+
+  .code-input {
+    font-size: 22px;
+    padding: 14px;
+  }
+
+  .btn-verify {
+    max-width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+}

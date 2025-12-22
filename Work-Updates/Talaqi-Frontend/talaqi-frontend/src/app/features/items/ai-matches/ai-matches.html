@@ -1,0 +1,265 @@
+<!-- AI Matches template: displays AI-suggested matches between lost and found items. -->
+<div class="ai-matches-page">
+  <!-- Hero Section with Blue Bottom Border -->
+  <div class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            <i class="bi bi-robot"></i>
+            {{ 'aiMatches.title' | translate }}
+          </h1>
+          <p class="hero-subtitle">{{ 'aiMatches.subtitle' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Filter + Search (Single-Line Slim Bar) -->
+    <div class="filter-section">
+      <div class="filter-toolbar">
+        <div class="status-chips">
+          <button type="button" class="chip" [class.active]="selectedStatus === 'All'"
+            (click)="onStatusFilterChange('All')">
+            <i class="bi bi-list-ul"></i>
+            <span>{{ 'aiMatches.filters.all' | translate }}</span>
+            <span class="count">{{ getMatchesCount('All') }}</span>
+          </button>
+          <button type="button" class="chip" [class.active]="selectedStatus === 'Pending'"
+            (click)="onStatusFilterChange('Pending')">
+            <i class="bi bi-hourglass-split"></i>
+            <span>{{ 'aiMatches.filters.pending' | translate }}</span>
+            <span class="count">{{ getMatchesCount('Pending') }}</span>
+          </button>
+          <button type="button" class="chip" [class.active]="selectedStatus === 'Confirmed'"
+            (click)="onStatusFilterChange('Confirmed')">
+            <i class="bi bi-check-circle"></i>
+            <span>{{ 'aiMatches.filters.confirmed' | translate }}</span>
+            <span class="count">{{ getMatchesCount('Confirmed') }}</span>
+          </button>
+          <button type="button" class="chip" [class.active]="selectedStatus === 'Resolved'"
+            (click)="onStatusFilterChange('Resolved')">
+            <i class="bi bi-check-all"></i>
+            <span>{{ 'aiMatches.filters.resolved' | translate }}</span>
+            <span class="count">{{ getMatchesCount('Resolved') }}</span>
+          </button>
+          <!-- Owner Filters -->
+          <div class="owner-filters">
+            <button type="button" class="chip small" [class.active]="ownerFilter === 'my-lost'"
+              (click)="setOwnerFilter('my-lost')">
+              <i class="bi bi-person-badge"></i>
+              <span>{{ 'aiMatches.filters.myLost' | translate }}</span>
+            </button>
+            <button type="button" class="chip small" [class.active]="ownerFilter === 'my-found'"
+              (click)="setOwnerFilter('my-found')">
+              <i class="bi bi-bag-check"></i>
+              <span>{{ 'aiMatches.filters.myFound' | translate }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-search">
+          <i class="bi bi-search"></i>
+          <input type="text" class="toolbar-input" [placeholder]="'aiMatches.searchPlaceholder' | translate" [(ngModel)]="searchQuery"
+            (input)="onSearchChange()" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">{{ 'aiMatches.loading' | translate }}</span>
+      </div>
+      <p>{{ 'aiMatches.loadingText' | translate }}</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (errorMessage && !isLoading) {
+    <div class="alert-error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading && filteredMatches.length === 0 && !errorMessage) {
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-robot"></i>
+      </div>
+      <h3 class="empty-state-title">{{ 'aiMatches.emptyState.title' | translate }}</h3>
+      <p class="empty-state-text">
+        @if (selectedStatus === 'All') {
+        <span>{{ 'aiMatches.emptyState.noMatches' | translate }}</span>
+        }
+        @if (selectedStatus !== 'All') {
+        <span>{{ 'aiMatches.emptyState.noMatchesWithStatus' | translate }} "{{ getStatusText(selectedStatus) }}"</span>
+        }
+      </p>
+      <button routerLink="/report-lost-item" class="btn-accent-primary btn-lg">
+        <i class="bi bi-plus-circle"></i>
+        {{ 'aiMatches.emptyState.reportButton' | translate }}
+      </button>
+    </div>
+    }
+
+    <!-- Matches List -->
+    @if (filteredMatches.length > 0) {
+    <div class="matches-list">
+      @for (match of filteredMatches; track match.id) {
+      <div class="match-card">
+        <!-- AI Match Header -->
+        <div class="match-header">
+          <div class="ai-indicator">
+            <i class="bi bi-stars ai-icon"></i>
+            <span>{{ 'aiMatches.smartMatch' | translate }}</span>
+          </div>
+          <div class="match-time">
+            <i class="bi bi-clock"></i>
+            {{ match.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </div>
+        </div>
+
+        <!-- Match Content -->
+        <div class="match-content">
+          <!-- Lost Item (Right Side) -->
+          <div class="item-section lost-item-section">
+            <div class="item-badge-wrapper">
+              <span class="item-badge badge-lost">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ 'aiMatches.lostBadge' | translate }}
+              </span>
+            </div>
+            <div class="item-image-container">
+              <div class="item-image-wrapper">
+                <img [src]="getItemImageUrl(match.lostItem?.imageUrl)" class="item-image" [alt]="match.lostItem?.title"
+                  (error)="$event.target.src='images/lost-and-found-.png'" />
+                <div class="image-overlay"></div>
+              </div>
+            </div>
+            <div class="item-details">
+              <h5 class="item-title">{{ match.lostItem?.title }}</h5>
+              <p class="item-description">{{ match.lostItem?.description }}</p>
+              <div class="item-meta">
+                <div class="meta-item">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <span>{{ getItemLocation(match.lostItem?.location) | locationTranslate }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-calendar-x"></i>
+                  <span>{{ match.lostItem?.dateLost | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Confidence Score (Center) -->
+          <div class="ai-comparison-center">
+            <div class="comparison-line"></div>
+            <div class="confidence-section" [ngClass]="getConfidenceClass(match.confidenceScore)">
+              <div class="ai-badge">
+                <i class="bi bi-cpu"></i>
+              </div>
+              <div class="confidence-circle">
+                <svg class="progress-ring" width="140" height="140">
+                  <circle class="progress-ring-circle-bg" cx="70" cy="70" r="62"></circle>
+                  <circle class="progress-ring-circle" cx="70" cy="70" r="62"
+                    [style.stroke-dasharray]="(match.confidenceScore / 100) * 389.557 + ' 389.557'"></circle>
+                </svg>
+                <div class="confidence-content">
+                  <div class="confidence-percentage">{{ match.confidenceScore | number: '1.0-1' }}%</div>
+                  <div class="confidence-label">{{ getConfidenceLabel(match.confidenceScore) }}</div>
+                </div>
+              </div>
+              <div class="ai-text">{{ 'aiMatches.aiMatchText' | translate }}</div>
+            </div>
+            <div class="comparison-line"></div>
+          </div>
+
+          <!-- Found Item (Left Side) -->
+          <div class="item-section found-item-section">
+            <div class="item-badge-wrapper">
+              <span class="item-badge badge-found">
+                <i class="bi bi-check-circle"></i>
+                {{ 'aiMatches.foundBadge' | translate }}
+              </span>
+            </div>
+            <div class="item-image-container">
+              <div class="item-image-wrapper">
+                <img [src]="getItemImageUrl(match.foundItem?.imageUrl)" class="item-image"
+                  [alt]="match.foundItem?.title" (error)="$event.target.src='images/lost-and-found-.png'" />
+                <div class="image-overlay"></div>
+              </div>
+            </div>
+            <div class="item-details">
+              <h5 class="item-title">{{ match.foundItem?.title }}</h5>
+              <p class="item-description">{{ match.foundItem?.description }}</p>
+              <div class="item-meta">
+                <div class="meta-item">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <span>{{ getItemLocation(match.foundItem?.location) | locationTranslate }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-calendar-check"></i>
+                  <span>{{ match.foundItem?.dateFound | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Match Footer -->
+        <div class="match-footer">
+          <div class="match-status-info">
+            <span [class]="'status-badge ' + getStatusBadgeClass(match.status)">
+              <i class="bi bi-record-circle-fill status-indicator"></i>
+              {{ getStatusText(match.status) }}
+            </span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="match-actions">
+            <button (click)="startChat(match)" class="btn-action btn-chat" [title]="'aiMatches.actions.chat' | translate">
+              <i class="bi bi-chat-dots-fill"></i>
+              <span>{{ 'aiMatches.actions.chat' | translate }}</span>
+            </button>
+            @if (canConfirm(match)) {
+            <button (click)="updateMatchStatus(match.id, MatchStatus.Confirmed)" class="btn-action btn-confirm"
+              [title]="'aiMatches.actions.confirm' | translate">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>{{ 'aiMatches.actions.confirm' | translate }}</span>
+            </button>
+            }
+            @if (canReject(match)) {
+            <button (click)="updateMatchStatus(match.id, MatchStatus.Rejected)" class="btn-action btn-reject"
+              [title]="'aiMatches.actions.reject' | translate">
+              <i class="bi bi-x-circle-fill"></i>
+              <span>{{ 'aiMatches.actions.reject' | translate }}</span>
+            </button>
+            }
+            @if (canResolve(match)) {
+            <button (click)="updateMatchStatus(match.id, MatchStatus.Resolved)" class="btn-action btn-resolve"
+              [title]="'aiMatches.actions.resolve' | translate">
+              <i class="bi bi-check-all"></i>
+              <span>{{ 'aiMatches.actions.resolve' | translate }}</span>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Results Count -->
+      <div class="results-count">
+        <p>
+          {{ 'aiMatches.resultsCount' | translate: { shown: filteredMatches.length, total: allMatches.length } }}
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+</div>

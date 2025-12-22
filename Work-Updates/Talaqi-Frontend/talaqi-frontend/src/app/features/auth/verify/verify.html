@@ -1,0 +1,82 @@
+<!-- Account Verification template: informs user of verification status. -->
+<div class="verify-container">
+  <div class="verify-card">
+    <!-- Left Side: Form -->
+    <div class="verify-form">
+      <!-- Header -->
+      <div class="verify-header">
+        <h2>{{ 'verify.title' | translate }}</h2>
+        <p>
+          {{ 'verify.subtitle' | translate }}
+        </p>
+        <span class="email">{{ email }}</span>
+
+        <!-- Helpful email hints -->
+        <div class="email-hint">
+          <div class="hint-text">{{ 'verify.emailHint.title' | translate }}</div>
+          <ul class="hint-list">
+            <li>{{ 'verify.emailHint.spam' | translate }}</li>
+            <li>{{ 'verify.emailHint.promotions' | translate }}</li>
+            <li>{{ 'verify.emailHint.wait' | translate }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+
+        <!-- كود التفعيل -->
+        <div class="form-group">
+          <label>{{ 'verify.code' | translate }} <span class="required">{{ 'verify.required' | translate }}</span></label>
+          <input type="text" class="form-input code-input" formControlName="code"
+            (blur)="verifyForm.get('code')?.markAsTouched()" [class.invalid]="isFieldInvalid('code')"
+            [placeholder]="'verify.placeholders.code' | translate" maxlength="6" />
+          @if (isFieldInvalid('code')) {
+          <div class="error-message">
+            {{ getFieldError('code') }}
+          </div>
+          }
+        </div>
+
+        <!-- زر التأكيد -->
+        <button type="submit" class="btn-verify" [disabled]="verifyForm.invalid || isSubmitting">
+          @if (!isSubmitting) {
+          <span>{{ 'verify.verifyButton' | translate }}</span>
+          }
+          @if (isSubmitting) {
+          <span>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ 'verify.verifying' | translate }}
+          </span>
+          }
+        </button>
+
+        <!-- زر إعادة إرسال الكود -->
+        <button type="button" class="btn-resend" (click)="resendCode()" [disabled]="isResending || countdown > 0">
+          @if (!isResending && countdown === 0) {
+          <span>
+            <i class="bi bi-arrow-clockwise"></i>
+            {{ 'verify.resendCode' | translate }}
+          </span>
+          }
+          @if (isResending) {
+          <span>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ 'verify.resending' | translate }}
+          </span>
+          }
+          @if (countdown > 0) {
+          <span>
+            {{ 'verify.resendCountdown' | translate: {seconds: countdown} }}
+          </span>
+          }
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Right Side: Image -->
+    <div class="verify-image">
+      <img src="verify/1.png" [alt]="'verify.imageAlt' | translate" />
+    </div>
+  </div>
+</div>

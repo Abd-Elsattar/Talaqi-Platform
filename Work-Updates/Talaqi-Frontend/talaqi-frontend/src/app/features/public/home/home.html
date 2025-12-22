@@ -1,0 +1,268 @@
+<!-- Home template: landing page layout and content. -->
+<div class="home-container" [class.home-public]="!isAuthenticated()">
+
+  <!-- Non-Authenticated User View - Simple Hero Section -->
+  <div *ngIf="!isAuthenticated()" class="hero-section">
+
+    <!-- Hero Slide Container -->
+    <div class="hero-slide-container">
+      <div *ngFor="let slide of heroSlides; let i = index" class="hero-slide-item"
+        [class.active]="i === currentSlideIndex">
+
+        <div class="hero-row" [class.ltr]="!languageService.isRtl()">
+          <!-- Content Column -->
+          <div class="hero-content-col">
+            <h1 class="hero-main-title">{{ slide.titleKey | translate }}</h1>
+            <p class="hero-main-description">{{ slide.descriptionKey | translate }}</p>
+            <button routerLink="/login" class="hero-main-button">
+              {{ slide.primaryButtonKey | translate }}
+            </button>
+          </div>
+
+          <!-- Image Column -->
+          <div class="hero-image-col">
+            <img [src]="slide.image" [alt]="slide.titleKey | translate" class="hero-slide-img">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide Indicators -->
+    <div class="hero-slide-indicators">
+      <button *ngFor="let slide of heroSlides; let i = index" class="slide-indicator-dot"
+        [class.active]="i === currentSlideIndex" (click)="goToSlide(i)">
+      </button>
+    </div>
+  </div>
+  <!-- Authenticated User View -->
+  <div *ngIf="isAuthenticated()" class="authenticated-section">
+
+    <!-- Hero Section for Logged In Users -->
+    <div class="logged-hero-section">
+      <div class="logged-hero-slide-container">
+        <div *ngFor="let slide of heroSlides; let i = index" class="logged-hero-slide-item"
+          [class.active]="i === currentSlideIndex">
+
+          <div class="logged-hero-row" [class.ltr]="!languageService.isRtl()">
+            <!-- Content Column -->
+            <div class="logged-hero-content-col">
+              <h1 class="logged-hero-title">{{ slide.titleKey | translate }}</h1>
+              <p class="logged-hero-description">{{ slide.descriptionKey | translate }}</p>
+              <div class="logged-hero-actions">
+                <button routerLink="/report-lost-item" class="logged-hero-button primary">
+                  <i class="bi bi-exclamation-circle me-2"></i>
+                  {{ 'home.actions.reportLost' | translate }}
+                </button>
+                <button routerLink="/report-found-item" class="logged-hero-button secondary">
+                  <i class="bi bi-check-circle me-2"></i>
+                  {{ 'home.actions.reportFound' | translate }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Image Column -->
+            <div class="logged-hero-image-col">
+              <img [src]="slide.image" [alt]="slide.titleKey | translate" class="logged-hero-slide-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide Indicators -->
+      <div class="logged-hero-slide-indicators">
+        <button *ngFor="let slide of heroSlides; let i = index" class="logged-slide-indicator-dot"
+          [class.active]="i === currentSlideIndex" (click)="goToSlide(i)">
+        </button>
+      </div>
+
+      <!-- Search Section - Professional Single Line -->
+      <div class="unified-search-bar">
+        <!-- Main Search Input -->
+        <div class="main-search-wrapper">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" class="main-search-input" [(ngModel)]="searchQuery" (input)="onSearchChange()"
+            [placeholder]="'home.search.placeholder' | translate">
+        </div>
+
+        <!-- Right Controls Wrapper -->
+        <div class="search-right-wrapper">
+          <!-- Vertical Divider -->
+          <div class="search-divider"></div>
+
+          <div class="right-controls-grid">
+            <!-- Date From -->
+            <div class="date-filter-group">
+              <label class="date-filter-label">{{ 'home.search.dateFrom' | translate }}</label>
+              <div class="date-filter-input-wrapper">
+                <i class="bi bi-calendar3"></i>
+                <input type="date" class="date-filter-input" [(ngModel)]="dateFrom" (change)="onDateChange()"
+                  placeholder="mm/dd/yyyy">
+              </div>
+            </div>
+
+            <!-- Arrow Separator -->
+            <div class="date-arrow" aria-hidden="true">
+              <i class="bi bi-arrow-left-right"></i>
+            </div>
+
+            <!-- Date To -->
+            <div class="date-filter-group">
+              <label class="date-filter-label">{{ 'home.search.dateTo' | translate }}</label>
+              <div class="date-filter-input-wrapper">
+                <i class="bi bi-calendar3"></i>
+                <input type="date" class="date-filter-input" [(ngModel)]="dateTo" (change)="onDateChange()"
+                  placeholder="mm/dd/yyyy">
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="search-actions">
+              @if (dateFrom || dateTo) {
+              <button class="clear-filter-btn" (click)="clearDateFilter()" [title]="'home.search.clearFilter' | translate">
+                <i class="bi bi-x-lg"></i>
+              </button>
+              }
+              <button class="primary-search-btn" (click)="performSearch()">
+                <i class="bi bi-search"></i>
+                <span>{{ 'home.search.searchButton' | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Content Layout with Ads -->
+      <div class="container py-4">
+        <div class="content-layout">
+          <!-- Left Content - Lost Items List -->
+          <div class="items-content">
+            <!-- Loading State -->
+            @if (isLoadingItems) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">{{ 'home.loading.text' | translate }}</span>
+              </div>
+              <p class="mt-3 text-muted">{{ 'home.loading.loadingItems' | translate }}</p>
+            </div>
+            }
+
+            <!-- Items Grid -->
+            @if (!isLoadingItems && lostItems.length > 0) {
+            <div class="items-grid">
+              <div *ngFor="let item of lostItems" class="modern-item-card" (click)="viewItemDetails(item.id)">
+
+                <!-- Image Section -->
+                <div class="item-image-wrapper">
+                  <img [src]="resolveImage(item.imageUrl)" class="item-image" [alt]="item.title"
+                    (error)="$event.target.src='images/lost-and-found-.png'" />
+                  <div class="image-overlay">
+                    <span class="status-badge lost">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ 'home.status.lost' | translate }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Content Section -->
+                <div class="item-body">
+                  <!-- Title & Category -->
+                  <div class="item-header">
+                    <h3 class="item-title">{{ item.title }}</h3>
+                    <span class="category-tag">
+                      <i class="bi bi-tag me-1"></i>
+                      {{ item.category | categoryTranslate }}
+                    </span>
+                  </div>
+
+                  <!-- Description -->
+                  <p class="item-description">{{ item.description }}</p>
+
+                  <!-- Metadata -->
+                  <div class="item-metadata with-action">
+                    <div class="meta-item">
+                      <i class="bi bi-geo-alt-fill"></i>
+                      <span>{{ getItemLocation(item) | locationTranslate }}</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-item">
+                      <i class="bi bi-calendar-event"></i>
+                      <span>{{ item.createdAt | date: 'dd/MM/yyyy' }}</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-item">
+                      <i class="bi bi-clock-history"></i>
+                      <span>{{ item.createdAt | date: 'HH:mm' }}</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <button class="view-inline-btn" (click)="viewItemDetails(item.id); $event.stopPropagation()">
+                      <i class="bi bi-eye me-2"></i>
+                      {{ 'home.item.viewDetails' | translate }}
+                      <i class="bi bi-arrow-left ms-2"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Empty State -->
+            @if (!isLoadingItems && lostItems.length === 0) {
+            <div class="text-center py-5">
+              <i class="bi bi-inbox display-1 text-muted"></i>
+              <p class="mt-3 text-muted">{{ 'home.empty.noLostItems' | translate }}</p>
+            </div>
+            }
+
+            <!-- Load More Button / Pagination -->
+            @if (!isLoadingItems && lostItems.length > 0) {
+            <div class="pagination-wrapper">
+              @if (lostItems.length < totalCount) { <button (click)="loadMore()" class="load-more-btn"
+                [disabled]="isLoadingItems">
+                @if (!isLoadingItems) {
+                <span>
+                  <i class="bi bi-chevron-down me-2"></i>
+                  {{ 'home.pagination.loadMore' | translate }}
+                </span>
+                }
+                @else {
+                <span>
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  {{ 'home.pagination.loading' | translate }}
+                </span>
+                }
+                </button>
+                }
+            </div>
+            }
+          </div>
+
+          <!-- Right Sidebar - Ads Section -->
+          <aside class="ads-sidebar">
+            @for (ad of ads; track ad.id) {
+            <div class="ad-card">
+              <div class="ad-label">
+                <i class="bi bi-badge-ad"></i>
+                <span>{{ 'home.ads.label' | translate }}</span>
+              </div>
+              <div class="ad-image-wrapper">
+                <img [src]="resolveImage(ad.imageUrl)" [alt]="ad.titleKey | translate" class="ad-image" loading="lazy"
+                  (error)="$any($event.target).src='images/lost-and-found-.png'">
+                <div class="ad-overlay">
+                  <i class="bi bi-eye"></i>
+                </div>
+              </div>
+              <div class="ad-content">
+                <h4 class="ad-title">{{ ad.titleKey | translate }}</h4>
+                <p class="ad-description">{{ ad.descriptionKey | translate }}</p>
+                <a routerLink="/contact-us">
+                  <button class="btn btn-primary">{{ 'home.ads.learnMore' | translate }}</button>
+                </a>
+              </div>
+            </div>
+            }
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>

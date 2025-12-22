@@ -1,0 +1,46 @@
+.maplibre-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.mapboxgl-ctrl-top-right {
+  margin: 8px;
+}
+
+.maplibre-wrapper {
+  position: relative;
+}
+
+.maplibre-actions {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.btn-center-select {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-center-select:hover {
+  background: #0b5ed7;
+}
+
+.maplibre-hint {
+  display: block;
+  margin-top: 6px;
+  color: #6c757d;
+}

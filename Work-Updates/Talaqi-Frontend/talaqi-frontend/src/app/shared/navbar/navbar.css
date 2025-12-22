@@ -1,0 +1,216 @@
+:root {
+  --navbar-height: 70px;
+}
+
+.talaqi-navbar {
+  background: var(--primary) !important;
+  height: var(--navbar-height);
+  padding: 0 .75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .15);
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+}
+
+body {
+  padding-top: var(--navbar-height);
+}
+
+/* LOGO */
+.navbar-logo {
+  height: 45px;
+  width: auto;
+  margin-inline-start: -12px;
+}
+
+.brand-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: .3px;
+}
+
+.navbar-brand {
+  padding-inline-start: 0;
+  gap: .5rem;
+}
+
+/* NAV LINKS */
+.nav-link {
+  padding: .5rem .85rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: rgba(255, 255, 255, .94) !important;
+  transition: background .25s ease, color .25s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, .14);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, .22);
+  font-weight: 600;
+  color: #fff !important;
+}
+
+.nav-link i {
+  font-size: .95rem;
+}
+
+/* PROFILE TRIGGER */
+.user-dropdown {
+  position: relative;
+}
+
+.profile-trigger {
+  padding: .4rem .9rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, .18);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.profile-trigger:hover {
+  background: rgba(255, 255, 255, .28);
+}
+
+.profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 650;
+  color: #fff;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 230px;
+  padding: .5rem 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .04) 8%, rgba(255, 255, 255, 0) 100%), var(--primary);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: .65rem 1rem;
+  font-size: .95rem;
+  color: rgba(255, 255, 255, .94);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, .14);
+}
+
+/* AUTH BUTTONS */
+.auth-buttons .btn {
+  padding: .4rem 1.1rem;
+  font-size: .95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  margin: 4px;
+}
+
+/* MOBILE */
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, .75);
+}
+
+.navbar-toggler-icon {
+  filter: brightness(5);
+  transition: transform .2s ease;
+}
+
+/* Rotate chevron inside profile trigger when open */
+.user-dropdown .bi-chevron-down {
+  transition: transform .2s ease;
+}
+
+.user-dropdown[aria-expanded="true"] .bi-chevron-down,
+.dropdown-menu.show+.bi-chevron-down {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background: rgba(255, 255, 255, .1);
+    margin-top: .5rem;
+    border-radius: 10px;
+    padding: .75rem;
+    overflow: hidden;
+    transition: max-height .25s ease, opacity .2s ease;
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .navbar-nav {
+    width: 100%;
+    text-align: center;
+    gap: .35rem;
+  }
+
+  .profile-trigger {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dropdown-menu {
+    position: static;
+    display: block;
+    opacity: 1 !important;
+    transform: none !important;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, .04) 8%, rgba(255, 255, 255, 0) 100%), var(--primary);
+  }
+
+  .navbar-collapse.show {
+    max-height: 800px;
+    /* large enough for content */
+    opacity: 1;
+  }
+}
+
+/* BACKDROP */
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+}

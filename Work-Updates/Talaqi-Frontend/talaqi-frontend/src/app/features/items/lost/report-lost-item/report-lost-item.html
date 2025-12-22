@@ -1,0 +1,420 @@
+<!-- Report Lost Item template: submit details for a lost item. -->
+<div class="report-lost-item-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <!-- Enhanced Page Header -->
+        <div class="page-header-wrapper mb-4">
+          <div class="page-header-content">
+            <div class="header-icon-wrapper">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="header-text-wrapper">
+              <h1 class="header-title">{{ 'reportLostItem.title' | translate }}</h1>
+              <p class="header-subtitle">
+                {{ 'reportLostItem.subtitle' | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        @if (successMessage) {
+        <div class="alert-wrapper success-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>{{ 'reportLostItem.success' | translate }}</strong>
+              <p>{{ successMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="successMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+        <div class="alert-wrapper error-alert mb-4" role="alert">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="alert-text">
+              <strong>{{ 'reportLostItem.error' | translate }}</strong>
+              <p>{{ errorMessage }}</p>
+            </div>
+            <button type="button" class="alert-close-btn" (click)="errorMessage = null">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Report Form -->
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="report-form-wrapper">
+          <div class="form-card">
+            <div class="form-card-body">
+
+              <!-- Category -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-grid-3x3-gap label-icon"></i>
+                  <span>{{ 'reportLostItem.category.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
+                </label>
+                <select class="form-control-enhanced" formControlName="category"
+                  (blur)="reportForm.get('category')?.markAsTouched()" [class.is-invalid]="isFieldInvalid('category')">
+                  <option value="">{{ 'reportLostItem.category.placeholder' | translate }}</option>
+                  <option *ngFor="let cat of categories" [value]="cat.value">
+                    {{ cat.label }}
+                  </option>
+                </select>
+                @if (isFieldInvalid('category')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('category') }}
+                </div>
+                }
+                <small class="form-hint">{{ 'reportLostItem.category.hint' | translate }}</small>
+              </div>
+
+              <!-- Title -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-card-heading label-icon"></i>
+                  <span>{{ 'reportLostItem.title_field.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.title_field.required' | translate }}</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="title"
+                  (blur)="reportForm.get('title')?.markAsTouched()"
+                  [placeholder]="'reportLostItem.title_field.placeholder' | translate" [class.is-invalid]="isFieldInvalid('title')"
+                  maxlength="200">
+                @if (isFieldInvalid('title')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('title') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <span>{{ 'reportLostItem.title_field.hint' | translate }}</span>
+                  <span class="char-counter">{{ reportForm.get('title')?.value?.length || 0 }}/200</span>
+                </small>
+              </div>
+
+              <!-- Description -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-text-paragraph label-icon"></i>
+                  <span>{{ 'reportLostItem.description.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
+                </label>
+                <textarea class="form-control-enhanced textarea-enhanced" formControlName="description"
+                  (blur)="reportForm.get('description')?.markAsTouched()"
+                  [placeholder]="'reportLostItem.description.placeholder' | translate"
+                  rows="5" [class.is-invalid]="isFieldInvalid('description')"></textarea>
+                @if (isFieldInvalid('description')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('description') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-lightbulb me-1"></i>
+                  {{ 'reportLostItem.description.hint' | translate }}
+                </small>
+              </div>
+
+              <!-- Image Upload -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-image label-icon"></i>
+                  <span>{{ 'reportLostItem.image.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.category.required' | translate }}</span>
+                </label>
+
+                <!-- Upload Zone -->
+                @if (!imagePreviewUrl) {
+                <div class="upload-zone-enhanced" [class.is-invalid]="isImageInvalid()" (drop)="onFileDrop($event)"
+                  (dragover)="onDragOver($event)">
+
+                  <div class="upload-zone-content">
+                    <div class="upload-icon-wrapper">
+                      <i class="bi bi-cloud-upload-fill"></i>
+                    </div>
+
+                    <h5 class="upload-title">{{ 'reportLostItem.image.dragDrop' | translate }}</h5>
+                    <p class="upload-subtitle">{{ 'reportLostItem.image.or' | translate }}</p>
+
+                    <label class="btn-upload-file">
+                      <i class="bi bi-folder2-open me-2"></i>
+                      {{ 'reportLostItem.image.browse' | translate }}
+                      <input type="file" class="d-none" accept="image/jpeg,image/jpg,image/png,image/gif"
+                        (change)="onFileSelected($event)" (blur)="reportForm.get('imageUrl')?.markAsTouched()">
+                    </label>
+
+                    <!-- ✅ Error Message -->
+                    @if (isImageInvalid()) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ getImageError() }}
+                    </div>
+                    }
+
+                    <p class="upload-hint">
+                      <i class="bi bi-info-circle me-1"></i>
+                      {{ 'reportLostItem.image.hint' | translate }}
+                    </p>
+                  </div>
+                </div>
+                }
+
+
+                <!-- Image Preview -->
+                @if (imagePreviewUrl) {
+                <div class="image-preview-wrapper">
+                  <div class="image-preview-container">
+                    <img [src]="imagePreviewUrl" [alt]="'reportLostItem.image.preview' | translate" class="preview-image">
+                    <button type="button" class="btn-remove-image" (click)="removeImage()" [disabled]="isUploadingImage"
+                      [title]="'reportLostItem.image.removeTitle' | translate">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                    @if (isUploadingImage) {
+                    <div class="upload-progress-overlay">
+                      <div class="upload-spinner-wrapper">
+                        <div class="spinner-border text-light" role="status">
+                          <span class="visually-hidden">{{ 'reportLostItem.image.uploading' | translate }}</span>
+                        </div>
+                        <p class="upload-status-text">{{ 'reportLostItem.image.uploading' | translate }}</p>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                  @if (!isUploadingImage && !isDefaultImage) {
+                  <div class="image-info-badge">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    {{ 'reportLostItem.image.uploadSuccess' | translate }}
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+
+              <!-- Location Section -->
+              <div class="form-group-wrapper location-section" formGroupName="location">
+                <label class="form-label-enhanced section-label">
+                  <i class="bi bi-geo-alt-fill label-icon"></i>
+                  <span>{{ 'reportLostItem.location.label' | translate }}</span>
+                </label>
+
+                <!-- Map Picker -->
+                <app-map-picker [height]="'350px'" [language]="'ar'"
+                  (locationSelected)="onLocationSelected($event)"></app-map-picker>
+
+                <!-- GPS Detection -->
+                <div class="gps-detection-wrapper">
+                  <div class="gps-info-box">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span>{{ 'reportLostItem.location.hint' | translate }}</span>
+                  </div>
+                  <button type="button" class="btn-detect-location" (click)="detectLocation()"
+                    [disabled]="isDetectingLocation || locationDetected">
+                    @if (!isDetectingLocation && !locationDetected) {
+                    <span>
+                      <i class="bi bi-crosshair me-2"></i>
+                      {{ 'reportLostItem.location.detectCurrent' | translate }}
+                    </span>
+                    }
+                    @if (isDetectingLocation) {
+                    <span>
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      {{ 'reportLostItem.location.detecting' | translate }}
+                    </span>
+                    }
+                    @if (locationDetected) {
+                    <span>
+                      <i class="bi bi-check-circle-fill me-2"></i>
+                      {{ 'reportLostItem.location.detected' | translate }}
+                    </span>
+                    }
+                  </button>
+                  @if (locationDetected) {
+                  <button type="button" class="btn-clear-location" (click)="clearLocation()">
+                    <i class="bi bi-x-circle me-2"></i>
+                    {{ 'reportLostItem.location.clear' | translate }}
+                  </button>
+                  }
+                  <!-- Coordinates validation message -->
+                  @if (areCoordinatesInvalid()) {
+                  <div class="error-feedback mt-2">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    {{ 'reportLostItem.location.coordinatesError' | translate }}
+                  </div>
+                  }
+                </div>
+
+                <!-- GPS Coordinates Display -->
+                @if (locationDetected) {
+                <div class="gps-coordinates-display">
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <strong>{{ 'reportLostItem.location.latitude' | translate }}</strong> {{ reportForm.get('location.latitude')?.value | number:'1.6-6' }}
+                  </div>
+                  <div class="coordinate-item">
+                    <i class="bi bi-geo me-2"></i>
+                    <strong>{{ 'reportLostItem.location.longitude' | translate }}</strong> {{ reportForm.get('location.longitude')?.value | number:'1.6-6' }}
+                  </div>
+                </div>
+                }
+
+                <!-- Address -->
+                <div class="location-field-wrapper">
+                  <label class="form-label-secondary">
+                    {{ 'reportLostItem.location.address.label' | translate }} <span class="required-mark">{{ 'reportLostItem.location.address.required' | translate }}</span>
+                  </label>
+                  <input type="text" class="form-control-enhanced" formControlName="address"
+                    (blur)="reportForm.get('location')?.get('address')?.markAsTouched()"
+                    [placeholder]="'reportLostItem.location.address.placeholder' | translate"
+                    [class.is-invalid]="isLocationFieldInvalid('address')">
+                  @if (isLocationFieldInvalid('address')) {
+                  <div class="error-feedback">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    {{ 'reportLostItem.errors.required' | translate }}
+                  </div>
+                  }
+                </div>
+
+                <!-- City and Governorate -->
+                <div class="row location-row">
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">{{ 'reportLostItem.location.city.label' | translate }}</label>
+                    <input type="text" class="form-control-enhanced" formControlName="city"
+                      (blur)="reportForm.get('location')?.get('city')?.markAsTouched()" [placeholder]="'reportLostItem.location.city.placeholder' | translate"
+                      [class.is-invalid]="isLocationFieldInvalid('city')">
+                    @if (isLocationFieldInvalid('city')) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ 'reportLostItem.errors.required' | translate }}
+                    </div>
+                    }
+                  </div>
+                  <div class="col-md-6 location-field-wrapper">
+                    <label class="form-label-secondary">{{ 'reportLostItem.location.governorate.label' | translate }}</label>
+                    <input type="text" class="form-control-enhanced" formControlName="governorate"
+                      (blur)="reportForm.get('location')?.get('governorate')?.markAsTouched()"
+                      [placeholder]="'reportLostItem.location.governorate.placeholder' | translate" [class.is-invalid]="isLocationFieldInvalid('governorate')">
+                    @if (isLocationFieldInvalid('governorate')) {
+                    <div class="error-feedback">
+                      <i class="bi bi-exclamation-circle me-1"></i>
+                      {{ 'reportLostItem.errors.required' | translate }}
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Date Lost -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-calendar-event label-icon"></i>
+                  <span>{{ 'reportLostItem.dateLost.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.dateLost.required' | translate }}</span>
+                </label>
+                <input type="date" class="form-control-enhanced date-input" formControlName="dateLost"
+                  (blur)="reportForm.get('dateLost')?.markAsTouched()" [max]="maxDate"
+                  [class.is-invalid]="isFieldInvalid('dateLost')">
+                @if (isFieldInvalid('dateLost')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('dateLost') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-info-circle me-1"></i>
+                  {{ 'reportLostItem.dateLost.hint' | translate }}
+                </small>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="form-group-wrapper">
+                <label class="form-label-enhanced">
+                  <i class="bi bi-telephone-fill label-icon"></i>
+                  <span>{{ 'reportLostItem.contactInfo.label' | translate }}</span>
+                  <span class="required-mark">{{ 'reportLostItem.contactInfo.required' | translate }}</span>
+                </label>
+                <input type="text" class="form-control-enhanced" formControlName="contactInfo"
+                  (blur)="reportForm.get('contactInfo')?.markAsTouched()"
+                  [placeholder]="'reportLostItem.contactInfo.placeholder' | translate"
+                  [class.is-invalid]="isFieldInvalid('contactInfo')">
+                @if (isFieldInvalid('contactInfo')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ getFieldError('contactInfo') }}
+                </div>
+                }
+                <small class="form-hint">
+                  <i class="bi bi-shield-check me-1"></i>
+                  {{ 'reportLostItem.contactInfo.hint' | translate }}
+                </small>
+              </div>
+
+              <!-- Legal Responsibility -->
+              <div class="form-group-wrapper legal-section">
+                <div class="legal-checkbox-wrapper">
+                  <input class="form-check-input-enhanced" type="checkbox" formControlName="legalResponsibility"
+                    id="legalResponsibility" [class.is-invalid]="isFieldInvalid('legalResponsibility')">
+                  <label class="legal-checkbox-label" for="legalResponsibility">
+                    <span class="legal-text">
+                      {{ 'reportLostItem.legalResponsibility.label' | translate }}
+                      <span class="required-mark">{{ 'reportLostItem.legalResponsibility.required' | translate }}</span>
+                    </span>
+                  </label>
+                </div>
+                @if (isFieldInvalid('legalResponsibility')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  {{ 'reportLostItem.legalResponsibility.error' | translate }}
+                </div>
+                }
+              </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions-wrapper">
+              <div class="actions-content">
+                <button type="button" class="btn-action-secondary" routerLink="/home" [disabled]="isSubmitting">
+                  <i class="bi bi-x-circle me-2"></i>
+                  <span>{{ 'reportLostItem.actions.cancel' | translate }}</span>
+                </button>
+                <button type="submit" class="btn-action-primary"
+                  [disabled]="isSubmitting || isUploadingImage || !isLocationReady">
+                  @if (!isSubmitting) {
+                  <span class="btn-content">
+                    <i class="bi bi-send-fill me-2"></i>
+                    <span>{{ 'reportLostItem.actions.submit' | translate }}</span>
+                  </span>
+                  }
+                  @if (isSubmitting) {
+                  <span class="btn-content">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    <span>{{ 'reportLostItem.actions.submitting' | translate }}</span>
+                  </span>
+                  }
+                </button>
+              </div>
+              <p class="actions-note">
+                <i class="bi bi-info-circle me-1"></i>
+                {{ 'reportLostItem.actions.note' | translate }}
+              </p>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
