@@ -1,0 +1,380 @@
+<!-- Legacy Admin Panel template. -->
+<!-- Modern Professional Admin Dashboard -->
+<div class="admin-dashboard">
+  <!-- Header with Gradient Background -->
+  <div class="dashboard-header">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="dashboard-title mb-2">
+            <i class="bi bi-speedometer2"></i> لوحة التحكم الإدارية
+          </h1>
+          <p class="dashboard-subtitle">إدارة شاملة للعناصر والمستخدمين والتطابقات</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="dashboard-icon">📊</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid dashboard-content p-4">
+    <!-- Quick Stats Section -->
+    <div class="stats-section mb-5">
+      <h5 class="section-title mb-4">
+        <i class="bi bi-graph-up"></i> الإحصائيات السريعة
+      </h5>
+
+      <div *ngIf="loadingStats" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+      </div>
+
+      <div *ngIf="!loadingStats && statistics" class="row g-3">
+        <!-- Users Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-primary">
+            <div class="stat-card-icon">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">إجمالي المستخدمين</h6>
+              <h2 class="stat-number">{{ statistics.users.total }}</h2>
+              <p class="stat-detail">نشط: <strong>{{ statistics.users.active }}</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lost Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-danger">
+            <div class="stat-card-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">عناصر مفقودة</h6>
+              <h2 class="stat-number">{{ statistics.items.lost }}</h2>
+              <p class="stat-detail">قيد الانتظار</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Found Items Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-success">
+            <div class="stat-card-icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">عناصر موجودة</h6>
+              <h2 class="stat-number">{{ statistics.items.found }}</h2>
+              <p class="stat-detail">جاهزة للتسليم</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matches Card -->
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-card stat-card-info">
+            <div class="stat-card-icon">
+              <i class="bi bi-link-45deg"></i>
+            </div>
+            <div class="stat-card-content">
+              <h6 class="stat-label">التطابقات</h6>
+              <h2 class="stat-number">{{ statistics.matches.total }}</h2>
+              <p class="stat-detail">قيد الانتظار: {{ statistics.matches.pending }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Sections (controlled by navbar navigation) -->
+    <div class="content-section">
+
+      <!-- Items Section -->
+      <div *ngIf="activeSection === 'items'" class="tab-content-section">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-header bg-light border-bottom">
+            <div class="row align-items-center">
+              <div class="col">
+                <h5 class="mb-0 fw-600">
+                  <i class="bi bi-box-seam"></i> إدارة العناصر
+                </h5>
+              </div>
+              <div class="col-auto">
+                <!-- Item Type Selector -->
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm" [class.btn-primary]="activeTab === 'lost'"
+                    [class.btn-outline-primary]="activeTab !== 'lost'" (click)="switchTab('lost')">
+                    <i class="bi bi-search me-1"></i> المفقودة ({{ statistics?.items?.lost || 0 }})
+                  </button>
+                  <button type="button" class="btn btn-sm" [class.btn-success]="activeTab === 'found'"
+                    [class.btn-outline-success]="activeTab !== 'found'" (click)="switchTab('found')">
+                    <i class="bi bi-check-circle me-1"></i> الموجودة ({{ statistics?.items?.found || 0 }})
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <!-- Search and Filter Bar -->
+            <div class="filter-bar p-3 border-bottom bg-light">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0">
+                      <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" placeholder="بحث عن عنصر..."
+                      [(ngModel)]="searchTerm">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-select form-select-sm" [(ngModel)]="filterCategory">
+                    <option value="">جميع الفئات</option>
+                    <option value="Electronics">الكترونيات</option>
+                    <option value="Documents">مستندات</option>
+                    <option value="Personal">مقتنيات شخصية</option>
+                    <option value="Other">أخرى</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-select form-select-sm" [(ngModel)]="filterStatus">
+                    <option value="">جميع الحالات</option>
+                    <option value="Active">نشط</option>
+                    <option value="Matched">متطابق</option>
+                    <option value="Closed">مغلق</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div *ngIf="loadingItems" class="text-center py-5">
+              <div class="spinner-border text-primary" style="width: 2.5rem; height: 2.5rem;"></div>
+              <p class="mt-3 text-muted">جاري تحميل البيانات...</p>
+            </div>
+
+            <!-- Items Table -->
+            <div *ngIf="!loadingItems" class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3" style="width: 280px;">العنصر</th>
+                    <th class="py-3">الفئة</th>
+                    <th class="py-3">الموقع</th>
+                    <th class="py-3">التاريخ</th>
+                    <th class="py-3">الحالة</th>
+                    <th class="py-3 text-center">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredItems" class="item-row">
+                    <td class="px-4">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="item-thumbnail">
+                          <img [src]="getItemImageUrl(item)" [alt]="item.title" (error)="onImageError($event)">
+                        </div>
+                        <div class="item-info">
+                          <div class="item-title">{{ item.title }}</div>
+                          <small class="text-muted">{{ item.description | slice:0:50 }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-category">{{ item.category }}</span>
+                    </td>
+                    <td>
+                      <i class="bi bi-geo-alt text-muted me-1"></i>
+                      <small>{{ item.location?.city || 'غير محدد' }}</small>
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ item.createdAt | date: 'dd/MM/yyyy' }}</small>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="getStatusBadgeClass(item.status)">
+                        {{ item.status }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <!-- No actions available for items (no API endpoints) -->
+                    </td>
+                  </tr>
+                  <tr *ngIf="filteredItems.length === 0" class="text-center">
+                    <td colspan="6" class="py-5">
+                      <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                      <p class="mt-3 text-muted">لا توجد عناصر</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-section p-3 border-top bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                  عرض {{ (itemsPage - 1) * itemsPageSize + 1 }} -
+                  {{ Math.min(itemsPage * itemsPageSize, totalItems) }} من {{ totalItems }}
+                </div>
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="itemsPage === 1">
+                      <a class="page-link" (click)="prevItemsPage()" style="cursor: pointer;">
+                        <i class="bi bi-chevron-right"></i> السابق
+                      </a>
+                    </li>
+                    <li class="page-item active">
+                      <span class="page-link">{{ itemsPage }}</span>
+                    </li>
+                    <li class="page-item" [class.disabled]="itemsPage >= totalItemsPages">
+                      <a class="page-link" (click)="nextItemsPage()" style="cursor: pointer;">
+                        التالي <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Section -->
+      <div *ngIf="activeSection === 'users'" class="tab-content-section">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-header bg-light border-bottom">
+            <h5 class="mb-0 fw-600">
+              <i class="bi bi-people"></i> إدارة المستخدمين
+            </h5>
+          </div>
+
+          <div class="card-body p-0">
+            <!-- Users Filter Bar -->
+            <div class="filter-bar p-3 border-bottom bg-light">
+              <input type="text" class="form-control form-control-sm" placeholder="بحث عن مستخدم..."
+                [(ngModel)]="userSearchTerm">
+            </div>
+
+            <!-- Loading Spinner -->
+            <div *ngIf="loadingUsers" class="text-center py-5">
+              <div class="spinner-border text-primary"></div>
+            </div>
+
+            <!-- Users Table -->
+            <div *ngIf="!loadingUsers" class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3">المستخدم</th>
+                    <th class="py-3">البريد الإلكتروني</th>
+                    <th class="py-3">تاريخ الانضمام</th>
+                    <th class="py-3">الحالة</th>
+                    <th class="py-3 text-center">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of filteredUsers" class="user-row">
+                    <td class="px-4">
+                      <div class="d-flex align-items-center gap-2">
+                        <div class="user-avatar">{{ (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '')
+                          | uppercase }}</div>
+                        <div>
+                          <div class="fw-500">{{ user.firstName }} {{ user.lastName }}</div>
+                          <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.createdAt | date: 'dd/MM/yyyy' }}</td>
+                    <td>
+                      <span class="badge bg-success">نشط</span>
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-sm" [class.btn-success]="user.isActive"
+                          [class.btn-danger]="!user.isActive" (click)="toggleUserStatus(user)"
+                          [disabled]="updatingUserId === user.id">
+                          <i [class]="user.isActive ? 'bi bi-check-circle' : 'bi bi-x-circle'" class="me-1"></i>
+                          {{ user.isActive ? 'تفعيل' : 'تعطيل' }}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="filteredUsers.length === 0">
+                    <td colspan="5" class="py-5 text-center text-muted">
+                      لا توجد نتائج
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Users Pagination -->
+            <div class="pagination-section p-3 border-top bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                  عرض {{ (usersPage - 1) * usersPageSize + 1 }} -
+                  {{ Math.min(usersPage * usersPageSize, totalUsers) }} من {{ totalUsers }}
+                </div>
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="usersPage === 1">
+                      <a class="page-link" (click)="prevUsersPage()" style="cursor: pointer;">
+                        السابق
+                      </a>
+                    </li>
+                    <li class="page-item active">
+                      <span class="page-link">{{ usersPage }}</span>
+                    </li>
+                    <li class="page-item" [class.disabled]="usersPage >= totalUsersPages">
+                      <a class="page-link" (click)="nextUsersPage()" style="cursor: pointer;">
+                        التالي
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Section Detail -->
+      <div *ngIf="activeSection === 'statistics'" class="tab-content-section">
+        <div class="row g-4">
+          <!-- Summary Cards -->
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6 class="info-card-title">ملخص العناصر</h6>
+              <div class="info-card-stat">
+                <span class="stat-label">عناصر مفقودة:</span>
+                <span class="stat-value text-danger">{{ statistics?.items?.lost }}</span>
+              </div>
+              <div class="info-card-stat">
+                <span class="stat-label">عناصر موجودة:</span>
+                <span class="stat-value text-success">{{ statistics?.items?.found }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-card">
+              <h6 class="info-card-title">ملخص التطابقات</h6>
+              <div class="info-card-stat">
+                <span class="stat-label">إجمالي التطابقات:</span>
+                <span class="stat-value text-info">{{ statistics?.matches?.total }}</span>
+              </div>
+              <div class="info-card-stat">
+                <span class="stat-label">قيد الانتظار:</span>
+                <span class="stat-value text-warning">{{ statistics?.matches?.pending }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

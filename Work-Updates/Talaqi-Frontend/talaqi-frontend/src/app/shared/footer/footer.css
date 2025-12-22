@@ -1,0 +1,338 @@
+/* ========================================
+   Footer Styles - Talaqi Platform
+   ======================================== */
+
+.footer {
+  background: var(--primary);
+  color: var(--text-light);
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid var(--accent);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Footer Content Grid */
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 2rem;
+  align-items: start;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(108, 141, 181, 0.3);
+}
+
+/* Brand Section */
+.footer-brand-section {
+  padding-left: 1rem;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.brand-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--text-light);
+}
+
+.footer-description {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+/* Links Sections */
+.footer-links-section,
+.footer-contact-section {
+  min-width: 0;
+}
+
+/* Footer Headings */
+.footer-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+
+/* Footer Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  color: var(--accent-light);
+  padding-right: 5px;
+}
+
+/* Contact Info */
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.contact-item i {
+  font-size: 1rem;
+  color: var(--accent-light);
+  min-width: 20px;
+}
+
+.contact-item a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.contact-item a:hover {
+  color: var(--accent-light);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  padding: 1rem 0 0;
+}
+
+.footer-bottom-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(108, 141, 181, 0.2);
+  color: var(--text-light);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  font-size: 1rem;
+  border: 2px solid transparent;
+}
+
+.social-icon:hover {
+  background: var(--accent);
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--accent-light);
+}
+
+.copyright-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.copyright {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.footer-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.legal-link {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color var(--transition-base);
+  white-space: nowrap;
+}
+
+.legal-link:hover {
+  color: var(--accent-light);
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.footer-bottom .social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.footer-bottom .social-icon {
+  width: 38px;
+  height: 38px;
+  font-size: 1rem;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--text-light);
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+  background: var(--accent-dark);
+}
+
+.scroll-to-top:active {
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.3rem;
+    text-align: center;
+    padding-bottom: 1rem;
+  }
+
+  .footer-brand-section {
+    padding-left: 0;
+  }
+
+  .footer-description {
+    max-width: 100%;
+  }
+
+  .footer-heading {
+    margin-bottom: 0.4rem;
+  }
+
+  .footer-links li {
+    margin-bottom: 0.3rem;
+  }
+
+  .contact-item {
+    justify-content: center;
+  }
+
+  .footer-bottom-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.9rem;
+  }
+
+  .copyright-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.60rem;
+  }
+
+  .footer-legal-links {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .footer-bottom .social-links {
+    justify-content: center;
+  }
+
+  .scroll-to-top {
+    bottom: 1.5rem;
+    left: 1.5rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
